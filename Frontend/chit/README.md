@@ -6,6 +6,7 @@
 
 ```shell
 git clone git@github.com:ericz02/chitchat-capstone.git
+```
 
 ### Install packages
 
