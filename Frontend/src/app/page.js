@@ -1,7 +1,10 @@
+import HomePage from "@/components/HomePage"
+
 export default function Home() {
   return (
-    <main className='bg-blue-300'>
-      <p>Hello World</p>
+    <main>
+      {/* This is the Home Page */}
+      <HomePage />
     </main>
   )
 }
