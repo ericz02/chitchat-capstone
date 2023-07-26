@@ -2,10 +2,10 @@
 
 const Navbar = () => {
   return (
-    <div className="flex justify-center bg-[#526D82]">
+    <div className="navbar">
       <div>This is the Navbar</div>
     </div>
   );
-}
+};
 
 export default Navbar;
