@@ -1,9 +1,9 @@
-import ViewPost from "@/pages/ViewPost";
+import Profile from "@/pages/Profile";
 
 const page = () => {
   return (
     <div>
-      <ViewPost />
+      <Profile />
     </div>
   )
 }
