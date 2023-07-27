@@ -1,7 +1,7 @@
 const ViewPost = () => {
   return (
     <div>
-      <p className="bg-[#FFFFFF] p-4 flex flex-col justify-center ml-64 mt-20">
+      <p className="bg-[#FFFFFF] h-[2000px] p-4 flex flex-col">
         this is the page to view posts
       </p>
     </div>
