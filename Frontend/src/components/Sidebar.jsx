@@ -4,7 +4,7 @@ import chitchatLogo from "../public/images/chitchat.png";
 
 const Sidebar = () => {
   return (
-    <div className="flex-none h-screen bg-[#27374D] w-1/6 p-4 relative">
+    <div className="flex-none bg-[#27374D] w-1/6 p-4 fixed h-full z-20">
       <Image
         className="m-auto"
         src={chitchatLogo}
