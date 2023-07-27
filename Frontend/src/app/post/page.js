@@ -1,8 +1,9 @@
-import Login from "@/pages/Login";
+import Post from "@/pages/Post";
 
 const page = () => {
+
   return (
-    <Login />
+    <Post />
   )
 }
 
