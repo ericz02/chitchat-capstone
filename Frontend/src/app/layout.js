@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Sidebar from "@/components/Sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
+const styles = "";
 
 export const metadata = {
   title: "ChitChat",
@@ -14,7 +15,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter?.className}`} >
         <div className="flex">
           <Sidebar />
           <div className="flex flex-col w-full">
@@ -22,7 +23,6 @@ export default function RootLayout({ children }) {
             <div className="flex flex-col flex-1">{children}</div>
           </div>
         </div>
-
         <Footer />
       </body>
     </html>

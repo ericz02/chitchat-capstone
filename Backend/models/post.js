@@ -52,5 +52,14 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "posts",
     }
   );
-  return Post;
-};
+  Post.init({
+    title: DataTypes.STRING,
+    content: DataTypes.TEXT,
+    image_URL: DataTypes.BLOB,
+    UserId: DataTypes.INTEGER,
+    ChatroomId: DataTypes.INTEGER
+  }, {
+    sequelize,
+    modelName: 'Post',
+    tableName:'posts'
+  });
