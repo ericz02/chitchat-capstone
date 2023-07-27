@@ -17,13 +17,15 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <div className="flex">
           <Sidebar />
-          <div className="flex flex-col w-full"> 
-          <Navbar />
-          <div className="flex flex-col flex-1">
+          
+          <div className="flex flex-col w-full">
+            <Navbar />
+            <div className="flex flex-col flex-1">
               {children}
             </div>
           </div>
         </div>
+
         <Footer />
       </body>
     </html>
