@@ -2,27 +2,20 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("posts", {
-      id: {
+    await queryInterface.createTable("chatrooms", {
+      chatroomId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      title: {
+      chatroomName: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
-      content: {
-        type: Sequelize.TEXT,
-      },
-      image_URL: {
-        type: Sequelize.BYTEA,
-      },
-      UserId: {
-        type: Sequelize.INTEGER,
-      },
-      ChatroomId: {
-        type: Sequelize.INTEGER,
+      chatroomDescription: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -35,7 +28,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("posts");
+    await queryInterface.dropTable("chatrooms");
   },
 };
-
