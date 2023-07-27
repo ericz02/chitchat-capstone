@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Post extends Model {
+  class Chatroom extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,46 +11,34 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Post.init(
+  Chatroom.init(
     {
-      title: {
+      chatroomName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           len: {
-            args: [3, 50],
-            msg: "Your title must be between 3 and 50 characters",
+            args: [1, 30],
+            msg: "The chatroom must be between 1 and 30 characters",
           },
         },
       },
-      content: {
-        type: DataTypes.TEXT,
+      chatroomDescription: {
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           len: {
-            args: [3, 500],
-            msg: "Your content must be between 3 and 500 characters",
+            args: [8, 150],
+            msg: "The chatroom description must be between 8 and 150 characters",
           },
         },
-      },
-      image_URL: {
-        type: DataTypes.BYTEA,
-        allowNull: false,
-      },
-      UserId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      ChatroomId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: "Post",
-      tableName: "posts",
+      modelName: "Chatroom",
+      tableName: "chatrooms",
     }
   );
-  return Post;
+  return Chatroom;
 };
