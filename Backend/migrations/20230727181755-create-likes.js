@@ -2,27 +2,29 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("posts", {
-      id: {
+    await queryInterface.createTable("likes", {
+      likeId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      title: {
+      likeableType: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
-      content: {
-        type: Sequelize.TEXT,
-      },
-      image_URL: {
-        type: Sequelize.BYTEA,
-      },
-      UserId: {
+      likeableId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
       },
-      ChatroomId: {
+      userId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,
@@ -33,9 +35,12 @@ module.exports = {
         type: Sequelize.DATE,
       },
     });
+
+    //Recommended index for faster querying
+    await queryInterface.addIndex("likes", ["likeableType", "likeableId"]);
+    await queryInterface.addIndex("likes", ["userId"]);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("posts");
+    await queryInterface.dropTable("likes");
   },
 };
-
