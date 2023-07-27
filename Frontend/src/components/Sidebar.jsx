@@ -2,7 +2,7 @@
 
 const Sidebar = () => {
   return (
-    <div className="flex-none h-screen bg-[#27374D] w-1/4 p-4">
+    <div className="flex-initial h-screen bg-[#27374D] w-1/4 p-4">
       Sidebar
     </div>
   );
