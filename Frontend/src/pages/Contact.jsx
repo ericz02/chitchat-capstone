@@ -1,6 +1,6 @@
 const Contact = () => {
   return (
-    <div className="bg-[#FFFFFF] p-4 flex flex-col justify-center ml-64 mt-20">
+    <div className="bg-[#FFFFFF] p-4 flex flex-col justify-center">
       <h1 className="flex justify-center text-2xl font-bold mb-4 mt-3">
         Contact Us
       </h1>
@@ -29,7 +29,7 @@ const Contact = () => {
           placeholder="Message:"
         />
       </div>
-      <button className="bg-[#14AE5C] hover:bg-[#0F8B49] text-white font-bold py-2 px-4 rounded mx-auto w-1/6 mt-3">
+      <button className="bg-[#14AE5C] hover:bg-[#0F8B49] text-white font-bold py-2 px-4 rounded mx-auto w-1/6 ml-[835px]">
         Send Message
       </button>
     </div>
