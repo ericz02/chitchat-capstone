@@ -9,12 +9,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Likes.belongsTo(models.User, {
+      this.belongsTo(models.User, {
         foreignKey: "userId",
         onDelete: "CASCADE",
       });
 
-      Likes.belongsTo(models.Post, {
+      this.belongsTo(models.Post, {
         foreignKey: "likeableId",
         constraints: false,
         scope: {
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
 
-      Likes.belongsTo(models.Comment, {
+      this.belongsTo(models.Comment, {
         foreignKey: "likeableId",
         constraints: false,
         scope: {
@@ -56,6 +56,13 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Likes",
       tableName: "likes",
+      indexes: [
+        {
+          unique: true,
+          fields: ["likeableId", "likeableType", "userId"],
+          name: "unique_likeable_user",
+        },
+      ],
     }
   );
   return Likes;
