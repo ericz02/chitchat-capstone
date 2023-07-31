@@ -16,13 +16,23 @@ module.exports = {
         type: Sequelize.TEXT,
       },
       image_URL: {
-        type: Sequelize.BYTEA,
+        type: Sequelize.STRING,
       },
       UserId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        allowNull: false,
       },
       ChatroomId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "chatrooms",
+          key: "id",
+        },
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -38,4 +48,3 @@ module.exports = {
     await queryInterface.dropTable("posts");
   },
 };
-

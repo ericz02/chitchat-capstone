@@ -9,6 +9,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.User, {
+        foreignKey: "UserId",
+        as: "author", //alias for User model
+      });
+
+      this.hasMany(models.Comment, {
+        foreignKey: "postId",
+        as: "comments",
+      });
+
+      this.hasMany(models.Likes, {
+        foreignKey: "likeableId",
+        scope: {
+          likeableType: "post",
+        },
+        as: "likes",
+      });
     }
   }
   Post.init(
@@ -34,8 +51,8 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       image_URL: {
-        type: DataTypes.BYTEA,
-        allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       UserId: {
         type: DataTypes.INTEGER,
@@ -52,4 +69,4 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "posts",
     }
   );
-   }
+};
