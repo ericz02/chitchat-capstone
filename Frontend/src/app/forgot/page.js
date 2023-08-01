@@ -1,9 +1,9 @@
-import Profile from "@/pages/Profile";
+import ForgotPassword from "@/pages/ForgotPassword";
 
 const page = () => {
   return (
     <div>
-      <Profile />
+      <ForgotPassword />
     </div>
   )
 }
