@@ -1,6 +1,6 @@
 const CreatePost = () => {
   return (
-    <div className="bg-[#FFFFFF] p-4 flex flex-col justify-center ml-64 mt-20">
+    <div className="bg-[#FFFFFF] p-4 flex flex-col justify-center">
       <h1 className="flex justify-center text-2xl font-bold mb-4 mt-3">
         Create a New Post
       </h1>
