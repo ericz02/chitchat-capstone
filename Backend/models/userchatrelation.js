@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.Chatroom, { foreignKey: "ChatroomId" });
     }
   }
-  userChatRelation.init(
+  UserChatRelation.init(
     {
       UserId: DataTypes.INTEGER,
       ChatroomId: DataTypes.INTEGER,
