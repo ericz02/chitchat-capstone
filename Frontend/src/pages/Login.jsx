@@ -17,37 +17,40 @@ const Login = () => {
         />
       </Link>
 
-      <div className = "bg-white mx-52 mb-20 p-20">
+      <div className = "bg-white mx-52 mb-20 p-20 ">
         <div>
           <h2 className="flex justify-center text-2xl font-bold mb-4 mt-3">Login to your account</h2>
           <div>
             <input 
-            className="w-full px-3 pb-10 pt-2 border rounded bg-[#E6E6E6] mt-3"
+            className="w-full h-6 px-3 pb-10 pt-2 border rounded bg-[#E6E6E6] mt-3 "
             type = "email"
             placeholder = "Email: "
             />
           </div>
           <div>
             <input 
-              className="w-full px-3 pb-10 pt-2 border rounded bg-[#E6E6E6] mt-3"
+              className="w-full h-6 px-3 pb-10 pt-2 border rounded bg-[#E6E6E6] mt-3 "
               type = "password"
               placeholder = "Password: "
             />
           </div>
+          <Link href = "/forgotPassword" className = "text-blue-600">
+          <p className = "flex justify-end m-2">Forgot Password?</p>
+          </Link>
 
-          <div className =" flex flex-col p-4 content-center">
-            <div >
-              <button className=" bg-[#14AE5C] hover:bg-[#0F8B49] text-white font-bold py-2 px-4 rounded mx-3 w-1/6 my-1">
+          <div className =" flex flex-col p-4 ">
+            <div className = "flex justify-center">
+              <button className=" bg-[#14AE5C] hover:bg-[#0F8B49] text-white font-bold py-2 px-4 rounded mx-3 w-1/2 my-1">
               Log in
               </button>
             </div>
-            <div >
-              <button className=" bg-[#14AE5C] hover:bg-[#0F8B49] text-white font-bold py-2 px-4 rounded mx-3 w-1/6 my-1">
+            <Link href = "/signup" className = "flex justify-center"> 
+              <button className=" bg-[#14AE5C] hover:bg-[#0F8B49] text-white font-bold py-2 px-4 rounded mx-3 w-1/2 my-1">
               Sign Up
               </button>
-            </div>
+            </Link>
           </div>
-          <p>Don't have an account? Sign Up</p>
+          <p className = "flex justify-center">Don't have an account? <Link href = "/signup" className = "text-blue-600">Sign Up</Link></p>
         </div>
       </div>
 
