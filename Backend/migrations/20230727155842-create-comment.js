@@ -11,12 +11,19 @@ module.exports = {
       },
       UserId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
       CommentableId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
       },
       commentableType: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       content: {
         type: Sequelize.TEXT,

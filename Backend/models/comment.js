@@ -23,13 +23,13 @@ module.exports = (sequelize, DataTypes) => {
         as: "post",
       });
 
-      this.belongsTo(models.Comment, {
+      this.hasMany(models.Comment, {
         foreignKey: "CommentableId",
         constraints: false,
         scope: {
           commentableType: "comment",
         },
-        as: "parentComment",
+        as: "replies",
       });
 
       this.hasMany(models.Likes, {
