@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const Login = () => {
   return (
-    <div className="bg-[#cee2ff] ">
+    <div className="bg-[#cee2ff] p-8 ">
       <Link href="/">
         <Image
           className="m-auto"
