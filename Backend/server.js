@@ -9,15 +9,6 @@ app.get("/", (req, res) => {
   res.send("Welcome to ChitChat!");
 });
 
-const getPost = async (id) => {
-  const post = await Post.findByPk(parseInt(id, 10), { include: [Comment] });
-
-  if (!post) {
-    throw new NotFoundError("Post not found");
-  }
-  return post;
-};
-
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });

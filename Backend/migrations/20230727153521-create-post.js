@@ -30,7 +30,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: "chatrooms",
-          key: "ChatroomId",
+          key: "id",
         },
         allowNull: false,
       },
