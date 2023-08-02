@@ -1,7 +1,6 @@
 'use client'
 import { useState, useEffect } from "react";
 
-
 const DropdownForm = ({ darkMode, setDarkMode }) => {
     const [loggedIn, setLoggedIn] = useState(true);
   
@@ -10,7 +9,6 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
     };
   
     const handleLoginLogoutToggle = () => {
-      // Add your logic here for handling login/logout
       setLoggedIn((prevLoggedIn) => !prevLoggedIn);
     };
     let background = document.getElementById('dynamic_page')

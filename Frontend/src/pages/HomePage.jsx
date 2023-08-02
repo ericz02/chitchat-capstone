@@ -5,7 +5,7 @@ const HomePage = () => {
   return (
     <div className="mx-auto max-w-4xl">
       <div className="flex flex-col justify-center mb-4">
-        <div className="mx-auto">
+        <div className="flex flex-col items-center ml-4 pr-6">
           <Link href="/create">
           <button
             className="bg-[#27374D] px-4 py-2 rounded-[10px] hover:bg-[#526D82] transition-colors duration-300 ease-in-out mt-8"
