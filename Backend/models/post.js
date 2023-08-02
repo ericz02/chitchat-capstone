@@ -2,13 +2,7 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Post extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
       this.belongsTo(models.User, {
         foreignKey: "UserId",
         as: "author", //alias for User model
@@ -50,6 +44,11 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      likesCount: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       image_URL: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -57,16 +56,35 @@ module.exports = (sequelize, DataTypes) => {
       UserId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
       ChatroomId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: "chatrooms",
+          key: "id",
+        },
       },
     },
     {
       sequelize,
       modelName: "Post",
       tableName: "posts",
+      cacheColumns: (models) => [
+        {
+          model: "Post",
+          column: "likesCount",
+          foreignKey: "postId",
+          where: {
+            likeableType: "post",
+          },
+        },
+      ],
     }
   );
+  return Post;
 };
