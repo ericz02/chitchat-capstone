@@ -32,8 +32,6 @@ async function getNestedComments(comment) {
       likesCount: reply.likesCount,
       createdAt: reply.createdAt,
       updatedAt: reply.updatedAt,
-      // Add any other properties you want to include
-      // For example, author information can be added as: author: reply.author,
     };
 
     // Recursively fetch nested comments for the current reply
