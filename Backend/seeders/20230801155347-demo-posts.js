@@ -126,9 +126,17 @@ module.exports = {
       },
       {
         UserId: robertId,
-        CommentableId: 2,
+        CommentableId: 3,
         commentableType: "comment",
         content: "Yeah, you should try it out sometime when you can",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        UserId: felixId,
+        CommentableId: 2,
+        commentableType: "comment",
+        content: "Thanks man!",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
