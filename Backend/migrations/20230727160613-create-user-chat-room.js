@@ -11,12 +11,23 @@ module.exports = {
       },
       UserId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
       ChatroomId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "chatrooms",
+          key: "id",
+        },
       },
       role: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

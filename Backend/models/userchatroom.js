@@ -14,9 +14,26 @@ module.exports = (sequelize, DataTypes) => {
   }
   UserChatRelation.init(
     {
-      UserId: DataTypes.INTEGER,
-      ChatroomId: DataTypes.INTEGER,
-      role: DataTypes.STRING,
+      UserId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
+      },
+      ChatroomId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "chatrooms",
+          key: "id",
+        },
+      },
+      role: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     {
       sequelize,

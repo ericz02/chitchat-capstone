@@ -43,9 +43,25 @@ module.exports = (sequelize, DataTypes) => {
   }
   Comment.init(
     {
-      UserId: DataTypes.INTEGER,
-      CommentableId: DataTypes.INTEGER,
-      commentableType: DataTypes.STRING,
+      UserId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
+      },
+      CommentableId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      commentableType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isIn: [["post", "comment"]],
+        },
+      },
       content: {
         type: DataTypes.TEXT,
         allowNull: false,
@@ -56,11 +72,26 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      likesCount: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
     },
     {
       sequelize,
       modelName: "Comment",
       tableName: "comments",
+      cacheColumns: (models) => [
+        {
+          model: "Comment",
+          column: "likesCount",
+          foreignKey: "commentId",
+          where: {
+            likeableType: "comment",
+          },
+        },
+      ],
     }
   );
   return Comment;

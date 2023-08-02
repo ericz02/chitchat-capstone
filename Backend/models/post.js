@@ -44,6 +44,11 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      likesCount: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       image_URL: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -51,16 +56,34 @@ module.exports = (sequelize, DataTypes) => {
       UserId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
       ChatroomId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: "chatrooms",
+          key: "id",
+        },
       },
     },
     {
       sequelize,
       modelName: "Post",
       tableName: "posts",
+      cacheColumns: (models) => [
+        {
+          model: "Post",
+          column: "likesCount",
+          foreignKey: "postId",
+          where: {
+            likeableType: "post",
+          },
+        },
+      ],
     }
   );
   return Post;
