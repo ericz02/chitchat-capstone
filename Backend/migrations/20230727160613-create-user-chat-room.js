@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("userchatrelations", {
+    await queryInterface.createTable("userchatrooms", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,12 +11,23 @@ module.exports = {
       },
       UserId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
       ChatroomId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "chatrooms",
+          key: "id",
+        },
       },
       role: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +40,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("userchatrelations");
+    await queryInterface.dropTable("userchatrooms");
   },
 };

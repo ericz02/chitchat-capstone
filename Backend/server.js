@@ -17,7 +17,6 @@ app.listen(port, () => {
 
 // Route to get all posts from the database
 app.get("/posts", async (req, res) => {
-
   try {
     const allPosts = await Post.findAll({ include: [Comment] });
 
@@ -26,7 +25,6 @@ app.get("/posts", async (req, res) => {
     console.error(err);
     res.status(500).send({ message: err.message });
   }
-  
 });
 
 //Get a specific post
