@@ -1,11 +1,10 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+//import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Sidebar from "@/components/Sidebar";
 
-const inter = Inter({ subsets: ["latin"] });
-const styles = "";
+//const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "ChitChat",
@@ -15,7 +14,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className='h-screen' id='dynamic_page'>
         <div className="flex">
           <Sidebar />
           <div className="flex flex-col w-5/6 ml-auto">

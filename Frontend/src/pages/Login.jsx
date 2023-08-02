@@ -4,14 +4,14 @@ import Image from "next/image";
 
 const Login = () => {
   return (
-    <div className="bg-[#cee2ff] p-8 ">
+    <div className="bg-[#cee2ff] p-2 ">
       <Link href="/">
         <Image
           className="m-auto"
           src={chitchatLogo}
           alt="Company Logo"
-          height={200}
-          width={200}
+          height={140}
+          width={140}
         />
       </Link>
 

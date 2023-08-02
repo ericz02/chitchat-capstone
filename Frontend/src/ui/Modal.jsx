@@ -1,26 +1,27 @@
+
 function Modal({ children, isVisible, hideModal }) {
   if (!isVisible) {
     return null;
   }
+
   return (
-    <div
-      onClick={hideModal}
-      className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex-justify-items-center items-center"
-    >
+    <div className="relative flex justify-end items-center px-4">
+
       <div
         onClick={(e) => e.stopPropagation()}
-        className="max-w-xl w-144 mx-auto flex flex-col h-2/3"
+        className=" absolute flex flex-col items-center max-w-xl w-144 mt-12 px-4 bg-white rounded-lg shadow-md transform transition-transform duration-300 ease-in-out"
       >
         <button
           onClick={hideModal}
-          className="text-black text-xl place-self-end"
+          className="text-black text-xl m-2 "
         >
           X
         </button>
-        <div className="bg-white text-gray-800 p-8">{children}</div>
+        <div className="p-8 ">{children}</div>
       </div>
     </div>
   );
 }
 
 export default Modal;
+
