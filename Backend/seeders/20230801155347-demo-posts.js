@@ -153,10 +153,10 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete("userchatrooms", null, {});
     await queryInterface.bulkDelete("comments", null, {});
     await queryInterface.bulkDelete("posts", null, {});
     await queryInterface.bulkDelete("chatrooms", null, {});
     await queryInterface.bulkDelete("users", null, {});
-    await queryInterface.bulkDelete("userchatrooms", null, {});
   },
 };
