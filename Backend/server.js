@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const app = express();
 const port = 4000;
-const { Post } = require("./models");
+const { Post, Comment } = require("./models");
 require("dotenv").config();
 
 // Welcome message for the root route of the serve
@@ -18,7 +18,18 @@ app.listen(port, () => {
 // Route to get all posts from the database
 app.get("/posts", async (req, res) => {
   try {
-    const allPosts = await Post.findAll({ include: [Comment] });
+    const allPosts = await Post.findAll({
+      where: {
+        CommentableId: 1,
+        commentableType: "post",
+      },
+      include: [
+        {
+          model: Comment,
+          as: "comments",
+        },
+      ],
+    });
 
     res.status(200).json(allPosts);
   } catch (err) {

@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       this.hasMany(models.Comment, {
-        foreignKey: "postId",
+        foreignKey: "CommentableId",
         as: "comments",
       });
 
