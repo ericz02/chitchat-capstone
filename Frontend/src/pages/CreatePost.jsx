@@ -2,7 +2,7 @@ const CreatePost = () => {
   return (
     <div className="bg-[#FFFFFF] p-4 flex flex-col justify-center">
       <h1 className="flex justify-center text-2xl font-bold mb-4 mt-3">
-        Create a New Post
+         New Post
       </h1>
 
       <div className="mb-4 mx-auto w-3/4">
