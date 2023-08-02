@@ -133,9 +133,27 @@ module.exports = {
         updatedAt: new Date(),
       },
     ]);
+
+    await queryInterface.bulkInsert("userchatrooms", [
+      {
+        UserId: 1,
+        ChatroomId: 1,
+        role: "admin",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        UserId: 3,
+        ChatroomId: 2,
+        role: "admin",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
   },
 
   async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete("userchatrooms", null, {});
     await queryInterface.bulkDelete("comments", null, {});
     await queryInterface.bulkDelete("posts", null, {});
     await queryInterface.bulkDelete("chatrooms", null, {});
