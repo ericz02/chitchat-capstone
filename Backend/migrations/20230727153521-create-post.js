@@ -19,7 +19,7 @@ module.exports = {
       },
       image_URL: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       UserId: {
         type: Sequelize.INTEGER,

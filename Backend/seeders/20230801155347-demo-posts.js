@@ -63,19 +63,6 @@ module.exports = {
       },
     ]);
 
-    await queryInterface.bulkInsert("userchatrooms", [
-      {
-        UserId: 1,
-        ChatroomId: 1,
-        role: "admin",
-      },
-      {
-        UserId: 3,
-        ChatroomId: 2,
-        role: "admin",
-      },
-    ]);
-
     const users = await queryInterface.sequelize.query(`SELECT id FROM users`);
 
     const ericId = users[0][0].id;
@@ -146,6 +133,23 @@ module.exports = {
         updatedAt: new Date(),
       },
     ]);
+
+    await queryInterface.bulkInsert("userchatrooms", [
+      {
+        UserId: 1,
+        ChatroomId: 1,
+        role: "admin",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        UserId: 3,
+        ChatroomId: 2,
+        role: "admin",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
   },
 
   async down(queryInterface, Sequelize) {
@@ -153,5 +157,6 @@ module.exports = {
     await queryInterface.bulkDelete("posts", null, {});
     await queryInterface.bulkDelete("chatrooms", null, {});
     await queryInterface.bulkDelete("users", null, {});
+    await queryInterface.bulkDelete("userchatrooms", null, {});
   },
 };
