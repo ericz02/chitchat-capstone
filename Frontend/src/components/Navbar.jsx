@@ -18,6 +18,7 @@ const Navbar = () => {
   const hideModal = () => {
     setIsModalVisible(false);
   };
+  
   return (
     <div className="bg-[#526D82] py-4 fixed w-5/6">
       <div className="flex items-center justify-end text-white px-4">

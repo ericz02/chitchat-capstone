@@ -34,7 +34,7 @@ const Login = () => {
               placeholder="Password: "
             />
           </div>
-          <Link href="/forgotPassword" className="text-blue-600">
+          <Link href="/forgot" className="text-blue-600">
             <p className="flex justify-end m-2">Forgot Password?</p>
           </Link>
 

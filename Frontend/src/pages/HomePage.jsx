@@ -8,7 +8,7 @@ const HomePage = () => {
         <div className="mx-auto">
           <Link href="/create">
           <button
-            className="bg-[#27374D] px-4 py-2 rounded-[10px] hover:bg-[#526D82] transition-colors duration-300 ease-in-out mt-8"
+            className="bg-[#27374D] px-4 py-2 rounded-[10px] hover:bg-[#526D82] transition-colors duration-300 ease-in-out mt-8 text-white"
             >
             Create Post
           </button>{" "}
