@@ -2,7 +2,7 @@ import chitchatLogo from "../public/images/chitchat.png";
 import Link from "next/link";
 import Image from "next/image";
 
-const Login = () => {
+const ForgotPassword = () => {
   return (
     <div className="bg-[#cee2ff] p-10">
       <Link href="/">
@@ -41,4 +41,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;
