@@ -63,6 +63,19 @@ module.exports = {
       },
     ]);
 
+    await queryInterface.bulkInsert("userchatrooms", [
+      {
+        UserId: 1,
+        ChatroomId: 1,
+        role: "admin",
+      },
+      {
+        UserId: 3,
+        ChatroomId: 2,
+        role: "admin",
+      },
+    ]);
+
     const users = await queryInterface.sequelize.query(`SELECT id FROM users`);
 
     const ericId = users[0][0].id;
