@@ -2,8 +2,21 @@ const express = require("express");
 const router = express.Router();
 const app = express();
 const port = 4000;
+const Sequelize = require("sequelize");
+const counterCache = require("./services/counterCache.js");
 const { Post, Comment } = require("./models");
 require("dotenv").config();
+
+const dbName = process.env.DB_NAME;
+const dbUsername = process.env.DB_USER;
+const dbPassword = process.env.DB_PASSWORD;
+const dbHost = process.env.DB_HOST;
+const dbDialect = "postgres";
+
+const sequelize = new Sequelize(dbName, dbUsername, dbPassword, {
+  host: dbHost,
+  dialect: dbDialect,
+});
 
 // Welcome message for the root route of the serve
 app.get("/", (req, res) => {
