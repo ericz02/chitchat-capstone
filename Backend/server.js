@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const app = express();
 const port = 4000;
-const { Post } = require("./models");
+const { Post, Comment } = require("./models");
 require("dotenv").config();
 
 // Welcome message for the root route of the serve
@@ -15,10 +15,65 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
+//Grab all nested comments
+async function getNestedComments(comment) {
+  const nestedComments = [];
+  const replies = await Comment.findAll({
+    where: {
+      CommentableId: comment.id,
+      commentableType: "comment",
+    },
+  });
+
+  for (const reply of replies) {
+    const nestedComment = {
+      id: reply.id,
+      content: reply.content,
+      likesCount: reply.likesCount,
+      createdAt: reply.createdAt,
+      updatedAt: reply.updatedAt,
+    };
+
+    // Recursively fetch nested comments for the current reply
+    nestedComment.replies = await getNestedComments(reply);
+
+    nestedComments.push(nestedComment);
+  }
+
+  return nestedComments;
+}
+
 // Route to get all posts from the database
 app.get("/posts", async (req, res) => {
   try {
-    const allPosts = await Post.findAll({ include: [Comment] });
+    const allPosts = await Post.findAll({
+      include: [
+        {
+          model: Comment,
+          as: "comments",
+          where: {
+            commentableType: "post",
+          },
+          //required: false,
+          /* include: [
+            {
+              model: Comment,
+              as: "replies",
+              where: {
+                commentableType: "comment",
+              },
+              required: false,
+            },
+          ], */
+        },
+      ],
+    });
+
+    for (const post of allPosts) {
+      for (const comment of post.comments) {
+        comment.replies = await Comment.getNestedComments(comment);
+      }
+    }
 
     res.status(200).json(allPosts);
   } catch (err) {

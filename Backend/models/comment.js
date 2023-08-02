@@ -40,6 +40,35 @@ module.exports = (sequelize, DataTypes) => {
         as: "likes",
       });
     }
+
+    static async getNestedComments(comment) {
+      const nestedComments = [];
+      const replies = await Comment.findAll({
+        where: {
+          CommentableId: comment.id,
+          commentableType: "comment",
+        },
+      });
+
+      for (const reply of replies) {
+        const nestedComment = {
+          id: reply.id,
+          content: reply.content,
+          likesCount: reply.likesCount,
+          createdAt: reply.createdAt,
+          updatedAt: reply.updatedAt,
+          // Add any other properties you want to include
+          // For example, author information can be added as: author: reply.author,
+        };
+
+        // Recursively fetch nested comments for the current reply
+        nestedComment.replies = await Comment.getNestedComments(reply);
+
+        nestedComments.push(nestedComment);
+      }
+
+      return nestedComments;
+    }
   }
   Comment.init(
     {
