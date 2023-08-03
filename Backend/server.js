@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const router = express.Router();
 const chatroomRouter = require("./routes/chatrooms");
 const app = express();
@@ -6,6 +7,7 @@ const port = 4000;
 const Sequelize = require("sequelize");
 const counterCache = require("./services/counterCache.js");
 const { Post, Comment, Chatroom, Likes, User, UserChatRoom } = require("./models");
+
 require("dotenv").config();
 
 const dbName = process.env.DB_NAME;
@@ -32,13 +34,11 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
+app.use(cors());
 // Welcome message for the root route of the serve
 app.get("/", (req, res) => {
   res.send("Welcome to ChitChat!");
 });
-
 
 
 // Route to get all posts from the database
@@ -87,11 +87,31 @@ app.get("/posts/:id", async (req, res) => {
   try {
     const post = await Post.findOne({
       where: { id: postId },
-      include: [Comment],
+      include: [
+        {
+          model: Comment,
+          as: "comments",
+          where: {
+            commentableType: "post",
+          },
+          required: false,
+        },
+      ],
     });
     
     if (post) {
-      res.status(200).json(post);
+      const postJSON = post.toJSON();
+      postJSON.comments = await Promise.all(
+        post.comments.map(async (comment) => {
+          const nestedComments = await Comment.getAllNestedComments(comment);
+          return {
+            ...comment.toJSON(),
+            replies: nestedComments,
+          };
+        })
+      );
+
+      res.status(200).json(postJSON);
     } else {
       res.status(404).send({ message: "Post not found" });
     }

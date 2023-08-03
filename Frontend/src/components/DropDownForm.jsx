@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-
+import Link from "next/link";
 const DropdownForm = ({ darkMode, setDarkMode }) => {
   const [loggedIn, setLoggedIn] = useState(true);
 
@@ -47,12 +47,12 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
       </div>
 
       {/* Login/Logout Toggle */}
-      <button
+      <Link href="/login"
         onClick={handleLoginLogoutToggle}
         className="bg-blue-500 text-white px-4 py-2 rounded"
       >
         {loggedIn ? "Logout" : "Login"}
-      </button>
+      </Link>
     </div>
   );
 };
