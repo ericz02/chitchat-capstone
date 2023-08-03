@@ -44,6 +44,12 @@ Object.keys(db).forEach((modelName) => {
   }
 });
 
+// Add counterCache hooks here after the models object is defined
+const counterCache = require("../services/counterCache");
+const { Post, Comment } = db;
+Post.addHook("afterSave", counterCache(db));
+Comment.addHook("afterSave", counterCache(db));
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

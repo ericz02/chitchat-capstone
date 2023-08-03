@@ -122,7 +122,7 @@ module.exports = (sequelize, DataTypes) => {
         {
           model: "Comment",
           column: "likesCount",
-          foreignKey: "commentId",
+          foreignKey: "id",
           where: {
             likeableType: "comment",
           },
@@ -130,5 +130,6 @@ module.exports = (sequelize, DataTypes) => {
       ],
     }
   );
+
   return Comment;
 };

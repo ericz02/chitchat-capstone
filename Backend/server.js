@@ -1,10 +1,11 @@
 const express = require("express");
-const cors = require("cors"); 
+const cors = require("cors");
 const router = express.Router();
 const app = express();
 const port = 4000;
 const Sequelize = require("sequelize");
-const { Post, Comment } = require("./models");
+const counterCache = require("./services/counterCache");
+const { Post, Comment, models } = require("./models");
 require("dotenv").config();
 
 const dbName = process.env.DB_NAME;
@@ -22,6 +23,8 @@ app.use(cors());
 app.get("/", (req, res) => {
   res.send("Welcome to ChitChat!");
 });
+
+app.use(cors());
 
 // Server listening on port 4000 for requests from the client
 app.listen(port, () => {
@@ -74,11 +77,31 @@ app.get("/posts/:id", async (req, res) => {
   try {
     const post = await Post.findOne({
       where: { id: postId },
-      include: [Comment],
+      include: [
+        {
+          model: Comment,
+          as: "comments",
+          where: {
+            commentableType: "post",
+          },
+          required: false,
+        },
+      ],
     });
 
     if (post) {
-      res.status(200).json(post);
+      const postJSON = post.toJSON();
+      postJSON.comments = await Promise.all(
+        post.comments.map(async (comment) => {
+          const nestedComments = await Comment.getAllNestedComments(comment);
+          return {
+            ...comment.toJSON(),
+            replies: nestedComments,
+          };
+        })
+      );
+
+      res.status(200).json(postJSON);
     } else {
       res.status(404).send({ message: "Post not found" });
     }
