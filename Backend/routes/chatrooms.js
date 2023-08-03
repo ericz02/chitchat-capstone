@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Chatroom } = require("../models");
-
+const { authenticateUser } = require("../middleware/auth");
 
 // CRUD for Chatroom
 

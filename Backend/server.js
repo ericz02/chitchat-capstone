@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const chatroomRouter = require("./routes/chatrooms");
+const authRouter = require("./routes/auth");
 const app = express();
 const port = 4000;
 const Sequelize = require("sequelize");
@@ -103,6 +104,7 @@ app.get("/posts/:id", async (req, res) => {
 
 //routes
 app.use("/chatrooms", chatroomRouter);
+app.use("/auth", authRouter);
 
 // Server listening on port 4000 for requests from the client
 app.listen(port, () => {
