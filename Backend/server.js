@@ -3,6 +3,7 @@ const cors = require("cors");
 const router = express.Router();
 const chatroomRouter = require("./routes/chatrooms");
 const postRouter = require("./routes/posts");
+const userRouter = require("./routes/users");
 const app = express();
 const port = 4000;
 const Sequelize = require("sequelize");
@@ -39,6 +40,7 @@ app.get("/", (req, res) => {
 
 app.use("/chatrooms", chatroomRouter);
 app.use("/posts", postRouter);
+app.use("/user", userRouter);
 
 // Server listening on port 4000 for requests from the client
 app.listen(port, () => {
