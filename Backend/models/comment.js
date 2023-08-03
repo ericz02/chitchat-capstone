@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
           commentableType: "comment",
         },
         as: "replies",
+        $recursive: true,
       });
 
       this.hasMany(models.Likes, {
@@ -41,35 +42,41 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static async getNestedComments(comment) {
-      const nestedComments = [];
-      const replies = await Comment.findAll({
+    static async getAllNestedComments(comment) {
+      const nestedComments = await Comment.findAll({
         where: {
           CommentableId: comment.id,
           commentableType: "comment",
         },
       });
 
-      for (const reply of replies) {
-        const nestedComment = {
-          id: reply.id,
-          content: reply.content,
-          likesCount: reply.likesCount,
-          createdAt: reply.createdAt,
-          updatedAt: reply.updatedAt,
-          // Add any other properties you want to include
-          // For example, author information can be added as: author: reply.author,
-        };
-
-        // Recursively fetch nested comments for the current reply
-        nestedComment.replies = await Comment.getNestedComments(reply);
-
-        nestedComments.push(nestedComment);
+      if (!nestedComments || nestedComments.length === 0) {
+        return [];
       }
 
-      return nestedComments;
+      const nestedCommentsWithReplies = await Promise.all(
+        nestedComments.map(async (reply) => {
+          const nestedComment = {
+            id: reply.id,
+            UserId: reply.UserId,
+            CommentableId: reply.CommentableId,
+            commentableType: reply.commentableType,
+            content: reply.content,
+            likesCount: reply.likesCount,
+            createdAt: reply.createdAt,
+            updatedAt: reply.updatedAt,
+          };
+
+          nestedComment.replies = await Comment.getAllNestedComments(reply);
+
+          return nestedComment;
+        })
+      );
+
+      return nestedCommentsWithReplies;
     }
   }
+
   Comment.init(
     {
       UserId: {

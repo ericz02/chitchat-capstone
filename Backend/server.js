@@ -28,34 +28,6 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
-//Grab all nested comments
-async function getNestedComments(comment) {
-  const nestedComments = [];
-  const replies = await Comment.findAll({
-    where: {
-      CommentableId: comment.id,
-      commentableType: "comment",
-    },
-  });
-
-  for (const reply of replies) {
-    const nestedComment = {
-      id: reply.id,
-      content: reply.content,
-      likesCount: reply.likesCount,
-      createdAt: reply.createdAt,
-      updatedAt: reply.updatedAt,
-    };
-
-    // Recursively fetch nested comments for the current reply
-    nestedComment.replies = await getNestedComments(reply);
-
-    nestedComments.push(nestedComment);
-  }
-
-  return nestedComments;
-}
-
 // Route to get all posts from the database
 app.get("/posts", async (req, res) => {
   try {
@@ -67,28 +39,28 @@ app.get("/posts", async (req, res) => {
           where: {
             commentableType: "post",
           },
-          //required: false,
-          /* include: [
-            {
-              model: Comment,
-              as: "replies",
-              where: {
-                commentableType: "comment",
-              },
-              required: false,
-            },
-          ], */
+          required: false,
         },
       ],
     });
 
-    for (const post of allPosts) {
-      for (const comment of post.comments) {
-        comment.replies = await Comment.getNestedComments(comment);
-      }
-    }
+    const postsWithNestedComments = await Promise.all(
+      allPosts.map(async (post) => {
+        const postJSON = post.toJSON();
+        postJSON.comments = await Promise.all(
+          post.comments.map(async (comment) => {
+            const nestedComments = await Comment.getAllNestedComments(comment);
+            return {
+              ...comment.toJSON(),
+              replies: nestedComments,
+            };
+          })
+        );
+        return postJSON;
+      })
+    );
 
-    res.status(200).json(allPosts);
+    res.status(200).json(postsWithNestedComments);
   } catch (err) {
     console.error(err);
     res.status(500).send({ message: err.message });
