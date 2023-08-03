@@ -15,49 +15,6 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
 
   let background = document.getElementById("dynamic_page");
   
-<<<<<<< HEAD
-    const handleDarkModeToggle = () => {
-      setDarkMode((prevDarkMode) => !prevDarkMode);
-    };
-  
-    const handleLoginLogoutToggle = () => {
-      setLoggedIn((prevLoggedIn) => !prevLoggedIn);
-    };
-    let background = document.getElementById('dynamic_page')
-    useEffect(() => {
-        if (darkMode) {
-            background.classList.add('bg-black')
-        } else {
-            background.classList.remove('bg-black')
-        }
-    }, [darkMode])
-   
-    return (
-      <div className="flex flex-col space-y-4">
-        {/* Dark Mode Switch */}
-        <div className="flex items-center justify-between">
-          <label htmlFor="darkModeSwitch" className="text-gray-800">
-            {darkMode ? "Dark Mode" : "Light Mode"}
-          </label>
-          
-          <button
-            id="darkModeSwitch"
-            className={`w-12 h-6 flex items-center rounded-full p-1 ${
-              darkMode ? "bg-gray-700" : "bg-yellow-500"
-            }`}
-            onClick={handleDarkModeToggle}
-          >
-            <div
-              className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                darkMode ? "translate-x-6" : "translate-x-0"
-              }`}
-            />
-        
-          </button>
-        </div>
-  
-        {/* Login/Logout Toggle */}
-=======
   useEffect(() => {
     if (darkMode) {
       background.classList.add("bg-black");
@@ -74,7 +31,6 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
           {darkMode ? "Dark Mode" : "Light Mode"}
         </label>
 
->>>>>>> 2be2d4bd952578bafaca905404b225149309c7b6
         <button
           id="darkModeSwitch"
           className={`w-12 h-6 flex items-center rounded-full p-1 ml-3 ${

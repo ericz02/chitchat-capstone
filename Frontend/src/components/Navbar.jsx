@@ -18,19 +18,11 @@ const Navbar = () => {
   const hideModal = () => {
     setIsModalVisible(false);
   };
-<<<<<<< HEAD
   return (
    
     <div className=" bg-[#526D82] py-4 fixed w-5/6">
-      <div className="flex flex-col md:flex-row items-center justify-between text-white px-4 pl-24">
+      <div className="flex md:flex-row items-center justify-between text-white px-4 pl-24">
         <div className="relative flex items-center mb-2 md:mb-0 mx-auto md:mr-auto ">
-=======
-
-  return (
-    <div className=" bg-[#526D82] py-4 fixed w-5/6">
-      <div className="  flex flex-col md:flex-row items-center justify-between text-white px-4  ">
-        <div className="relative flex items-center justify-end mb-2 ">
->>>>>>> 2be2d4bd952578bafaca905404b225149309c7b6
           <BiSearch className="text-white absolute left-4" size={20} />
           <input
             type="search"

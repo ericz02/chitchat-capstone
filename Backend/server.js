@@ -3,7 +3,6 @@ const router = express.Router();
 const app = express();
 const port = 4000;
 const Sequelize = require("sequelize");
-const counterCache = require("./services/counterCache.js");
 const { Post, Comment } = require("./models");
 require("dotenv").config();
 
@@ -28,65 +27,34 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
-//Grab all nested comments
-async function getNestedComments(comment) {
-  const nestedComments = [];
-  const replies = await Comment.findAll({
-    where: {
-      CommentableId: comment.id,
-      commentableType: "comment",
-    },
-  });
 
-  for (const reply of replies) {
-    const nestedComment = {
-      id: reply.id,
-      content: reply.content,
-      likesCount: reply.likesCount,
-      createdAt: reply.createdAt,
-      updatedAt: reply.updatedAt,
-    };
 
-    // Recursively fetch nested comments for the current reply
-    nestedComment.replies = await getNestedComments(reply);
+function includeNestedComments(model) {
+  const include = {
+    model: model,
+    as: "comments",
+    include: [],
+  };
 
-    nestedComments.push(nestedComment);
+  const commentModel = model.sequelize.models.Comment;
+  const associations = Object.values(commentModel.associations); // Get an array of association objects
+
+  for (const association of associations) {
+    if (association.associationType === "HasMany" && association.as === "replies") {
+      include.include.push(includeNestedComments(association.target));
+    }
   }
 
-  return nestedComments;
+
+  return include;
 }
 
 // Route to get all posts from the database
 app.get("/posts", async (req, res) => {
   try {
     const allPosts = await Post.findAll({
-      include: [
-        {
-          model: Comment,
-          as: "comments",
-          where: {
-            commentableType: "post",
-          },
-          //required: false,
-          /* include: [
-            {
-              model: Comment,
-              as: "replies",
-              where: {
-                commentableType: "comment",
-              },
-              required: false,
-            },
-          ], */
-        },
-      ],
+      include: [includeNestedComments(Comment)],
     });
-
-    for (const post of allPosts) {
-      for (const comment of post.comments) {
-        comment.replies = await Comment.getNestedComments(comment);
-      }
-    }
 
     res.status(200).json(allPosts);
   } catch (err) {
