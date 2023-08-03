@@ -27,36 +27,39 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
-
-
-function includeNestedComments(model) {
-  const include = {
-    model: model,
-    as: "comments",
-    include: [],
-  };
-
-  const commentModel = model.sequelize.models.Comment;
-  const associations = Object.values(commentModel.associations); // Get an array of association objects
-
-  for (const association of associations) {
-    if (association.associationType === "HasMany" && association.as === "replies") {
-      include.include.push(includeNestedComments(association.target));
-    }
-  }
-
-
-  return include;
-}
-
 // Route to get all posts from the database
 app.get("/posts", async (req, res) => {
   try {
     const allPosts = await Post.findAll({
-      include: [includeNestedComments(Comment)],
+      include: [
+        {
+          model: Comment,
+          as: "comments",
+          where: {
+            commentableType: "post",
+          },
+          required: false,
+        },
+      ],
     });
 
-    res.status(200).json(allPosts);
+    const postsWithNestedComments = await Promise.all(
+      allPosts.map(async (post) => {
+        const postJSON = post.toJSON();
+        postJSON.comments = await Promise.all(
+          post.comments.map(async (comment) => {
+            const nestedComments = await Comment.getAllNestedComments(comment);
+            return {
+              ...comment.toJSON(),
+              replies: nestedComments,
+            };
+          })
+        );
+        return postJSON;
+      })
+    );
+
+    res.status(200).json(postsWithNestedComments);
   } catch (err) {
     console.error(err);
     res.status(500).send({ message: err.message });

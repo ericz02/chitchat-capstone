@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
           commentableType: "comment",
         },
         as: "replies",
+        $recursive: true,
       });
 
       this.hasMany(models.Likes, {
@@ -41,7 +42,41 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    static async getAllNestedComments(comment) {
+      const nestedComments = await Comment.findAll({
+        where: {
+          CommentableId: comment.id,
+          commentableType: "comment",
+        },
+      });
+
+      if (!nestedComments || nestedComments.length === 0) {
+        return [];
+      }
+
+      const nestedCommentsWithReplies = await Promise.all(
+        nestedComments.map(async (reply) => {
+          const nestedComment = {
+            id: reply.id,
+            UserId: reply.UserId,
+            CommentableId: reply.CommentableId,
+            commentableType: reply.commentableType,
+            content: reply.content,
+            likesCount: reply.likesCount,
+            createdAt: reply.createdAt,
+            updatedAt: reply.updatedAt,
+          };
+
+          nestedComment.replies = await Comment.getAllNestedComments(reply);
+
+          return nestedComment;
+        })
+      );
+
+      return nestedCommentsWithReplies;
+    }
   }
+
   Comment.init(
     {
       UserId: {
