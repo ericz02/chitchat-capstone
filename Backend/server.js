@@ -1,11 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const router = express.Router();
+const chatroomRouter = require("./routes/chatrooms");
 const app = express();
 const port = 4000;
 const Sequelize = require("sequelize");
-const counterCache = require("./services/counterCache");
-const { Post, Comment, models } = require("./models");
+const counterCache = require("./services/counterCache.js");
+const { Post, Comment, Chatroom, Likes, User, UserChatRoom } = require("./models");
+
 require("dotenv").config();
 
 const dbName = process.env.DB_NAME;
@@ -17,19 +19,27 @@ const dbDialect = "postgres";
 const sequelize = new Sequelize(dbName, dbUsername, dbPassword, {
   host: dbHost,
   dialect: dbDialect,
+ });
+
+//middleware
+app.use(express.json()); // For parsing JSON data in requests
+
+//for debugging purposes, logs information about each incoming request
+app.use((req, res, next) => {
+  console.log(`Request: ${req.method} ${req.originalUrl}`);
+  res.on("finish", () => {
+    // the 'finish' event will be emitted when the response is handed over to the OS
+    console.log(`Response Status: ${res.statusCode}`);
+  });
+  next();
 });
+
 app.use(cors());
 // Welcome message for the root route of the serve
 app.get("/", (req, res) => {
   res.send("Welcome to ChitChat!");
 });
 
-app.use(cors());
-
-// Server listening on port 4000 for requests from the client
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
 
 // Route to get all posts from the database
 app.get("/posts", async (req, res) => {
@@ -73,7 +83,7 @@ app.get("/posts", async (req, res) => {
 //Get a specific post
 app.get("/posts/:id", async (req, res) => {
   const postId = parseInt(req.params.id, 10);
-
+  
   try {
     const post = await Post.findOne({
       where: { id: postId },
@@ -88,7 +98,7 @@ app.get("/posts/:id", async (req, res) => {
         },
       ],
     });
-
+    
     if (post) {
       const postJSON = post.toJSON();
       postJSON.comments = await Promise.all(
@@ -109,4 +119,12 @@ app.get("/posts/:id", async (req, res) => {
     console.error(err);
     res.status(500).send({ message: err.message });
   }
+});
+
+//routes
+app.use("/chatrooms", chatroomRouter);
+
+// Server listening on port 4000 for requests from the client
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
