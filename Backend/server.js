@@ -124,10 +124,26 @@ app.get("/chatrooms", async (req, res) => {
       console.error(err);
       res.status(500).send({ message: err.message });
     }
-  }
-);
+  });
 
 // get a chatroom by id
+app.get("/chatrooms/:id", async (req, res) => {
+
+  const chatroomId = parseInt(req.params.id, 10);
+
+  try {
+    const chatroom = await Chatroom.findOne({where: {id: chatroomId}});
+
+    if (chatroom) {
+      res.status(200).json(chatroom);
+    } else {
+      res.status(404).send({message: 'Chatroom not found'});
+    }
+  } catch (err) {
+    console.error(err);
+      res.status(500).send({ message: err.message });
+  }
+});
 
 // create a new community
 
