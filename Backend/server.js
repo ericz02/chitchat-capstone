@@ -5,15 +5,25 @@ const port = 4000;
 const { Post, Comment } = require("./models");
 require("dotenv").config();
 
+//middleware
+app.use(express.json()); // For parsing JSON data in requests
+
+//for debugging purposes, logs information about each incoming request
+app.use((req, res, next) => {
+  console.log(`Request: ${req.method} ${req.originalUrl}`);
+  res.on("finish", () => {
+    // the 'finish' event will be emitted when the response is handed over to the OS
+    console.log(`Response Status: ${res.statusCode}`);
+  });
+  next();
+});
+
 // Welcome message for the root route of the serve
 app.get("/", (req, res) => {
   res.send("Welcome to ChitChat!");
 });
 
-// Server listening on port 4000 for requests from the client
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+
 
 //Grab all nested comments
 async function getNestedComments(comment) {
@@ -24,7 +34,7 @@ async function getNestedComments(comment) {
       commentableType: "comment",
     },
   });
-
+  
   for (const reply of replies) {
     const nestedComment = {
       id: reply.id,
@@ -33,13 +43,13 @@ async function getNestedComments(comment) {
       createdAt: reply.createdAt,
       updatedAt: reply.updatedAt,
     };
-
+    
     // Recursively fetch nested comments for the current reply
     nestedComment.replies = await getNestedComments(reply);
-
+    
     nestedComments.push(nestedComment);
   }
-
+  
   return nestedComments;
 }
 
@@ -68,13 +78,13 @@ app.get("/posts", async (req, res) => {
         },
       ],
     });
-
+    
     for (const post of allPosts) {
       for (const comment of post.comments) {
         comment.replies = await Comment.getNestedComments(comment);
       }
     }
-
+    
     res.status(200).json(allPosts);
   } catch (err) {
     console.error(err);
@@ -85,13 +95,13 @@ app.get("/posts", async (req, res) => {
 //Get a specific post
 app.get("/posts/:id", async (req, res) => {
   const postId = parseInt(req.params.id, 10);
-
+  
   try {
     const post = await Post.findOne({
       where: { id: postId },
       include: [Comment],
     });
-
+    
     if (post) {
       res.status(200).json(post);
     } else {
@@ -101,4 +111,9 @@ app.get("/posts/:id", async (req, res) => {
     console.error(err);
     res.status(500).send({ message: err.message });
   }
+});
+
+// Server listening on port 4000 for requests from the client
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
