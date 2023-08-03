@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const chatroomRouter = require("./routes/chatrooms");
 const app = express();
 const port = 4000;
 const { Post, Comment, Chatroom, Likes, User, UserChatRoom } = require("./models");
@@ -113,46 +114,8 @@ app.get("/posts/:id", async (req, res) => {
   }
 });
 
-// CRUD for Chatroom
-
-//get a list of all chatrooms
-app.get("/chatrooms", async (req, res) => {
-    try {
-      const allChatrooms = await Chatroom.findAll();
-      res.status(200).json(allChatrooms);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send({ message: err.message });
-    }
-  });
-
-// get a chatroom by id
-app.get("/chatrooms/:id", async (req, res) => {
-
-  const chatroomId = parseInt(req.params.id, 10);
-
-  try {
-    const chatroom = await Chatroom.findOne({where: {id: chatroomId}});
-
-    if (chatroom) {
-      res.status(200).json(chatroom);
-    } else {
-      res.status(404).send({message: 'Chatroom not found'});
-    }
-  } catch (err) {
-    console.error(err);
-      res.status(500).send({ message: err.message });
-  }
-});
-
-// create a new community
-
-// update a chatroom by id
-
-// Delete a chatroom by ID.
-
-
-
+//routes
+app.use("/chatrooms", chatroomRouter);
 
 // Server listening on port 4000 for requests from the client
 app.listen(port, () => {
