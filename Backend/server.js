@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const app = express();
 const port = 4000;
-const { Post, Comment } = require("./models");
+const { Post, Comment, Chatroom, Likes, User, UserChatRoom } = require("./models");
 require("dotenv").config();
 
 //middleware
@@ -112,6 +112,31 @@ app.get("/posts/:id", async (req, res) => {
     res.status(500).send({ message: err.message });
   }
 });
+
+// CRUD for Chatroom
+
+//get a list of all chatrooms
+app.get("/chatrooms", async (req, res) => {
+    try {
+      const allChatrooms = await Chatroom.findAll();
+      res.status(200).json(allChatrooms);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: err.message });
+    }
+  }
+);
+
+// get a chatroom by id
+
+// create a new community
+
+// update a chatroom by id
+
+// Delete a chatroom by ID.
+
+
+
 
 // Server listening on port 4000 for requests from the client
 app.listen(port, () => {
