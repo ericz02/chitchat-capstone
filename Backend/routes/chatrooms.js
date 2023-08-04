@@ -42,6 +42,7 @@ router.get("/:id", async (req, res) => {
 router.post("/", authenticateUser, async(req,res)=>{
   try {
     const newChatroom = await Chatroom.create(req.body);
+    res.status(201).json(newJob);
   } catch (err) {
     console.log(err);
     res.status(500).send({message:err.message});
