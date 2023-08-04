@@ -6,10 +6,12 @@ const chatroomRouter = require("./routes/chatrooms");
 const postRouter = require("./routes/posts");
 const userRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
+const errorHandler = require("./middleware/errorHandler");
 const app = express();
 const port = 4000;
 const Sequelize = require("sequelize");
 const counterCache = require("./services/counterCache");
+const { authenticateUser } = require("../Backend/middleware/auth");
 const { Post, Comment, models } = require("./models");
 require("dotenv").config();
 
@@ -56,7 +58,9 @@ app.use("/chatrooms", chatroomRouter);
 app.use("/auth", authRouter);
 app.use("/posts", postRouter);
 app.use("/user", userRouter);
-
+// Connect the error handlers
+app.use(errorHandler.forbiddenErrorHandler);
+app.use(errorHandler.notFoundErrorHandler);
 // Server listening on port 4000 for requests from the client
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

@@ -1,3 +1,4 @@
+'use client'
 import Login from "@/pages/Login";
 
 const page = () => {
