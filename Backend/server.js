@@ -13,7 +13,7 @@ const counterCache = require("./services/counterCache");
 const { Post, Comment, models } = require("./models");
 require("dotenv").config();
 
-const dbName = process.env.DB_NAME;
+/* const dbName = process.env.DB_NAME;
 const dbUsername = process.env.DB_USER;
 const dbPassword = process.env.DB_PASSWORD;
 const dbHost = process.env.DB_HOST;
@@ -22,7 +22,7 @@ const dbDialect = "postgres";
 const sequelize = new Sequelize(dbName, dbUsername, dbPassword, {
   host: dbHost,
   dialect: dbDialect,
-});
+}); */
 
 app.use(cors());
 app.use(express.json());

@@ -1,7 +1,8 @@
 const { filter } = require("lodash");
 
-const counterCache = (models) => async (instance, options, next) => {
-  const type = instance.$modelOptions.name.singular;
+const counterCache = (models) => async (instance) => {
+  console.log("Instance:", instance);
+  const type = instance.constructor.name;
 
   if (type === "Post" || type === "Comment") {
     // Update likesCount only for Post and Comment models
@@ -33,8 +34,6 @@ const counterCache = (models) => async (instance, options, next) => {
       })
     );
   }
-
-  return next();
 };
 
 module.exports = counterCache;

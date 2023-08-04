@@ -1,88 +1,115 @@
 const express = require("express");
 const router = express.Router();
-const { Chatroom } = require("../models");
+const { Chatroom, Post } = require("../models");
 const { authenticateUser } = require("../middleware/auth");
 
 // functions to ensure users only update or delete their own chatrooms. depending on userChatroom role.
-const authroizeEdit = (session, chatroom)=>{/*add logic*/};
-const authorizeDelete = (session, chatroom)=>{/*add logic*/};
+const authroizeEdit = (session, chatroom) => {
+  /*add logic*/
+};
+const authorizeDelete = (session, chatroom) => {
+  /*add logic*/
+};
 // CRUD for Chatroom
 
 //get a list of all chatrooms
 router.get("/", async (req, res) => {
-    try {
-      const allChatrooms = await Chatroom.findAll();
-      res.status(200).json(allChatrooms);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send({ message: err.message });
-    }
-  });
+  try {
+    const allChatrooms = await Chatroom.findAll();
+    res.status(200).json(allChatrooms);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: err.message });
+  }
+});
 
 // get a chatroom by id
 router.get("/:id", async (req, res) => {
-
   const chatroomId = parseInt(req.params.id, 10);
 
   try {
-    const chatroom = await Chatroom.findOne({where: {id: chatroomId}});
+    const chatroom = await Chatroom.findOne({ where: { id: chatroomId } });
 
     if (chatroom) {
       res.status(200).json(chatroom);
     } else {
-      res.status(404).send({message: 'Chatroom not found'});
+      res.status(404).send({ message: "Chatroom not found" });
     }
   } catch (err) {
     console.error(err);
-      res.status(500).send({ message: err.message });
+    res.status(500).send({ message: err.message });
+  }
+});
+
+//get all chatroom posts
+router.get("/:id/posts", async (req, res) => {
+  const chatroomId = parseInt(req.params.id, 10);
+
+  try {
+    const chatroomPosts = await Post.findAll({
+      where: {
+        ChatroomId: chatroomId,
+      },
+    });
+
+    if (chatroomPosts) {
+      res.status(200).json(chatroomPosts);
+    } else {
+      res.status(404).send({ message: "Chatroom not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: err.message });
   }
 });
 
 // create a new chatroom
-router.post("/", authenticateUser, async(req,res)=>{
+router.post("/", authenticateUser, async (req, res) => {
   try {
     const newChatroom = await Chatroom.create(req.body);
     res.status(201).json(newChatroom);
   } catch (err) {
     console.log(err);
-    res.status(500).send({message:err.message});
+    res.status(500).send({ message: err.message });
   }
 });
 
-
 // update a chatroom by id
-router.patch("/:id", authenticateUser, async(req, res)=>{
-  const chatroomId = parseInt(req.params.id,10);
+router.patch("/:id", authenticateUser, async (req, res) => {
+  const chatroomId = parseInt(req.params.id, 10);
   try {
-    const[numberOfAffectedRows, affectedRows] = await Chatroom.update(req.body,{where: {id: chatroomId},returning:true});
+    const [numberOfAffectedRows, affectedRows] = await Chatroom.update(
+      req.body,
+      { where: { id: chatroomId }, returning: true }
+    );
     if (numberOfAffectedRows > 0) {
       res.status(200).json(affectedRows[0]);
-  }
-  else{
-      res.status(404).json({message:"post not found"});
-  }
+    } else {
+      res.status(404).json({ message: "post not found" });
+    }
   } catch (err) {
     console.log(err);
-    res.status(500).json({message:err.message});
+    res.status(500).json({ message: err.message });
   }
 });
 
 // Delete a chatroom by ID.
-router.delete("/:id", authenticateUser, async (req,res)=>{
+router.delete("/:id", authenticateUser, async (req, res) => {
   const chatroomId = parseInt(req.params.id, 10);
   try {
-    const deleteChatroom = await Chatroom.destroy({where: {id:chatroomId}});
+    const deleteChatroom = await Chatroom.destroy({
+      where: { id: chatroomId },
+    });
 
-    if(deleteChatroom>0){
-      res.status(200).send({message: "Chatroom deleted successfully"});
-    }else{
-      res.status(404).send({message: "Chatroom not found"});
+    if (deleteChatroom > 0) {
+      res.status(200).send({ message: "Chatroom deleted successfully" });
+    } else {
+      res.status(404).send({ message: "Chatroom not found" });
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({message:err.message});
+    res.status(500).json({ message: err.message });
   }
 });
-
 
 module.exports = router;
