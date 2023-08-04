@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Chatroom, Post } = require("../models");
+const { Chatroom, Post, UserChatRoom } = require("../models");
 const { authenticateUser } = require("../middleware/auth");
 
 // functions to ensure users only update or delete their own chatrooms. depending on userChatroom role.
@@ -110,6 +110,66 @@ router.delete("/:id", authenticateUser, async (req, res) => {
     console.log(err);
     res.status(500).json({ message: err.message });
   }
+});
+
+//get all the users in a chatroom
+router.get("/:id/users", async(req,res) =>{
+  const chatroomId = parseInt(req.params.id, 10);
+  try {
+    const users = await UserChatRoom.findAll({
+      where: { ChatroomId: chatroomId}
+    });
+
+    if(users&&users.length>0){
+      res.status(200).json(users);
+    }
+    else{
+      res.status(404).send({message:"this chatroom has no users or does not exist"});
+    }
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
+//add a user to a chatroom
+router.post("/:id/addUser/:userId", async(req,res) =>{
+  //the chatroom to add the user to and the user itself
+  const chatroomId = parseInt(req.params.id,10);
+  const userId = parseInt(req.params.userId,10);
+  try {
+    const addedUser = await UserChatRoom.create({UserId: userId, ChatroomId:chatroomId, role:"member"});
+    res.status(201).json(addedUser);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err.message });
+  }
+
+});
+
+//remove a user from a chatroom
+router.delete("/:id/removeUser/:userId", async (req,res) =>{
+  //the chatroom to remove the user from and the user itself
+  const chatroomId = parseInt(req.params.id,10);
+  const userId = parseInt(req.params.userId,10);
+  try{
+    const deletedUser = await UserChatRoom.destroy({
+      where:{UserId:userId, ChatroomId:chatroomId}
+    });
+    if(deletedUser>0){
+      res.status(200).send({message: "user Removed Successfully"});
+    }
+    else{
+      res.status(404).send({message:"chatroom or user not found."});
+    }
+    
+  }catch(err){
+    console.log(err);
+    res.status(500).json({ message: err.message });
+  }
+
 });
 
 module.exports = router;

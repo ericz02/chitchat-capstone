@@ -48,6 +48,10 @@ module.exports = (sequelize, DataTypes) => {
           CommentableId: comment.id,
           commentableType: "comment",
         },
+        attributes: {
+          // Include the 'isDeleted' attribute
+          include: ["isDeleted"],
+        },
       });
 
       if (!nestedComments || nestedComments.length === 0) {
@@ -63,6 +67,7 @@ module.exports = (sequelize, DataTypes) => {
             commentableType: reply.commentableType,
             content: reply.content,
             likesCount: reply.likesCount,
+            isDeleted: reply.isDeleted,
             createdAt: reply.createdAt,
             updatedAt: reply.updatedAt,
           };
@@ -112,6 +117,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
+      },
+      isDeleted: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
     },
     {

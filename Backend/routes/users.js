@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { User, Post, Comment } = require("../models");
+const { User, Post, Comment, UserChatRoom } = require("../models");
 
+//gets user by id
 router.get("/:id", async (req, res) => {
   const userId = parseInt(req.params.id, 10);
   try {
@@ -18,6 +19,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//get a specific users post.
 router.get("/:id/posts", async (req, res) => {
   const userId = parseInt(req.params.id, 10);
 
@@ -39,6 +41,7 @@ router.get("/:id/posts", async (req, res) => {
   }
 });
 
+//gets a users comments
 router.get("/:id/comments", async (req, res) => {
   const userId = parseInt(req.params.id, 10);
 
@@ -58,6 +61,27 @@ router.get("/:id/comments", async (req, res) => {
     console.error(err);
     res.status(500).send({ message: err.message });
   }
+});
+
+//get all chatrooms from a user.
+router.get("/:id/chatrooms", async (req, res) => {
+  const userId = parseInt(req.params.id, 10);
+
+  try {
+    const chatrooms = await UserChatRoom.findAll({
+      where:{ UserId: userId}
+    });
+    if(chatrooms&&chatrooms.length>0){
+      res.status(200).json(chatrooms);
+    }
+    else{
+      res.status(404).send({message: "this User has no chatrooms"});
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: err.message });
+  }
+
 });
 
 module.exports = router;
