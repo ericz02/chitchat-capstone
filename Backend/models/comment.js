@@ -120,9 +120,9 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "comments",
       cacheColumns: (models) => [
         {
-          model: "Comment",
+          model: "Likes",
           column: "likesCount",
-          foreignKey: "id",
+          foreignKey: "likeableId",
           where: {
             likeableType: "comment",
           },

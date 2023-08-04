@@ -67,7 +67,7 @@ router.delete("/logout", async (req, res) => {
     if (err) {
       return res.sendStatus(500);
     }
-    res.clearCookie("connected.sid");
+    res.clearCookie("connect.sid");
     return res.sendStatus(200);
   });
 });

@@ -20,7 +20,7 @@ const HomePage = () => {
 
             // Fetch chatroom data (chatroom)
             const chatroomResponse = await fetch(
-              `http://localhost:4000/chatrooms/${post.id}`
+              `http://localhost:4000/chatrooms/${post.ChatroomId}`
             );
 
             const chatroomData = await chatroomResponse.json();
