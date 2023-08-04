@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const { Chatroom } = require("../models");
+const { authenticateUser } = require("../middleware/auth");
 
-
+// functions to ensure users only update or delete their own chatrooms. depending on userChatroom role.
+const authroizeEdit = (session, chatroom)=>{/*add logic*/};
+const authorizeDelete = (session, chatroom)=>{/*add logic*/};
 // CRUD for Chatroom
 
 //get a list of all chatrooms
@@ -36,9 +39,10 @@ router.get("/:id", async (req, res) => {
 });
 
 // create a new chatroom
-router.post("/", async(req,res)=>{
+router.post("/", authenticateUser, async(req,res)=>{
   try {
     const newChatroom = await Chatroom.create(req.body);
+    res.status(201).json(newChatroom);
   } catch (err) {
     console.log(err);
     res.status(500).send({message:err.message});
@@ -47,7 +51,7 @@ router.post("/", async(req,res)=>{
 
 
 // update a chatroom by id
-router.patch("/:id", async(req, res)=>{
+router.patch("/:id", authenticateUser, async(req, res)=>{
   const chatroomId = parseInt(req.params.id,10);
   try {
     const[numberOfAffectedRows, affectedRows] = await Chatroom.update(req.body,{where: {id: chatroomId},returning:true});
@@ -64,7 +68,7 @@ router.patch("/:id", async(req, res)=>{
 });
 
 // Delete a chatroom by ID.
-router.delete("/:id", async (req,res)=>{
+router.delete("/:id", authenticateUser, async (req,res)=>{
   const chatroomId = parseInt(req.params.id, 10);
   try {
     const deleteChatroom = await Chatroom.destroy({where: {id:chatroomId}});
