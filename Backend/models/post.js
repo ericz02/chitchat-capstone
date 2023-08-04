@@ -25,6 +25,14 @@ module.exports = (sequelize, DataTypes) => {
         as: "likes",
       });
     }
+
+    get likesCount() {
+      return this.getDataValue("likesCount") || 0;
+    }
+
+    get commentsCount() {
+      return this.getDataValue("commentsCount") || 0;
+    }
   }
   Post.init(
     {
@@ -48,11 +56,16 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      likesCount: {
+      /*       likesCount: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
       },
+      commentsCount: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      }, */
       image_URL: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -73,6 +86,11 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
+      isDeleted: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     },
     {
       sequelize,
@@ -85,6 +103,14 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: "likeableId",
           where: {
             likeableType: "post",
+          },
+        },
+        {
+          model: "Comment",
+          column: "commentsCount",
+          foreignKey: "CommentableId",
+          where: {
+            commentableType: "post",
           },
         },
       ],
