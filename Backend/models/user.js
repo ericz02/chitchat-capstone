@@ -75,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
             args: true,
           },
           len: {
-            args: [3, 20],
+            args: [3, 100],//had to expand the length limit because this checks the encrypted password not the true password, encypted password is likely always longer than 20 char
             msg: "Your password must be between 3 and 20 characters",
           },
         },

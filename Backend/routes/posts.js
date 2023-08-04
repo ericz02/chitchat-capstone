@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { User, Post, Comment } = require("../models");
+const { authenticateUser } = require("../middleware/auth");
 
 const getPost = async (id) => {
   const post = await Post.findByPk(parseInt(id, 10), { include: [Comment] });
