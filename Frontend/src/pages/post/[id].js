@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 
 const Comment = ({ comment }) => {
+  
   const [user, setUser] = useState(null);
 
   useEffect(() => {
