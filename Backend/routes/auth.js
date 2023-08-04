@@ -33,6 +33,7 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
+    console.log("body", req.body);
     const user = await User.findOne({ where: { email: req.body.email } });
 
     if (user === null) {
@@ -71,5 +72,12 @@ router.delete("/logout", async (req, res) => {
     return res.sendStatus(200);
   });
 });
-
+//////////////////////////
+router.get("/check-auth", (req, res) => {
+    if (req.session.userId) {
+      res.status(200).json({ authenticated: true });
+    } else {
+      res.status(401).json({ authenticated: false });
+    }
+  });
 module.exports = router;

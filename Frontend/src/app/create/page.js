@@ -1,10 +1,7 @@
 import CreatePost from "@/pages/CreatePost";
 
 const page = () => {
-
-  return (
-    <CreatePost />
-  )
-}
+  return <CreatePost />;
+};
 
 export default page;
