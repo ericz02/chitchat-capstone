@@ -1,7 +1,7 @@
-import Profile from "@/pages/Profile";
+import Settings from "@/pages/Settings";
 
 const page = () => {
-  return <Profile />;
+  return <Settings />;
 };
 
 export default page;
