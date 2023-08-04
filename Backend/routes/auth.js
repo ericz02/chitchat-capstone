@@ -13,6 +13,7 @@ router.post("/signup", async (req,res)=> {
             email: req.body.email,
             password: hashedPassword
         });
+        // req.session.userId = user.id; //for if we want to automatically login user after they have signed up.
         res.status(201).json({
             message: "User Created Successfully",
             user:{
@@ -24,13 +25,51 @@ router.post("/signup", async (req,res)=> {
         });
     }
     catch(err){
-        
+        res.status(500).json({
+            message: "Error occurred while creating user",
+            error: err,
+          });
 
     }
 });
 
-router.post("/login", async (req,res)=> {});
+router.post("/login", async (req,res)=> {
+    try {
+        const user = await User.findOne({where:{email:req.body.email}});
 
-router.delete("/logout", async (req,res)=> {});
+        if(user===null){//check to see if the user is actually in the database.
+            return res.status(401).json({message:'Incorrect credentials',});
+        }
+
+        //if the user is valid check to see if the password is valid.
+        bcrypt.compare(req.body.password, user.password, (error, result) =>{
+            if(result){
+                req.session.userId = user.id;
+                res.status(200).json({
+                    message: 'Logged in successfully',
+                    user:{
+                        name:user.name,
+                        email:user.email,
+                    }
+                });
+            }else{
+                res.status(401).json({message:'Incorrect credentials'});
+            }
+        });
+
+    } catch (err) {
+        res.status(500).json({message:'An error occured during the login process'});
+    }
+});
+
+router.delete("/logout", async (req,res)=> {
+    req.session.destroy(err=>{
+        if(err){
+            return res.sendStatus(500);
+        }
+        res.clearCookie('connected.sid');
+        return res.sendStatus(200);
+    });
+});
 
 module.exports = router;

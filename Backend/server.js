@@ -1,4 +1,5 @@
 const express = require("express");
+const session = require('express-session');
 const cors = require("cors");
 const router = express.Router();
 const chatroomRouter = require("./routes/chatrooms");
@@ -23,8 +24,6 @@ const sequelize = new Sequelize(dbName, dbUsername, dbPassword, {
  });
 
 //middleware
-app.use(express.json()); // For parsing JSON data in requests
-
 //for debugging purposes, logs information about each incoming request
 app.use((req, res, next) => {
   console.log(`Request: ${req.method} ${req.originalUrl}`);
@@ -34,6 +33,19 @@ app.use((req, res, next) => {
   });
   next();
 });
+
+// For parsing JSON data in requests
+app.use(express.json()); 
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 3600000 // currently set to 1 hour
+  },
+}));
+
 
 app.use(cors());
 // Welcome message for the root route of the serve
