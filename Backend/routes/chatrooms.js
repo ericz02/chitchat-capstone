@@ -3,7 +3,7 @@ const router = express.Router();
 const { Chatroom } = require("../models");
 const { authenticateUser } = require("../middleware/auth");
 
-// functions to ensure users only update or delete their own chatrooms.
+// functions to ensure users only update or delete their own chatrooms. depending on userChatroom role.
 const authroizeEdit = (session, chatroom)=>{/*add logic*/};
 const authorizeDelete = (session, chatroom)=>{/*add logic*/};
 // CRUD for Chatroom
