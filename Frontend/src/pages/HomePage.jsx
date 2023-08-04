@@ -1,6 +1,7 @@
 'use client'
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { FaTh, FaThumbsUp } from "react-icons/fa";
 
 
 const HomePage = () => {
@@ -31,12 +32,19 @@ const HomePage = () => {
       </div>
 
       {posts.map((post) => (
-        
-        <div key={post.id} className="bg-white p-4 rounded-md shadow-md mb-4">
-          console.log(post)
-          <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
+        <Link href={`/post/${post.id}`} key={post.id}>
+          
+        <div key={post.id} className="bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 flex md:flex-col items-center " > 
+          <div className="flex flex-col justify-center mb-4">
+            <h2 className="text-xl font-semibold">{post.title}</h2>
+            {/* Add the post details, e.g., author, date, etc., here */}
+          </div>
           <p className="text-gray-600">{post.content}</p>
+          <div className="flex items-center mt-4">
+          </div>
         </div>
+        </Link>
+        
       ))}
     </div>
   );

@@ -1,11 +1,12 @@
 import ViewPost from "@/pages/ViewPost";
 
 const page = () => {
-  return (
+  return 
+  (
     <div>
-      <ViewPost />
-    </div>
+    <ViewPost />;
+  </div>
   )
-}
+};
 
 export default page;

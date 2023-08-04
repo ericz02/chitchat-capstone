@@ -17,9 +17,9 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
   
   useEffect(() => {
     if (darkMode) {
-      background.classList.add("bg-black");
+      background.classList.add("bg-gray-500");
     } else {
-      background.classList.remove("bg-black");
+      background.classList.remove("bg-gray-500");
     }
   }, [darkMode]);
 
