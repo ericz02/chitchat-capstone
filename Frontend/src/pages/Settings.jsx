@@ -29,7 +29,7 @@ const Settings = ({ userId }) => {
             <div className="flex flex-row justify-evenly">
               <div>
                 <img
-                  src="/female-icon.png" // Replace with the actual image path
+                  src={userData.profilePicture} // Replace with the actual image path
                   alt="Logo"
                   width={100}
                   height={100}
@@ -51,7 +51,6 @@ const Settings = ({ userId }) => {
                   </button>
                 </p>
               </div>
-
             </div>
           </>
         ) : (
