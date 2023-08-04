@@ -1,4 +1,3 @@
-"use client";
 import RootLayout from "@/app/layout";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
