@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 
 const Comment = ({ comment }) => {
-  
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -31,23 +30,22 @@ const Comment = ({ comment }) => {
           <FaUserCircle className="w-8 h-8 mr-2 text-gray-500" />
         )}
         <div>
-        {user && <span className="font-semibold">{user.userName}</span>}
-  
-      </div>
+          {user && <span className="font-semibold">{user.userName}</span>}
+        </div>
       </div>
       <p className="text-gray-600">{comment.content}</p>
       {comment.createdAt && (
-          <span className="text-gray-500 text-xs">{formatDate(comment.createdAt)}</span>
-        )}
+        <span className="text-gray-500 text-xs">
+          {formatDate(comment.createdAt)}
+        </span>
+      )}
       {comment.replies && comment.replies.length > 0 && (
         <div className="mt-2">
           {comment.replies.map((reply) => (
             <Comment key={reply.id} comment={reply} />
           ))}
-    
         </div>
       )}
-
     </div>
   );
 };
