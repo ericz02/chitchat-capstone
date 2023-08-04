@@ -1,10 +1,10 @@
-const Settings = () => {
+const Profile = () => {
 
   return (
     <div className="bg-[#FFFFFF] p-4 flex flex-col justify-center">
-      this is the settings page
+      this is the Profile page
     </div>
   )
 }
 
-export default Settings;
+export default Profile;

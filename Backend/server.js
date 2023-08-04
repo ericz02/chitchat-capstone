@@ -26,7 +26,12 @@ const sequelize = new Sequelize(dbName, dbUsername, dbPassword, {
   dialect: dbDialect,
 }); */
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Replace with the URL of your frontend
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use((req, res, next) => {
