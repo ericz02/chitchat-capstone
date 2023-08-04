@@ -75,8 +75,24 @@ module.exports = (sequelize, DataTypes) => {
             args: true,
           },
           len: {
-            args: [3, 100],//had to expand the length limit because this checks the encrypted password not the true password, encypted password is likely always longer than 20 char
+            args: [3, 100], //had to expand the length limit because this checks the encrypted password not the true password, encypted password is likely always longer than 20 char
             msg: "Your password must be between 3 and 20 characters",
+          },
+        },
+      },
+      profilePicture: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7aYKpm6-eaTSFFUBagnmL23fzGsu4j3H7ag&usqp=CAU",
+      },
+      aboutMe: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        validate: {
+          len: {
+            args: [0, 500],
+            msg: "Your about me should be less than 500 characters",
           },
         },
       },
