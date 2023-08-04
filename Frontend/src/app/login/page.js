@@ -1,9 +1,7 @@
 import Login from "@/pages/Login";
 
 const page = () => {
-  return (
-    <Login />
-  )
-}
+  return <Login />;
+};
 
 export default page;

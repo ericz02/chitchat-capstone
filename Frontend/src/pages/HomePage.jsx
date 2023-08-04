@@ -18,7 +18,7 @@ const HomePage = () => {
 
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-4xl pl-16">
       <div className="flex flex-col justify-center mb-4">
         <div className="flex flex-col items-center ml-4 pr-6">
           <Link href="/create">
@@ -34,7 +34,7 @@ const HomePage = () => {
       {posts.map((post) => (
         <Link href={`/post/${post.id}`} key={post.id}>
           
-        <div key={post.id} className="bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 flex md:flex-col items-center " > 
+        <div key={post.id} className="bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start" > 
           <div className="flex flex-col justify-center mb-4">
             <h2 className="text-xl font-semibold">{post.title}</h2>
             {/* Add the post details, e.g., author, date, etc., here */}
