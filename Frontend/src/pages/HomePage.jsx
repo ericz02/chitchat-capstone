@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { FaThumbsUp, FaCommentDots } from "react-icons/fa";
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
-  const [authenticated, setAuthenticated] = useState(false);
+
 
   useEffect(() => {
     // Fetch posts from the server

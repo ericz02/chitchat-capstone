@@ -1,7 +1,24 @@
 const express = require("express");
+const passport = require("passport");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { User } = require("../models");
+
+
+router.get("/current_user", async (req, res) => {
+  if (req.session.userId) {
+    const user = await User.findByPk(req.session.userId);
+    return res.status(200).json({
+      user: {
+        id: user.id,
+        email: user.email,
+        userName: user.userName,
+      }
+    });
+  } else {
+    return res.status(401).json({user: null})
+  }
+});
 
 router.post("/signup", async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -72,12 +89,5 @@ router.delete("/logout", async (req, res) => {
     return res.sendStatus(200);
   });
 });
-//////////////////////////
-router.get("/check-auth", (req, res) => {
-    if (req.session.userId) {
-      res.status(200).json({ authenticated: true });
-    } else {
-      res.status(401).json({ authenticated: false });
-    }
-  });
+
 module.exports = router;

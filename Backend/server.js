@@ -15,21 +15,24 @@ const { authenticateUser } = require("../Backend/middleware/auth");
 const { Post, Comment, models } = require("./models");
 require("dotenv").config();
 
-/* const dbName = process.env.DB_NAME;
-const dbUsername = process.env.DB_USER;
-const dbPassword = process.env.DB_PASSWORD;
-const dbHost = process.env.DB_HOST;
-const dbDialect = "postgres";
+//  const dbName = process.env.DB_NAME;
+// const dbUsername = process.env.DB_USER;
+// const dbPassword = process.env.DB_PASSWORD;
+// const dbHost = process.env.DB_HOST;
+// const dbDialect = "postgres";
 
-const sequelize = new Sequelize(dbName, dbUsername, dbPassword, {
-  host: dbHost,
-  dialect: dbDialect,
-}); */
+
+// const sequelize = new Sequelize(dbName, dbUsername, dbPassword, {
+//   host: dbHost,
+//   dialect: dbDialect,
+// }); 
 
 app.use(
   cors({
     origin: "http://localhost:3000", // Replace with the URL of your frontend
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PATCH", "DELETE"],
   })
 );
 app.use(express.json());
