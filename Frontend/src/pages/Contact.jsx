@@ -1,32 +1,31 @@
 const Contact = () => {
   return (
-    <div class="container my-[24px] mt-[70px] mx-auto md:px-6">
-      <section class="mb-32">
-        <div class="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-          <div class="flex flex-wrap items-center">
-            <div class="block w-full shrink-0 grow-0 basis-auto lg:flex lg:w-6/12 xl:w-4/12">
-              <div class="h-[500px] w-full">
+    <div className="container my-[24px] mt-[70px] mx-auto md:px-6">
+      <section className="mb-32">
+        <div className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+          <div className="flex flex-wrap items-center">
+            <div className="block w-full shrink-0 grow-0 basis-auto lg:flex lg:w-6/12 xl:w-4/12">
+              <div className="h-[500px] w-full">
                 <iframe
                   src="https://maps.google.com/maps?q=manhatan&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                  class="left-0 top-0 h-full w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
-                  frameborder="0"
+                  className="left-0 top-0 h-full w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg border-0"
                   allowfullscreen
                 ></iframe>
               </div>
             </div>
-            <div class="w-full shrink-0 grow-0 basis-auto lg:w-6/12 xl:w-8/12">
-              <div class="flex flex-wrap px-3 pt-12 pb-12 md:pb-0 lg:pt-0">
-                <div class="mb-12 w-full shrink-0 grow-0 basis-auto px-3 md:w-6/12 md:px-6 lg:w-full xl:w-6/12 xl:px-12">
-                  <div class="flex items-start">
-                    <div class="shrink-0">
-                      <div class="inline-block rounded-md bg-primary-100 p-4 text-primary">
+            <div className="w-full shrink-0 grow-0 basis-auto lg:w-6/12 xl:w-8/12">
+              <div className="flex flex-wrap px-3 pt-12 pb-12 md:pb-0 lg:pt-0">
+                <div className="mb-12 w-full shrink-0 grow-0 basis-auto px-3 md:w-6/12 md:px-6 lg:w-full xl:w-6/12 xl:px-12">
+                  <div className="flex items-start">
+                    <div className="shrink-0">
+                      <div className="inline-block rounded-md bg-primary-100 p-4 text-primary">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke-width="2"
                           stroke="currentColor"
-                          class="h-6 w-6"
+                          className="h-6 w-6"
                         >
                           <path
                             stroke-linecap="round"
@@ -36,30 +35,30 @@ const Contact = () => {
                         </svg>
                       </div>
                     </div>
-                    <div class="ml-6 grow">
-                      <p class="mb-2 font-bold dark:text-white">
+                    <div className="ml-6 grow">
+                      <p className="mb-2 font-bold dark:text-white">
                         Technical support
                       </p>
-                      <p class="text-neutral-500 dark:text-neutral-200">
+                      <p className="text-neutral-500 dark:text-neutral-200">
                         chitchat@tech.com
                       </p>
-                      <p class="text-neutral-500 dark:text-neutral-200">
+                      <p className="text-neutral-500 dark:text-neutral-200">
                         +1 234-567-89
                       </p>
                     </div>
                   </div>
                 </div>
-                <div class="mb-12 w-full shrink-0 grow-0 basis-auto px-3 md:w-6/12 md:px-6 lg:w-full xl:w-6/12 xl:px-12">
-                  <div class="flex items-start">
-                    <div class="shrink-0">
-                      <div class="inline-block rounded-md bg-primary-100 p-4 text-primary">
+                <div className="mb-12 w-full shrink-0 grow-0 basis-auto px-3 md:w-6/12 md:px-6 lg:w-full xl:w-6/12 xl:px-12">
+                  <div className="flex items-start">
+                    <div className="shrink-0">
+                      <div className="inline-block rounded-md bg-primary-100 p-4 text-primary">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke-width="2"
                           stroke="currentColor"
-                          class="h-6 w-6"
+                          className="h-6 w-6"
                         >
                           <path
                             stroke-linecap="round"
@@ -69,30 +68,30 @@ const Contact = () => {
                         </svg>
                       </div>
                     </div>
-                    <div class="ml-6 grow">
-                      <p class="mb-2 font-bold dark:text-white">
+                    <div className="ml-6 grow">
+                      <p className="mb-2 font-bold dark:text-white">
                         Sales questions
                       </p>
-                      <p class="text-neutral-500 dark:text-neutral-200">
+                      <p className="text-neutral-500 dark:text-neutral-200">
                         chitchat@sales.com
                       </p>
-                      <p class="text-neutral-500 dark:text-neutral-200">
+                      <p className="text-neutral-500 dark:text-neutral-200">
                         +1 234-567-89
                       </p>
                     </div>
                   </div>
                 </div>
-                <div class="mb-12 w-full shrink-0 grow-0 basis-auto px-3 md:w-6/12 md:px-6 lg:w-full xl:mb-0 xl:w-6/12 xl:px-12">
-                  <div class="align-start flex">
-                    <div class="shrink-0">
-                      <div class="inline-block rounded-md bg-primary-100 p-4 text-primary">
+                <div className="mb-12 w-full shrink-0 grow-0 basis-auto px-3 md:w-6/12 md:px-6 lg:w-full xl:mb-0 xl:w-6/12 xl:px-12">
+                  <div className="align-start flex">
+                    <div className="shrink-0">
+                      <div className="inline-block rounded-md bg-primary-100 p-4 text-primary">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke-width="2"
                           stroke="currentColor"
-                          class="h-6 w-6"
+                          className="h-6 w-6"
                         >
                           <path
                             stroke-linecap="round"
@@ -102,28 +101,28 @@ const Contact = () => {
                         </svg>
                       </div>
                     </div>
-                    <div class="ml-6 grow">
-                      <p class="mb-2 font-bold dark:text-white">Press</p>
-                      <p class="text-neutral-500 dark:text-neutral-200">
+                    <div className="ml-6 grow">
+                      <p className="mb-2 font-bold dark:text-white">Press</p>
+                      <p className="text-neutral-500 dark:text-neutral-200">
                         chitchat@press.com
                       </p>
-                      <p class="text-neutral-500 dark:text-neutral-200">
+                      <p className="text-neutral-500 dark:text-neutral-200">
                         +1 234-567-89
                       </p>
                     </div>
                   </div>
                 </div>
-                <div class="w-full shrink-0 grow-0 basis-auto px-3 md:w-6/12 md:px-6 lg:w-full xl:w-6/12 xl:px-12">
-                  <div class="align-start flex">
-                    <div class="shrink-0">
-                      <div class="inline-block rounded-md bg-primary-100 p-4 text-primary">
+                <div className="w-full shrink-0 grow-0 basis-auto px-3 md:w-6/12 md:px-6 lg:w-full xl:w-6/12 xl:px-12">
+                  <div className="align-start flex">
+                    <div className="shrink-0">
+                      <div className="inline-block rounded-md bg-primary-100 p-4 text-primary">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke-width="2"
                           stroke="currentColor"
-                          class="h-6 w-6"
+                          className="h-6 w-6"
                         >
                           <path
                             stroke-linecap="round"
@@ -133,12 +132,14 @@ const Contact = () => {
                         </svg>
                       </div>
                     </div>
-                    <div class="ml-6 grow">
-                      <p class="mb-2 font-bold dark:text-white">Bug report</p>
-                      <p class="text-neutral-500 dark:text-neutral-200">
+                    <div className="ml-6 grow">
+                      <p className="mb-2 font-bold dark:text-white">
+                        Bug report
+                      </p>
+                      <p className="text-neutral-500 dark:text-neutral-200">
                         chitchat@bugs.com
                       </p>
-                      <p class="text-neutral-500 dark:text-neutral-200">
+                      <p className="text-neutral-500 dark:text-neutral-200">
                         +1 234-567-89
                       </p>
                     </div>
