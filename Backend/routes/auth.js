@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { User } = require("../models");
 
+
 router.post("/signup", async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   try {
@@ -84,21 +85,15 @@ router.get("/check-auth", (req, res) => {
 
 //to get the currently logged in users Id
 router.get("/getId", async(req,res) =>{
-  // if (req.session.user) {
-  //   const userId = req.session.user;
-  //   res.status(200).json({userId});
-  // } else {
-  //   res.status(401).json({ id: null });
-  // }
   
   const userId = req.session.user;
   try {
     const user = await User.findOne({where:{id:userId}});
     if(user){
-      res.status(200).json(user); 
+      res.status(200).json(user);//{id:user.id} 
     }
     else{
-      res.status(404).json({user:{id:null}});
+      res.status(404).send({ message: "user not found" });
     }
   } catch (err) {
     console.error(err);

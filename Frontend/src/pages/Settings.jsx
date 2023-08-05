@@ -5,11 +5,18 @@ import { useState, useEffect } from "react";
 const Settings = ({ userId }) => {
   const [userData, setUserData] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-
+  const [user, setUser] = useState({});
+  useEffect(() =>{
+    fetch(`http://localhost:4000/auth/getId`)
+      .then((response) => response.json())
+      .then((data) => {setUser(data)})
+      .catch((error) => console.error("Error fetching user data:", error));
+  },[]);
+console.log(user);
   useEffect(() => {
     // Fetch user data from the server
     // Fixed for now, but we need to change this to fetch the user data for the logged in user
-    fetch(`http://localhost:4000/user/${userId}`)
+    fetch(`http://localhost:4000/user/${userId}`)/*http://localhost:4000/auth/getId */
       .then((response) => response.json())
       .then((data) => {
         setUserData(data);
@@ -41,7 +48,7 @@ const Settings = ({ userId }) => {
                 <p>My Username: {userData.userName}</p>
                 <p>My Email: {userData.email}</p>
                 <p>
-                  My Password: _{userId}_  {showPassword ? userData.password : "********"}
+                  My Password: _{userId}_  _{user.id}_ {showPassword ? userData.password : "********"}
                   <button
                     type="button" // Add this to prevent the button from triggering form submission
                     className="ml-2 underline text-blue-500"
