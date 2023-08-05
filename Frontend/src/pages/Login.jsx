@@ -31,7 +31,8 @@ const Login = () => {
         router.push("/");
       } else {
         // Handle signup error
-        console.error("Signup failed.");
+        console.error("login failed.");
+        window.alert("Incorrect Credentials");
       }
     } catch (error) {
       setError(error.message);
@@ -53,6 +54,7 @@ const Login = () => {
         console.error("Error checking authentication:", error);
       });
   }, []);
+
   return (
     <div className="bg-[#cee2ff] p-2 ">
       <Link href="/">

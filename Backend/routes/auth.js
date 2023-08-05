@@ -45,6 +45,7 @@ router.post("/login", async (req, res) => {
     bcrypt.compare(req.body.password, user.password, (error, result) => {
       if (result) {
         req.session.userId = user.id;
+        req.session.user = user.id;//this will store the currently logged in user id so that we can use this variable to identify who is logged in at that time.
         res.status(200).json({
           message: "Logged in successfully",
           user: {
@@ -80,4 +81,29 @@ router.get("/check-auth", (req, res) => {
       res.status(401).json({ authenticated: false });
     }
   });
+
+//to get the currently logged in users Id
+router.get("/getId", async(req,res) =>{
+  // if (req.session.user) {
+  //   const userId = req.session.user;
+  //   res.status(200).json({userId});
+  // } else {
+  //   res.status(401).json({ id: null });
+  // }
+  
+  const userId = req.session.user;
+  try {
+    const user = await User.findOne({where:{id:userId}});
+    if(user){
+      res.status(200).json(user); 
+    }
+    else{
+      res.status(404).json({user:{id:null}});
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: err.message });
+  }
+
+});
 module.exports = router;

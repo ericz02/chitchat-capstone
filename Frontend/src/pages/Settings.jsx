@@ -9,14 +9,14 @@ const Settings = ({ userId }) => {
   useEffect(() => {
     // Fetch user data from the server
     // Fixed for now, but we need to change this to fetch the user data for the logged in user
-    fetch(`http://localhost:4000/user/1`)
+    fetch(`http://localhost:4000/user/${userId}`)
       .then((response) => response.json())
       .then((data) => {
         setUserData(data);
       })
       .catch((error) => console.error("Error fetching user data:", error));
   }, [userId]);
-
+    
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
@@ -41,7 +41,7 @@ const Settings = ({ userId }) => {
                 <p>My Username: {userData.userName}</p>
                 <p>My Email: {userData.email}</p>
                 <p>
-                  My Password: {showPassword ? userData.password : "********"}
+                  My Password: _{userId}_  {showPassword ? userData.password : "********"}
                   <button
                     type="button" // Add this to prevent the button from triggering form submission
                     className="ml-2 underline text-blue-500"
