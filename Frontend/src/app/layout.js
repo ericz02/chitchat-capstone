@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Sidebar from "@/components/Sidebar";
-import { AuthProvider } from "./contexts/AuthContext";
+import AuthProvider from "./contexts/AuthContext";
 
 //const inter = Inter({ subsets: ["latin"] });
 
@@ -23,9 +23,7 @@ export default function RootLayout({children }) {
               <div>
                 <Navbar />
               </div>
-              <div className="flex flex-col flex-1 mt-20">
-                {children}
-              </div>
+              <div className="flex flex-col flex-1 mt-20">{children}</div>
             </div>
           </div>
           <Footer />

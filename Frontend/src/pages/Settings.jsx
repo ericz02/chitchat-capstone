@@ -1,25 +1,30 @@
 "use client";
+import { useContext, useState, useEffect } from "react";
+import { AuthContext } from "@/app/contexts/AuthContext";
 
-import { useState, useEffect } from "react";
-
-const Settings = ({ userId }) => {
+const Settings = () => {
+  const { currentUser } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    // Fetch user data from the server
-    // Fixed for now, but we need to change this to fetch the user data for the logged in user
-    fetch(`http://localhost:4000/user/1`)
-      .then((response) => response.json())
-      .then((data) => {
-        setUserData(data);
-      })
-      .catch((error) => console.error("Error fetching user data:", error));
-  }, [userId]);
+    if (currentUser) {
+      console.log(currentUser);
+      // Fetch user data from the server for the logged-in user
+      fetch(`http://localhost:4000/user/${currentUser.id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setUserData(data);
+        })
+        .catch((error) => console.error("Error fetching user data:", error));
+    }
+  }, [currentUser]);
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
+
+  console.log(userData);
 
   return (
     <div className="bg-[#FFFFFF] p-4 flex justify-center">
@@ -29,7 +34,7 @@ const Settings = ({ userId }) => {
             <div className="flex flex-row justify-evenly">
               <div>
                 <img
-                  src="/female-icon.png" // Replace with the actual image path
+                  src={userData.profilePicture} // Replace with the actual image path
                   alt="Logo"
                   width={100}
                   height={100}
@@ -51,7 +56,6 @@ const Settings = ({ userId }) => {
                   </button>
                 </p>
               </div>
-
             </div>
           </>
         ) : (

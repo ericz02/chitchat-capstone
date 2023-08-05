@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { FaThumbsUp, FaCommentDots } from "react-icons/fa";
+import { FaCommentDots, FaThumbsUp } from "react-icons/fa";
+
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
-
 
   useEffect(() => {
     // Fetch posts from the server
@@ -17,9 +17,10 @@ const HomePage = () => {
             const userResponse = await fetch(
               `http://localhost:4000/user/${post.UserId}`
             );
+
             // Fetch chatroom data (chatroom)
             const chatroomResponse = await fetch(
-              `http://localhost:4000/chatrooms/${post.id}`
+              `http://localhost:4000/chatrooms/${post.ChatroomId}`
             );
 
             const chatroomData = await chatroomResponse.json();
@@ -80,4 +81,5 @@ const HomePage = () => {
     </div>
   );
 };
+
 export default HomePage;

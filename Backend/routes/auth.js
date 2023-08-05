@@ -1,9 +1,7 @@
 const express = require("express");
-const passport = require("passport");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { User } = require("../models");
-
 
 router.get("/current_user", async (req, res) => {
   if (req.session.userId) {
@@ -12,11 +10,15 @@ router.get("/current_user", async (req, res) => {
       user: {
         id: user.id,
         email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
         userName: user.userName,
-      }
+        password: user.password,
+        profilePicture: user.profilePicture,
+      },
     });
   } else {
-    return res.status(401).json({user: null})
+    return res.status(401).json({ user: null });
   }
 });
 
@@ -62,10 +64,12 @@ router.post("/login", async (req, res) => {
     bcrypt.compare(req.body.password, user.password, (error, result) => {
       if (result) {
         req.session.userId = user.id;
+
         res.status(200).json({
           message: "Logged in successfully",
           user: {
-            name: user.name,
+            id: user.id,
+            name: user.firstName,
             email: user.email,
           },
         });
@@ -89,5 +93,12 @@ router.delete("/logout", async (req, res) => {
     return res.sendStatus(200);
   });
 });
-
+//////////////////////////
+router.get("/check-auth", (req, res) => {
+  if (req.session.userId) {
+    res.status(200).json({ authenticated: true });
+  } else {
+    res.status(401).json({ authenticated: false });
+  }
+});
 module.exports = router;
