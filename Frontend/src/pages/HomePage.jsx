@@ -9,44 +9,28 @@ const HomePage = () => {
   useEffect(() => {
     // Fetch posts from the server
     fetch("http://localhost:4000/posts")
-    .then((response) => response.json())
-    .then(async (data) => {
-      // Fetch user details for each post
-      const postsWithUserDetails = await Promise.all(
-        data.map(async (post) => {
-          const userResponse = await fetch(
-            `http://localhost:4000/user/${post.UserId}`
-          );
- // Fetch chatroom data (chatroom)
- const chatroomResponse = await fetch(
-  `http://localhost:4000/chatrooms/${post.id}`
-);
+      .then((response) => response.json())
+      .then(async (data) => {
+        // Fetch user details for each post
+        const postsWithUserDetails = await Promise.all(
+          data.map(async (post) => {
+            const userResponse = await fetch(
+              `http://localhost:4000/user/${post.UserId}`
+            );
+            // Fetch chatroom data (chatroom)
+            const chatroomResponse = await fetch(
+              `http://localhost:4000/chatrooms/${post.id}`
+            );
 
-const chatroomData = await chatroomResponse.json();
-const userData = await userResponse.json();
+            const chatroomData = await chatroomResponse.json();
+            const userData = await userResponse.json();
 
-return { ...post, user: userData, chatroom: chatroomData };
-})
-);
-setPosts(postsWithUserDetails);
-})
-.catch((error) => console.error("Error fetching posts:", error));
-
-    // Check if the user is authenticated
-    fetch("http://localhost:4000/auth/check-auth", {
-      credentials: "include", // To include the session cookie
-    })
-      .then((response) => {
-        if (response.ok) {
-          setAuthenticated(true);
-        } else {
-          setAuthenticated(false);
-        }
+            return { ...post, user: userData, chatroom: chatroomData };
+          })
+        );
+        setPosts(postsWithUserDetails);
       })
-      .catch((error) => {
-        console.error("Error checking authentication:", error);
-        setAuthenticated(false);
-      });
+      .catch((error) => console.error("Error fetching posts:", error));
   }, []);
 
   return (
