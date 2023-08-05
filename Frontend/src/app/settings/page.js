@@ -8,7 +8,7 @@ async function getUser(){
 const User = getUser();
 
 const page = () => {
-  return <Settings userId = {User.id}/>;
+  return <Settings userId = {typeof User.id}/>;
 };
 
 export default page;
