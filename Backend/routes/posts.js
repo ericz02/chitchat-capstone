@@ -191,11 +191,11 @@ module.exports = (db) => {
   });
 
   //create a new comment to a post
-  router.post("/:id/comments", authenticateUser, async (req, res) => {
+  router.post("/:id/comments", async (req, res) => {
     const postId = parseInt(req.params.id, 10);
     const content = req.body.content;
     const userId = req.session.userId;
-
+    console.log("Received new comment:", { postId, content, userId });
     try {
       const newComment = await Comment.create({
         content: content,

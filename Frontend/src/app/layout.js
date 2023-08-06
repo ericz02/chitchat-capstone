@@ -12,7 +12,7 @@ const metadata = {
   description: "A forum based social media platform.",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({children }) {
   return (
     <AuthProvider>
       <html lang="en">
