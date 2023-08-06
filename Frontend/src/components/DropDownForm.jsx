@@ -1,8 +1,9 @@
-"use client";
-import { useState, useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { AuthContext } from "@/app/contexts/AuthContext";
 import Link from "next/link";
+
 const DropdownForm = ({ darkMode, setDarkMode }) => {
-  const [loggedIn, setLoggedIn] = useState(true);
+  const { currentUser, logout } = useContext(AuthContext);
 
   const handleDarkModeToggle = () => {
     setDarkMode((prevDarkMode) => !prevDarkMode);
@@ -10,11 +11,19 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
 
   const handleLoginLogoutToggle = () => {
     // Add your logic here for handling login/logout
-    setLoggedIn((prevLoggedIn) => !prevLoggedIn);
+    if (currentUser) {
+      // If the user is logged in, perform logout
+      logout();
+    } else {
+      // If the user is not logged in, redirect to the login page
+      // You can add the appropriate route for the login page below
+      // Replace "/login" with your actual login page route
+      window.location.href = "/login";
+    }
   };
 
   let background = document.getElementById("dynamic_page");
-  
+
   useEffect(() => {
     if (darkMode) {
       background.classList.add("bg-gray-500");
@@ -47,12 +56,12 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
       </div>
 
       {/* Login/Logout Toggle */}
-      <Link href="/login"
+      <button
         onClick={handleLoginLogoutToggle}
         className="bg-blue-500 text-white px-4 py-2 rounded"
       >
-        {loggedIn ? "Logout" : "Login"}
-      </Link>
+        {currentUser ? "Logout" : "Login"}
+      </button>
     </div>
   );
 };
