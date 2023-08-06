@@ -62,13 +62,16 @@ app.get("/", (req, res) => {
   res.send("Welcome to ChitChat!");
 });
 
+// Connect the error handlers
+app.use(errorHandler.forbiddenErrorHandler);
+app.use(errorHandler.notFoundErrorHandler);
+
+
 app.use("/chatrooms", chatroomRouter);
 app.use("/auth", authRouter);
 app.use("/posts", postRouter);
 app.use("/user", userRouter);
-// Connect the error handlers
-app.use(errorHandler.forbiddenErrorHandler);
-app.use(errorHandler.notFoundErrorHandler);
+
 // Server listening on port 4000 for requests from the client
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
