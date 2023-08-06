@@ -213,6 +213,32 @@ module.exports = (db) => {
     }
   });
 
+  //create a reply to a comment
+  router.post("/:id/replyComments", async (req, res) => {
+    const postId = parseInt(req.params.id, 10);
+    const content = req.body.content;
+    const userId = req.session.userId;
+    console.log("Received new comment:", { postId, content, userId });
+    try {
+      const newComment = await Comment.create({
+        content: content,
+        UserId: userId,
+        CommentableId: postId,
+        commentableType: "comment",
+      });
+
+      res.status(201).json({
+        message: "Reply created succesfully",
+        comment: newComment,
+      });
+    } catch (err) {
+      handleErrors(err, res);
+    }
+  });
+
+
+
+
   //update a specific post
   router.patch("/:id", authenticateUser, async (req, res) => {
     try {
