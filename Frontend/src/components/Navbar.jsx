@@ -1,16 +1,22 @@
-"use client";
+"use client"
+
 import { BiSearch } from "react-icons/bi";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Modal from "../ui/Modal";
 import DropdownForm from "./DropDownForm";
+import { AuthContext } from "@/app/contexts/AuthContext"; // Import the AuthContext
 
 const Navbar = () => {
+  const { currentUser } = useContext(AuthContext); // Access the currentUser from the AuthContext
+
   const handleLogoClick = () => {
     // Add your logic here for what should happen when the logo is clicked
     // For example, you can navigate to a different page using 'window.location.href'
   };
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -18,21 +24,21 @@ const Navbar = () => {
   const hideModal = () => {
     setIsModalVisible(false);
   };
+
   return (
-   
-    <div className=" bg-[#526D82] py-4 fixed w-5/6">
+    <div className="bg-[#526D82] py-4 fixed w-5/6">
       <div className="flex md:flex-row items-center justify-between text-white px-4 pl-24">
-        <div className="relative flex items-center mb-2 md:mb-0 mx-auto md:mr-auto ">
+        <div className="relative flex items-center mb-2 md:mb-0 mx-auto md:mr-auto">
           <BiSearch className="text-white absolute left-4" size={20} />
           <input
             type="search"
-            className="p-3 pl-10 w-full md:w-[400px] bg-transparent rounded-[10px] border border-gray-300 dark:bg-transparent dark:border 
-              border-l-gray-700 dark:border-gray-400 dark:placeholder-gray-100 dark:text-white outline-none"
+            className="p-3 pl-10 w-full md:w-[400px] bg-transparent rounded-[10px] border border-gray-300 dark:bg-transparent dark:border border-l-gray-700 dark:border-gray-400 dark:placeholder-gray-100 dark:text-white outline-none"
             placeholder="Search Communities, Posts, Users..."
             required
           />
         </div>
-        {/* Clickable Image need an onClick event */}
+        {/* Display user's name when logged in */}
+        {currentUser ? <div>Logged in as {currentUser.name}</div> : null}
         <a href="#" className="ml-4 md:ml-0 md:mr-8" onClick={showModal}>
           <img
             src="/female-icon.png" // Replace with the actual image path
