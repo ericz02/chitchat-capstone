@@ -171,6 +171,22 @@ module.exports = (db) => {
       res.status(500).send({ message: err.message });
     }
   });
+  //get chatroom id by name
+  // router.post("/chatRoomId", authenticateUser, async (req, res) => {
+  //     const name = req.params.chatroom;
+  //   try {
+  //     const newPost = await Post.create({
+  //       title: req.body.title,
+  //       content: req.body.content,
+  //       UserId: userId,
+  //       ChatroomId: req.body.chatroomId,
+  //     });
+
+  //     res.status(201).json(newPost);
+  //   } catch (err) {
+  //     handleErrors(err, res);
+  //   }
+  // });
 
   //create a post
   router.post("/", authenticateUser, async (req, res) => {

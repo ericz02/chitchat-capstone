@@ -32,10 +32,10 @@ export const Comment = ({ comment, setPost }) => {
             alt={`Avatar of ${user.userName}`}
           />
         ) : (
-          <FaUserCircle className="w-8 h-8 mr-2 text-gray-500" />
+          <FaUserCircle className="w-8 h-8 mr-2 text-gray-500" />//first statement will always be true.
         )}
         <div>
-          {user && <span className="font-semibold">{user.userName}</span>}
+          {user && <span className="font-semibold text-sm ">{user.userName}</span>}
         </div>
       </div>
       <p className="text-gray-600">{comment.content}</p>
@@ -65,16 +65,16 @@ export const Comment = ({ comment, setPost }) => {
       {/* Show the button to reveal the reply input */}
       {!showReplyInput && (
         <button
-          className="px-4 py-2 mt-2 bg-gray-200 rounded-md"
+          className="px-2 py-1 m-2 bg-gray-200 rounded-md text-xs"
           onClick={() => setShowReplyInput(true)}
         >
           Reply
         </button>
       )}
-      {comment.replies && comment.replies.length > 0 && (
+      {comment.replies && comment.replies.length > 0 && (//base case
         <div className="mt-2">
           {comment.replies.map((reply) => (
-            <Comment key={reply.id} comment={reply} />
+            <Comment key={reply.id} comment={reply} />//recursive call
           ))}
         </div>
       )}
