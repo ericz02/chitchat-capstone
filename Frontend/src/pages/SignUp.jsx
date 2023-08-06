@@ -3,17 +3,22 @@
 import chitchatLogo from "../public/images/chitchat.png";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "../app/contexts/AuthContext";
+
+
 const SignUp = () => {
   const router = useRouter();
+  //get the signup funciton, the current user and the error {if any occur during fetch}
+  const{signup,currentUser,authError} = useContext(AuthContext);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -25,26 +30,18 @@ const SignUp = () => {
       email,
       password,
     };
-
+   
     try {
-      const response = await fetch("http://localhost:4000/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.ok) {
-        // Redirect to the login page after successful signup
-        router.push("/");
-      } else {
-        // Handle signup error
-        console.error("Signup failed.");
+      await signup(userData);
+      if(currentUser&&authError===null){
+        router.push("/");//want this to rout back to the login page instead of the home page but didn't work
+        return null;
       }
     } catch (error) {
-      console.error("Error during signup:", error);
+        console.error("Error during signup:", error);
     }
+    
+
   };
 
   return (
@@ -108,7 +105,9 @@ const SignUp = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-
+            {authError && (
+              <p className="text-red-500 text-sm text-center">{authError} </p>
+            )}
             <div className="flex flex-col p-4">
               <div className="flex justify-center">
                 <button className="bg-[#14AE5C] hover:bg-[#0F8B49] text-white font-bold py-2 px-4 rounded mx-3 w-1/2 my-1">

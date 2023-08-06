@@ -60,8 +60,9 @@ const Settings = () => {
               <p>{userData.aboutMe ? userData.aboutMe : "No content yet."}</p>
             </div>
           </>
-        ) : (
-          <p>Loading user data...</p>
+        ) : ( 
+          //if the user is not logged in then say so.
+          (!currentUser? <><p>Not Logged In</p></> : <p>Loading user data...</p>)
         )}
       </div>
     </div>
