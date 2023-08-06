@@ -197,7 +197,7 @@ module.exports = (db) => {
         title: req.body.title,
         content: req.body.content,
         UserId: userId,
-        ChatroomId: req.body.chatroomId,
+        ChatroomId: parseInt(req.body.chatroomId,10),
       });
 
       res.status(201).json(newPost);

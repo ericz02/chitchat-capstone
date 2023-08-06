@@ -10,17 +10,60 @@ const CreatePost = () => {
 
   const handleSubmit = async(e)=>{
     e.preventDefault();
-   
-    const postDetails = {
-      title:e.target.postTitle.value,
-      content:e.target.Description.value,
-      chatroomId:1
-    }
-
     if(!currentUser){
       console.log("You are not logged in");
       return null;
     }
+    //validate to see if the chatroom exists
+    var validatethis = e.target.chatroom.value;
+    //validatethis = {chatroomName:validatethis};
+    var roomId;
+    try {
+      const ChatroomValid = await fetch(`http://localhost:4000/chatrooms/validate/${validatethis}`,{
+             method:"GET",
+             headers: {
+             "Content-Type": "application/json",
+            }});
+
+      console.log(ChatroomValid.ChatroomId);
+        if(ChatroomValid.ChatroomId){
+           roomId = ChatroomValid.ChatroomId;
+        }
+        else{
+          console.log("invalid Chatroom");
+          return null;
+        }
+    } catch (error) {
+      console.error("failed to validate chatroom name:", error);
+    }
+
+    // try {
+    //   const ChatroomValid = await fetch(`http://localhost:4000/chatrooms/valid`,{
+    //     method:"GET",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(validatethis),
+    //   });
+    //     if(ChatroomValid.ChatroomId){
+    //        roomId = ChatroomValid.ChatroomId;
+    //     }
+    //     else{
+    //       console.log("invalid Chatroom");
+    //       return null;
+    //     }
+    // } catch (error) {
+    //   console.error("failed to validate chatroom name:", error);
+    // }
+  
+   
+    const postDetails = {
+      title:e.target.postTitle.value,
+      content:e.target.Description.value,
+      chatroomId:roomId,
+    }
+
+    console.log("this is the thing that is getting sent to the post request", postDetails);
     try {
       const response = await fetch("http://localhost:4000/posts",{
         method:"POST",
@@ -29,15 +72,19 @@ const CreatePost = () => {
         },
         body: JSON.stringify(postDetails),
       })
+      if(response){
+        console.log(response);
+      }else{
+        console.log("failed to post the post");
+      }
       router.push("/");
-      console.log("successfull post");
       return null;
     } catch (error) {
       console.error("failed to post:", error);
     }
     console.log(e.target.postTitle.value);
     console.log(e.target.Description.value);
-    console.log(e.target.postRoom.value);
+    console.log(e.target.chatroom.value);
   };
 
 
@@ -70,7 +117,7 @@ const CreatePost = () => {
           <textarea
             className="w-full px-3 pb-10 pt-2 border rounded bg-[#E6E6E6] mt-3"
             id="postRoom"
-            name="postRoom"
+            name="chatroom"
             rows="4"
             placeholder="ChitChat Room:"
           />
