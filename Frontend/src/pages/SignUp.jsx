@@ -3,10 +3,14 @@
 import chitchatLogo from "../public/images/chitchat.png";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "../app/contexts/AuthContext";
+
+
 const SignUp = () => {
   const router = useRouter();
+  const{signup,currentUser,authError} = useContext(AuthContext);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");

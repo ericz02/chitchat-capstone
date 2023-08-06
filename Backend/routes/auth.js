@@ -3,6 +3,24 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { User } = require("../models");
 
+router.get("/current_user", async (req, res) => {
+  if (req.session.userId) {
+    const user = await User.findByPk(req.session.userId);
+    return res.status(200).json({
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userName: user.userName,
+        password: user.password,
+        profilePicture: user.profilePicture,
+      },
+    });
+  } else {
+    return res.status(401).json({ user: null });
+  }
+});
 
 router.post("/signup", async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -46,11 +64,11 @@ router.post("/login", async (req, res) => {
     bcrypt.compare(req.body.password, user.password, (error, result) => {
       if (result) {
         req.session.userId = user.id;
-        req.session.user = user.id;//this will store the currently logged in user id so that we can use this variable to identify who is logged in at that time.
         res.status(200).json({
           message: "Logged in successfully",
           user: {
-            name: user.name,
+            id: user.id,
+            name: user.firstName,
             email: user.email,
           },
         });
@@ -76,29 +94,10 @@ router.delete("/logout", async (req, res) => {
 });
 //////////////////////////
 router.get("/check-auth", (req, res) => {
-    if (req.session.userId) {
-      res.status(200).json({ authenticated: true });
-    } else {
-      res.status(401).json({ authenticated: false });
-    }
-  });
-
-//to get the currently logged in users Id
-router.get("/getId", async(req,res) =>{
-  
-  const userId = req.session.user;
-  try {
-    const user = await User.findOne({where:{id:userId}});
-    if(user){
-      res.status(200).json(user);//{id:user.id} 
-    }
-    else{
-      res.status(404).send({ message: "user not found" });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: err.message });
+  if (req.session.userId) {
+    res.status(200).json({ authenticated: true });
+  } else {
+    res.status(401).json({ authenticated: false });
   }
-
 });
 module.exports = router;
