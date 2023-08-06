@@ -2,7 +2,7 @@ import Image from "next/image";
 import { FaHome, FaCog, FaMailBulk, FaComments } from "react-icons/fa";
 import chitchatLogo from "../public/images/chitchat.png";
 import Link from "next/link";
-
+import ChatroomList from "../pages/ChatroomList";
 const Sidebar = () => {
   return (
     <div className=" bg-[#27374D] w-1/6 min-w-[120px] p-4 fixed h-full z-20 overflow-auto">
@@ -42,7 +42,9 @@ const Sidebar = () => {
         {/* TODO: Wrap in link component to chitchatrooms */}
         <div className="flex items-center mt-16 text-[20px] text-white self-center">
           <FaComments style={{ marginRight: "8px" }} size={24} /> ChitChatRooms{" "}
+
         </div>
+        <ChatroomList />
       </div>
     </div>
   );
