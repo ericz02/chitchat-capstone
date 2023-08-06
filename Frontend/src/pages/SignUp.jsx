@@ -17,7 +17,7 @@ const SignUp = () => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -29,26 +29,37 @@ const SignUp = () => {
       email,
       password,
     };
+    const formData = new FormData(e.target);
+    const credentials = formData;
 
-    try {
-      const response = await fetch("http://localhost:4000/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.ok) {
-        // Redirect to the login page after successful signup
+      await signup(userData);
+      if(currentUser&&authError===null){
         router.push("/");
-      } else {
-        // Handle signup error
-        console.error("Signup failed.");
       }
-    } catch (error) {
-      console.error("Error during signup:", error);
-    }
+
+    // try {
+    //   const response = await fetch("http://localhost:4000/auth/signup", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(userData),
+    //   });
+      
+
+    //   if (response.ok) {
+    //     // Redirect to the login page after successful signup
+    //     router.push("/");
+    //   } else {
+    //     // Handle signup error
+    //     console.error("Signup failed.");
+    //   }
+    // } catch (error) {
+    //   console.error("Error during signup:", error);
+    // }
+
+
+
   };
 
   return (
@@ -112,7 +123,9 @@ const SignUp = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-
+            {authError && (
+              <p className="text-red-500 text-sm text-center">{authError}</p>
+            )}
             <div className="flex flex-col p-4">
               <div className="flex justify-center">
                 <button className="bg-[#14AE5C] hover:bg-[#0F8B49] text-white font-bold py-2 px-4 rounded mx-3 w-1/2 my-1">
