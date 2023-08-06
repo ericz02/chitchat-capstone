@@ -10,6 +10,7 @@ import { AuthContext } from "../app/contexts/AuthContext";
 
 const SignUp = () => {
   const router = useRouter();
+  //get the signup funciton, the current user and the error {if any occur during fetch}
   const{signup,currentUser,authError} = useContext(AuthContext);
 
   const [firstName, setFirstName] = useState("");
@@ -29,36 +30,17 @@ const SignUp = () => {
       email,
       password,
     };
-    const formData = new FormData(e.target);
-    const credentials = formData;
-
+   
+    try {
       await signup(userData);
       if(currentUser&&authError===null){
-        router.push("/");
+        router.push("/");//want this to rout back to the login page instead of the home page but didn't work
+        return null;
       }
-
-    // try {
-    //   const response = await fetch("http://localhost:4000/auth/signup", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(userData),
-    //   });
-      
-
-    //   if (response.ok) {
-    //     // Redirect to the login page after successful signup
-    //     router.push("/");
-    //   } else {
-    //     // Handle signup error
-    //     console.error("Signup failed.");
-    //   }
-    // } catch (error) {
-    //   console.error("Error during signup:", error);
-    // }
-
-
+    } catch (error) {
+        console.error("Error during signup:", error);
+    }
+    
 
   };
 
@@ -124,7 +106,7 @@ const SignUp = () => {
               />
             </div>
             {authError && (
-              <p className="text-red-500 text-sm text-center">{authError}</p>
+              <p className="text-red-500 text-sm text-center">{authError} </p>
             )}
             <div className="flex flex-col p-4">
               <div className="flex justify-center">
