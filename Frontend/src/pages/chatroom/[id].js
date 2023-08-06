@@ -9,7 +9,7 @@ export const Comment = ({ comment }) => {
 
   useEffect(() => {
     // Fetch the user's data based on the comment's UserId
-    fetch(`http://localhost:4000/users/${comment.UserId}`)
+    fetch(`http://localhost:4000/user/${comment.UserId}`)//when we fetch here there is a 404 error that is why the comments dont display their user properties
       .then((response) => response.json())
       .then((data) => setUser(data))
       .catch((error) => console.error("Error fetching user:", error));
@@ -20,7 +20,7 @@ export const Comment = ({ comment }) => {
   };
   return (
     <div className="ml-4 border-l-2 pl-4 mt-4">
-      <div className="flex items-center mb-1">
+      <div className="flex items-center mb-1">{/*console.log("user: ",user)*/}
         {user && user.image_URL ? (
           <img
             className="w-8 h-8 rounded-full mr-2"

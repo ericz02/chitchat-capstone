@@ -4,13 +4,14 @@ import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 
 export const Comment = ({ comment, setPost }) => {
+  //the user who made the comment
   const [user, setUser] = useState(null);
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyContent, setReplyContent] = useState("");
 
   useEffect(() => {
     // Fetch the user's data based on the comment's UserId
-    fetch(`http://localhost:4000/users/${comment.UserId}`)
+    fetch(`http://localhost:4000/user/${comment.UserId}`)
       .then((response) => response.json())
       .then((data) => setUser(data))
       .catch((error) => console.error("Error fetching user:", error));
@@ -24,10 +25,10 @@ export const Comment = ({ comment, setPost }) => {
   return (
     <div className="ml-4 border-l-2 pl-4 mt-4">
       <div className="flex items-center mb-1">
-        {user && user.image_URL ? (
+        {user && user.profilePicture ? (
           <img
             className="w-8 h-8 rounded-full mr-2"
-            src={user.image_URL}
+            src={user.profilePicture}
             alt={`Avatar of ${user.userName}`}
           />
         ) : (
@@ -114,7 +115,7 @@ const ViewPost = () => {
         <div className="flex items-center mt-4">
           {/* Render the comments */}
           {post.comments && post.comments.length > 0 && (
-            <div>
+            <div>{ console.log(post.comments)}
               {post.comments.map((comment) => (
                 <Comment key={comment.id} comment={comment} />
               ))}
