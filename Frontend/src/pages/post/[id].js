@@ -2,6 +2,7 @@ import RootLayout from "@/app/layout";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
+<<<<<<< HEAD
  //this is my comment function
 export const Comment = ({ comment,replyContent, setReplyContent }) => {
   //the user who made the comment
@@ -99,6 +100,11 @@ export const Comment = ({ comment,replyContent, setReplyContent }) => {
   );
 };
  //this is my viewpost function
+=======
+import PostCard from "@/components/PostCard";
+import CommentSection from "@/components/CommentSection";
+
+>>>>>>> 400456d9ec5947ccb222e4af0363778f36ba2ec3
 const ViewPost = () => {
   const router = useRouter();
   const { id } = router.query; // This will get the post ID from the URL
@@ -110,7 +116,10 @@ const ViewPost = () => {
       // Fetch post from the server based on the post ID
       fetch(`/api/posts/${id}`)
         .then((response) => response.json())
-        .then((data) => setPost(data))
+        .then((data) => {
+          console.log("Data received:", data);
+          setPost(data);
+        })
         .catch((error) => console.error("Error fetching post:", error));
     }
   }, [id,replyContent]);
@@ -121,14 +130,14 @@ const ViewPost = () => {
 
   return (
     <RootLayout>
-      <div
-        key={post.id}
-        className="bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start"
-      >
-        <div className="flex flex-col justify-center mb-4">
-          <h2 className="text-xl font-semibold">{post.title}</h2>
-          {/* Add the post details, e.g., author, date, etc., here */}
+      <PostCard post={post} />
+      {post.comments && post.comments.length > 0 && (
+        <div className="w-2/3 flex flex-col">
+          {post.comments.map((comment) => (
+            <CommentSection key={comment.id} comment={comment} />
+          ))}
         </div>
+<<<<<<< HEAD
         <p className="text-gray-600">{post.content}</p>
         <div className="flex items-center mt-4">
           {/* Render the comments */}
@@ -141,6 +150,9 @@ const ViewPost = () => {
           )}
         </div>
       </div>
+=======
+      )}
+>>>>>>> 400456d9ec5947ccb222e4af0363778f36ba2ec3
     </RootLayout>
   );
 };

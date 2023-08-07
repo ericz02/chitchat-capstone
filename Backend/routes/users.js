@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { User, Post, Comment, UserChatRoom } = require("../models");
+const { authenticateUser } = require("../middleware/auth");
 
 //gets user by id
 router.get("/:id", async (req, res) => {
@@ -13,6 +14,20 @@ router.get("/:id", async (req, res) => {
     } else {
       res.status(404).send({ message: "User not found" });
     }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: err.message });
+  }
+});
+
+router.patch("/:id", authenticateUser, async (req, res) => {
+  const userId = parseInt(req.params.id, 10);
+
+  try {
+    const user = await User.findOne({ where: { id: userId } });
+
+    const updatedUserProfile = await user.update(req.body);
+    res.status(200).json(updatedUserProfile);
   } catch (err) {
     console.error(err);
     res.status(500).send({ message: err.message });
@@ -69,19 +84,17 @@ router.get("/:id/chatrooms", async (req, res) => {
 
   try {
     const chatrooms = await UserChatRoom.findAll({
-      where:{ UserId: userId}
+      where: { UserId: userId },
     });
-    if(chatrooms&&chatrooms.length>0){
+    if (chatrooms && chatrooms.length > 0) {
       res.status(200).json(chatrooms);
-    }
-    else{
-      res.status(404).send({message: "this User has no chatrooms"});
+    } else {
+      res.status(404).send({ message: "this User has no chatrooms" });
     }
   } catch (err) {
     console.error(err);
     res.status(500).send({ message: err.message });
   }
-
 });
 
 module.exports = router;

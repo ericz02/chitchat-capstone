@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       chatroomName: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
           len: {
             args: [1, 30],

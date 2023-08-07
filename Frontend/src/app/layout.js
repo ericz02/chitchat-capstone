@@ -12,14 +12,14 @@ const metadata = {
   description: "A forum based social media platform.",
 };
 
-export default function RootLayout({children }) {
+export default function RootLayout({ children }) {
   return (
     <AuthProvider>
       <html lang="en">
         <body className="h-screen" id="dynamic_page">
           <div className="flex">
             <Sidebar />
-            <div className="flex flex-col w-5/6 ml-auto">
+            <div className="flex flex-col w-5/6 ml-auto z-20">
               <div>
                 <Navbar />
               </div>
