@@ -3,6 +3,7 @@ import { FaHome, FaCog, FaMailBulk, FaComments } from "react-icons/fa";
 import chitchatLogo from "../public/images/chitchat.png";
 import Link from "next/link";
 import ChatroomList from "../pages/ChatroomList";
+
 const Sidebar = () => {
   return (
     <div className=" bg-[#27374D] w-1/6 min-w-[120px] p-4 fixed h-full z-20 overflow-auto">
@@ -44,7 +45,14 @@ const Sidebar = () => {
           <FaComments style={{ marginRight: "8px" }} size={24} /> ChitChatRooms{" "}
 
         </div>
-        <p>CreateChatroom</p>
+        <Link href="/createChatroom">
+            <button
+              className="bg-[#E6E6E6] text-black px-4 py-1 rounded-[10px] hover:bg-[#526D82] transition-colors 
+              duration-300 ease-in-out mt-3 text-3xl"
+            >
+              +
+            </button>
+          </Link>
         <ChatroomList />
       </div>
     </div>
