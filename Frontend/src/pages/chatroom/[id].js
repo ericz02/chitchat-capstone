@@ -9,7 +9,7 @@ export const Comment = ({ comment }) => {
 
   useEffect(() => {
     // Fetch the user's data based on the comment's UserId
-    fetch(`http://localhost:4000/users/${comment.UserId}`)
+    fetch(`http://localhost:4000/user/${comment.UserId}`)
       .then((response) => response.json())
       .then((data) => setUser(data))
       .catch((error) => console.error("Error fetching user:", error));
@@ -20,11 +20,11 @@ export const Comment = ({ comment }) => {
   };
   return (
     <div className="ml-4 border-l-2 pl-4 mt-4">
-      <div className="flex items-center mb-1">
-        {user && user.image_URL ? (
+      <div className="flex items-center mb-1">{/*console.log("user: ",user)*/}
+        {user && user.profilePicture ? (
           <img
             className="w-8 h-8 rounded-full mr-2"
-            src={user.image_URL}
+            src={user.profilePicture}
             alt={`Avatar of ${user.userName}`}
           />
         ) : (
@@ -53,14 +53,14 @@ export const Comment = ({ comment }) => {
 
 const ViewChatRoom = () => {
   const router = useRouter();
-  const { id } = router.query; // This will get the post ID from the URL
+  const { id } = router.query; // This will get the chatroom ID from the URL
 
   const [post, setPost] = useState(null);
   const [chatroom, setChatroom] = useState(null);
   useEffect(() => {
     if (id) {
-      // Fetch post from the server based on the post ID
-      fetch(`http://localhost:4000/posts/${id}`)
+      // Fetch all posts in that chatroom via chatroom id
+      fetch(`http://localhost:4000/chatrooms/${id}/posts`)
         .then((response) => response.json())
         .then((data) => setPost(data))
         .catch((error) => console.error("Error fetching post:", error));
@@ -90,6 +90,7 @@ const ViewChatRoom = () => {
             {chatroom.chatroomName}
           </h1>
           <p className="text-gray-600">{chatroom.chatroomDescription}</p>
+          {/* map through all posts from that chatroom. post should now be an array of objects */}
         <div className="flex flex-col justify-center mb-4">
           <h2 className="text-xl font-semibold">{post.title}</h2>
           <p className="text-gray-600">
