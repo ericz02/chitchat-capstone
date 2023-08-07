@@ -10,11 +10,11 @@ router.get("/current_user", async (req, res) => {
       user: {
         id: user.id,
         email: user.email,
-        firstName: user.firstName,
+        /*         firstName: user.firstName,
         lastName: user.lastName,
         userName: user.userName,
         password: user.password,
-        profilePicture: user.profilePicture,
+        profilePicture: user.profilePicture, */
       },
     });
   } else {
@@ -68,8 +68,9 @@ router.post("/login", async (req, res) => {
           message: "Logged in successfully",
           user: {
             id: user.id,
-            name: user.firstName,
+            firstName: user.firstName,
             email: user.email,
+            profilePicture: user.profilePicture,
           },
         });
       } else {

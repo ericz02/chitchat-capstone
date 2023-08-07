@@ -1,9 +1,10 @@
-"use client"
+"use client";
 
 import { BiSearch } from "react-icons/bi";
 import { useState, useContext } from "react";
 import Modal from "../ui/Modal";
 import DropdownForm from "./DropDownForm";
+import Cookies from "js-cookie";
 import { AuthContext } from "@/app/contexts/AuthContext"; // Import the AuthContext
 
 const Navbar = () => {
@@ -27,7 +28,7 @@ const Navbar = () => {
 
   return (
     <div className="bg-[#526D82] py-4 fixed w-5/6">
-      <div className="flex md:flex-row items-center justify-between text-white px-4 pl-24">
+      <div className="flex flex-shrink-0 md:flex-row items-center justify-between text-white px-4 pl-24">
         <div className="relative flex items-center mb-2 md:mb-0 mx-auto md:mr-auto">
           <BiSearch className="text-white absolute left-4" size={20} />
           <input
@@ -38,16 +39,31 @@ const Navbar = () => {
           />
         </div>
         {/* Display user's name when logged in */}
-        {currentUser ? <div>Logged in as {currentUser.name}</div> : null}
-        <a href="#" className="ml-4 md:ml-0 md:mr-8" onClick={showModal}>
-          <img
-            src="/female-icon.png" // Replace with the actual image path
-            alt="Logo"
-            width={60}
-            height={60}
-            className="rounded-full cursor-pointer"
-          />
-        </a>
+        {currentUser ? (
+          <div className="flex items-center">
+            <a href="#" className="ml-4 md:ml-0 md:mr-8" onClick={showModal}>
+              <img
+                src={currentUser.profilePicture}
+                alt="Profile"
+                width={60}
+                height={60}
+                className="rounded-full cursor-pointer ml-1"
+              />
+            </a>
+          </div>
+        ) : (
+          <div className="flex items-center">
+            <a href="#" className="ml-4 md:ml-0 md:mr-8" onClick={showModal}>
+              <img
+                src="/female-icon.png"
+                alt="Profile"
+                width={60}
+                height={60}
+                className="rounded-full cursor-pointer ml-4 md:ml-0 md:mr-8"
+              />
+            </a>
+          </div>
+        )}
       </div>
       <Modal isVisible={isModalVisible} hideModal={hideModal}>
         <DropdownForm darkMode={darkMode} setDarkMode={setDarkMode} />

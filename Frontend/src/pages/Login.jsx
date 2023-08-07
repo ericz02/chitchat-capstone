@@ -3,7 +3,7 @@
 import chitchatLogo from "../public/images/chitchat.png";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "../app/contexts/AuthContext";
 
@@ -11,10 +11,12 @@ const Login = () => {
   const { currentUser, login, authError } = useContext(AuthContext);
   const router = useRouter();
 
-  if (currentUser) {
-    router.push("/");
-    return null;
-  }
+  useEffect(() => {
+    if (currentUser) {
+      router.push("/");
+    }
+  }, [currentUser, router]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);

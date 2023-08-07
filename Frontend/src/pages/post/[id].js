@@ -10,8 +10,7 @@ export const Comment = ({ comment, setPost }) => {
   const [replyContent, setReplyContent] = useState("");
 
   useEffect(() => {
-    // Fetch the user's data based on the comment's UserId
-    fetch(`http://localhost:4000/user/${comment.UserId}`)
+    fetch(`/api/user/${comment.UserId}`)
       .then((response) => response.json())
       .then((data) => setUser(data))
       .catch((error) => console.error("Error fetching user:", error));
@@ -90,7 +89,7 @@ const ViewPost = () => {
   useEffect(() => {
     if (id) {
       // Fetch post from the server based on the post ID
-      fetch(`http://localhost:4000/posts/${id}`)
+      fetch(`/api/posts/${id}`)
         .then((response) => response.json())
         .then((data) => setPost(data))
         .catch((error) => console.error("Error fetching post:", error));
