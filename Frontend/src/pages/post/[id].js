@@ -31,10 +31,12 @@ export const Comment = ({ comment, setPost }) => {
             alt={`Avatar of ${user.userName}`}
           />
         ) : (
-          <FaUserCircle className="w-8 h-8 mr-2 text-gray-500" />//first statement will always be true.
+          <FaUserCircle className="w-8 h-8 mr-2 text-gray-500" /> //first statement will always be true.
         )}
         <div>
-          {user && <span className="font-semibold text-sm ">{user.userName}</span>}
+          {user && (
+            <span className="font-semibold text-sm ">{user.userName}</span>
+          )}
         </div>
       </div>
       <p className="text-gray-600">{comment.content}</p>
@@ -70,13 +72,14 @@ export const Comment = ({ comment, setPost }) => {
           Reply
         </button>
       )}
-      {comment.replies && comment.replies.length > 0 && (//base case
-        <div className="mt-2">
-          {comment.replies.map((reply) => (
-            <Comment key={reply.id} comment={reply} />//recursive call
-          ))}
-        </div>
-      )}
+      {comment.replies &&
+        comment.replies.length > 0 && ( //base case
+          <div className="mt-2">
+            {comment.replies.map((reply) => (
+              <Comment key={reply.id} comment={reply} /> //recursive call
+            ))}
+          </div>
+        )}
     </div>
   );
 };
@@ -91,7 +94,10 @@ const ViewPost = () => {
       // Fetch post from the server based on the post ID
       fetch(`/api/posts/${id}`)
         .then((response) => response.json())
-        .then((data) => setPost(data))
+        .then((data) => {
+          console.log("Data received:", data);
+          setPost(data);
+        })
         .catch((error) => console.error("Error fetching post:", error));
     }
   }, [id]);
@@ -114,7 +120,8 @@ const ViewPost = () => {
         <div className="flex items-center mt-4">
           {/* Render the comments */}
           {post.comments && post.comments.length > 0 && (
-            <div>{ console.log(post.comments)}
+            <div>
+              {console.log(post.comments)}
               {post.comments.map((comment) => (
                 <Comment key={comment.id} comment={comment} />
               ))}

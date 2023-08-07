@@ -11,7 +11,6 @@ const HomePage = () => {
     // Fetch posts from the server
     fetch("/api/posts", {
       method: "GET",
-      credentials: "include",
     })
       .then((response) => response.json())
       .then(async (data) => {
@@ -20,7 +19,6 @@ const HomePage = () => {
           data.map(async (post) => {
             const userResponse = await fetch(`/api/user/${post.UserId}`, {
               method: "GET",
-              credentials: "include",
             });
 
             // Fetch chatroom data (chatroom)
@@ -28,7 +26,6 @@ const HomePage = () => {
               `/api/chatrooms/${post.ChatroomId}`,
               {
                 method: "GET",
-                credentials: "include",
               }
             );
 

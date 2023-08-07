@@ -138,6 +138,22 @@ module.exports = (db) => {
     try {
       const post = await Post.findOne({
         where: { id: postId },
+        attributes: {
+          include: [
+            [
+              db.sequelize.literal(
+                '(SELECT COUNT(*) FROM "likes" WHERE "likes"."likeableId" = "Post"."id" AND "likes"."likeableType" = \'post\')'
+              ),
+              "likesCount",
+            ],
+            [
+              db.sequelize.literal(
+                '(SELECT COUNT(*) FROM "comments" WHERE "comments"."CommentableId" = "Post"."id" AND "comments"."commentableType" = \'post\')'
+              ),
+              "commentsCount",
+            ],
+          ],
+        },
         include: [
           {
             model: Comment,
