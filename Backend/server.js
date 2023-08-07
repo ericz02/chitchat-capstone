@@ -15,6 +15,7 @@ const { authenticateUser } = require("../Backend/middleware/auth");
 const { Post, Comment, models } = require("./models");
 require("dotenv").config();
 
+
 //  const dbName = process.env.DB_NAME;
 // const dbUsername = process.env.DB_USER;
 // const dbPassword = process.env.DB_PASSWORD;

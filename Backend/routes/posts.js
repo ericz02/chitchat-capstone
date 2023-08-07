@@ -191,17 +191,21 @@ module.exports = (db) => {
   //create a post
   router.post("/", authenticateUser, async (req, res) => {
     const userId = req.session.userId;
-
+    const TITLE = req.body.title;
+    const CONTENT = req.body.content;
+    const CHATROOMID = req.body.chatroomId;//try parse int
     try {
       const newPost = await Post.create({
-        title: req.body.title,
-        content: req.body.content,
+        title: TITLE,
+        content: CONTENT,
         UserId: userId,
-        ChatroomId: parseInt(req.body.chatroomId,10),
+        ChatroomId:parseInt(CHATROOMID),
       });
 
       res.status(201).json(newPost);
     } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: err.message});
       handleErrors(err, res);
     }
   });

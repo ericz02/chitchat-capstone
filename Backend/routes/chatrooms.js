@@ -12,14 +12,14 @@ const authorizeDelete = (session, chatroom) => {
 };
 // CRUD for Chatroom
 
-router.get("/valid", async (req, res) => {
+router.post("/validate", async (req, res) => {
   try {
-    const ChatRoomName = req.body.chatroomName;// try req.body
+    const ChatRoomName = req.body.chatroomName;
     const chatroom = await Chatroom.findOne({where:{chatroomName:ChatRoomName}});
     if(chatroom){
-      res.status(200).json({ChatroomId:chatroom.id});
+      res.status(200).json(chatroom);
     }else{
-      res.status(404).json({ChatroomId:null});
+      res.status(404).json(null);
     }
   } catch (err) {
     console.error(err);
@@ -27,22 +27,7 @@ router.get("/valid", async (req, res) => {
   }
 });
 
-//validate to see if the chatroom actually exists if it exists return the chatroom Id
-router.get("/validate/:name", async (req, res) => {
-  try {
-    //const ChatRoomName = req.params.chatroomName;// try req.body
-    //const chatroom = await Chatroom.findOne({where:{chatroomName:ChatRoomName}});
-    const chatrooms = await Chatroom.findOne({where:{chatroomName:req.params.name}});
-    if(chatrooms){
-      res.status(200).json({ChatroomId:chatrooms.id});
-    }else{
-      res.status(404).json({ChatroomId:null});
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: err.message});
-  }
-});
+
 
 //get a list of all chatrooms
 router.get("/", async (req, res) => {
