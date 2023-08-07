@@ -2,12 +2,12 @@ import RootLayout from "@/app/layout";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
-
-export const Comment = ({ comment, setPost }) => {
+ //this is my comment function
+export const Comment = ({ comment,replyContent, setReplyContent }) => {
   //the user who made the comment
   const [user, setUser] = useState(null);
   const [showReplyInput, setShowReplyInput] = useState(false);
-  const [replyContent, setReplyContent] = useState("");
+
 
   useEffect(() => {
     fetch(`/api/user/${comment.UserId}`)
@@ -20,7 +20,25 @@ export const Comment = ({ comment, setPost }) => {
     const date = new Date(timestamp);
     return date.toDateString(); // Format the timestamp to display only the date
   };
+  const handleReplySubmit = (replyContent, commentId) => {
+    // Fetch the backend API route to create a reply comment
+    fetch(`/api/posts/${commentId}/replyComments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: replyContent }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Clear the reply input
+        setReplyContent("");
+        // Hide the reply input after submitting the reply
+        setShowReplyInput(false);
 
+      })
+      .catch((error) => console.error("Error creating reply:", error));
+  };
   return (
     <div className="ml-4 border-l-2 pl-4 mt-4">
       <div className="flex items-center mb-1">
@@ -62,7 +80,7 @@ export const Comment = ({ comment, setPost }) => {
         </div>
       )}
       {/* Show the button to reveal the reply input */}
-      {!showReplyInput && (
+      { !showReplyInput &&   (
         <button
           className="px-2 py-1 m-2 bg-gray-200 rounded-md text-xs"
           onClick={() => setShowReplyInput(true)}
@@ -73,18 +91,19 @@ export const Comment = ({ comment, setPost }) => {
       {comment.replies && comment.replies.length > 0 && (//base case
         <div className="mt-2">
           {comment.replies.map((reply) => (
-            <Comment key={reply.id} comment={reply} />//recursive call
+            <Comment key={reply.id} comment={reply} replyContent={replyContent} setReplyContent={setReplyContent}/>//recursive call
           ))}
         </div>
       )}
     </div>
   );
 };
-
+ //this is my viewpost function
 const ViewPost = () => {
   const router = useRouter();
   const { id } = router.query; // This will get the post ID from the URL
   const [post, setPost] = useState(null);
+  const [replyContent, setReplyContent] = useState("");
 
   useEffect(() => {
     if (id) {
@@ -94,7 +113,7 @@ const ViewPost = () => {
         .then((data) => setPost(data))
         .catch((error) => console.error("Error fetching post:", error));
     }
-  }, [id]);
+  }, [id,replyContent]);
 
   if (!post) {
     return <p>Loading...</p>;
@@ -116,7 +135,7 @@ const ViewPost = () => {
           {post.comments && post.comments.length > 0 && (
             <div>{ console.log(post.comments)}
               {post.comments.map((comment) => (
-                <Comment key={comment.id} comment={comment} />
+                <Comment key={comment.id} comment={comment} replyContent={replyContent} setReplyContent={setReplyContent} />
               ))}
             </div>
           )}
