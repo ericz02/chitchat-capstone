@@ -150,6 +150,24 @@ router.get("/:id/users", async(req,res) =>{
   }
 });
 
+//add a creator of a chatroom as admin and the chatroom into the user-chatroom relation.
+router.post("/:id/addCreator/:userId", async (req,res)=>{
+  const chatroomId = parseInt(req.params.id,10);
+  const userId = parseInt(req.params.userId,10);
+  try{
+    const addCreator = await UserChatRoom.create({
+      UserId:userId,
+      ChatroomId:chatroomId,
+      role:"admin"
+    });
+    res.status(201).json(addCreator);
+
+  }catch (err){
+    console.log(err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
 //add a user to a chatroom
 router.post("/:id/addUser/:userId", async(req,res) =>{
   //the chatroom to add the user to and the user itself
