@@ -12,23 +12,6 @@ const authorizeDelete = (session, chatroom) => {
 };
 // CRUD for Chatroom
 
-router.post("/validate", async (req, res) => {
-  try {
-    const ChatRoomName = req.body.chatroomName;
-    const chatroom = await Chatroom.findOne({where:{chatroomName:ChatRoomName}});
-    if(chatroom){
-      res.status(200).json(chatroom);
-    }else{
-      res.status(404).json(null);
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: err.message});
-  }
-});
-
-
-
 //get a list of all chatrooms
 router.get("/", async (req, res) => {
   try {

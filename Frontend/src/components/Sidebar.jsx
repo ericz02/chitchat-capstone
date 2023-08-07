@@ -44,7 +44,6 @@ const Sidebar = () => {
           <FaComments style={{ marginRight: "8px" }} size={24} /> ChitChatRooms{" "}
 
         </div>
-        <p>CreateChatroom</p>
         <ChatroomList />
       </div>
     </div>

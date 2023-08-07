@@ -4,14 +4,13 @@ import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 
 export const Comment = ({ comment, setPost }) => {
-  //the user who made the comment
   const [user, setUser] = useState(null);
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyContent, setReplyContent] = useState("");
 
   useEffect(() => {
     // Fetch the user's data based on the comment's UserId
-    fetch(`http://localhost:4000/user/${comment.UserId}`)
+    fetch(`http://localhost:4000/users/${comment.UserId}`)
       .then((response) => response.json())
       .then((data) => setUser(data))
       .catch((error) => console.error("Error fetching user:", error));
@@ -25,17 +24,17 @@ export const Comment = ({ comment, setPost }) => {
   return (
     <div className="ml-4 border-l-2 pl-4 mt-4">
       <div className="flex items-center mb-1">
-        {user && user.profilePicture ? (
+        {user && user.image_URL ? (
           <img
             className="w-8 h-8 rounded-full mr-2"
-            src={user.profilePicture}
+            src={user.image_URL}
             alt={`Avatar of ${user.userName}`}
           />
         ) : (
-          <FaUserCircle className="w-8 h-8 mr-2 text-gray-500" />//first statement will always be true.
+          <FaUserCircle className="w-8 h-8 mr-2 text-gray-500" />
         )}
         <div>
-          {user && <span className="font-semibold text-sm ">{user.userName}</span>}
+          {user && <span className="font-semibold">{user.userName}</span>}
         </div>
       </div>
       <p className="text-gray-600">{comment.content}</p>
@@ -65,16 +64,16 @@ export const Comment = ({ comment, setPost }) => {
       {/* Show the button to reveal the reply input */}
       {!showReplyInput && (
         <button
-          className="px-2 py-1 m-2 bg-gray-200 rounded-md text-xs"
+          className="px-4 py-2 mt-2 bg-gray-200 rounded-md"
           onClick={() => setShowReplyInput(true)}
         >
           Reply
         </button>
       )}
-      {comment.replies && comment.replies.length > 0 && (//base case
+      {comment.replies && comment.replies.length > 0 && (
         <div className="mt-2">
           {comment.replies.map((reply) => (
-            <Comment key={reply.id} comment={reply} />//recursive call
+            <Comment key={reply.id} comment={reply} />
           ))}
         </div>
       )}
@@ -115,7 +114,7 @@ const ViewPost = () => {
         <div className="flex items-center mt-4">
           {/* Render the comments */}
           {post.comments && post.comments.length > 0 && (
-            <div>{ console.log(post.comments)}
+            <div>
               {post.comments.map((comment) => (
                 <Comment key={comment.id} comment={comment} />
               ))}

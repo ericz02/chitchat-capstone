@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
           include: ["isDeleted"],
         },
       });
-      //base case
+
       if (!nestedComments || nestedComments.length === 0) {
         return [];
       }
@@ -72,7 +72,7 @@ module.exports = (sequelize, DataTypes) => {
             updatedAt: reply.updatedAt,
           };
 
-          nestedComment.replies = await Comment.getAllNestedComments(reply);//recursive call
+          nestedComment.replies = await Comment.getAllNestedComments(reply);
 
           return nestedComment;
         })
