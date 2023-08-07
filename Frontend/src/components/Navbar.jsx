@@ -27,7 +27,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-[#526D82] py-4 fixed w-5/6 z-30">
+    <div className="bg-[#526D82] py-4 fixed w-5/6 z-30 ">
       <div className="flex flex-shrink-0 md:flex-row items-center justify-between text-white px-4 pl-24">
         <div className="relative flex items-center mb-2 md:mb-0 mx-auto md:mr-auto">
           <BiSearch className="text-white absolute left-4" size={20} />

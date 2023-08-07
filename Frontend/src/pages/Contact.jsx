@@ -155,31 +155,3 @@ const Contact = () => {
 };
 
 export default Contact;
-
-// Server-Side Rendering function for Contact page since 
-export async function getServerSideProps() {
-  const contactData = {
-    technicalSupport: {
-      email: "chitchat@tech.com",
-      phone: "+1 234-567-89",
-    },
-    salesQuestions: {
-      email: "chitchat@sales.com",
-      phone: "+1 234-567-89",
-    },
-    press: {
-      email: "chitchat@press.com",
-      phone: "+1 234-567-89",
-    },
-    bugReport: {
-      email: "chitchat@bugs.com",
-      phone: "+1 234-567-89",
-    },
-  };
-
-  return {
-    props: {
-      contactData,
-    },
-  };
-}
