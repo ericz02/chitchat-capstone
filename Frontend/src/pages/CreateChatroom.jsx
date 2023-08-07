@@ -10,10 +10,6 @@ const CreateChatroom = ()=>{
 
     const handleSubmit =  async(e) =>{
         e.preventDefault();
-        console.log("submit button works", roomName, roomDescription);
-        //const user = currentUser;
-        console.log("currentUser: ",currentUser.id);
-        //console.log("currentUser: ",user.id);
 
         const chatroomData = {
             chatroomName:roomName,
