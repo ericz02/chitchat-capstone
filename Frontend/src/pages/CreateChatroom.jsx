@@ -61,6 +61,7 @@ const CreateChatroom = ()=>{
 
 
     return(
+        <ProtectedRoute>
             <div className = "flex flex-col justify-center p-5 ">
                 <h1 className="flex justify-center text-2xl font-bold mb-4 mt-3">
                     Create Chatroom
@@ -96,6 +97,7 @@ const CreateChatroom = ()=>{
                     </div>
                 </form>
             </div>
+        </ProtectedRoute>
     );
 }
 export default CreateChatroom;
