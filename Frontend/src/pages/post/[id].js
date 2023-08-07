@@ -31,7 +31,7 @@ const ViewPost = () => {
     <RootLayout>
       <PostCard post={post} />
       {post.comments && post.comments.length > 0 && (
-        <div className="w-2/3 flex flex-col">
+        <div className="w-2/3 h-[1100px] flex flex-col">
           {post.comments.map((comment) => (
             <CommentSection key={comment.id} comment={comment} />
           ))}

@@ -80,7 +80,7 @@ const PostCard = ({ post }) => {
   return (
     <div
       key={post.id}
-      className="bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start relative"
+      className="z-20 bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start relative"
     >
       {currentUser && post.UserId === currentUser.id && (
         <button
