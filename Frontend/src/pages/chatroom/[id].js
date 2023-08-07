@@ -20,11 +20,11 @@ export const Comment = ({ comment }) => {
   };
   return (
     <div className="ml-4 border-l-2 pl-4 mt-4">
-      <div className="flex items-center mb-1">
-        {user && user.image_URL ? (
+      <div className="flex items-center mb-1">{/*console.log("user: ",user)*/}
+        {user && user.profilePicture ? (
           <img
             className="w-8 h-8 rounded-full mr-2"
-            src={user.image_URL}
+            src={user.profilePicture}
             alt={`Avatar of ${user.userName}`}
           />
         ) : (
@@ -53,7 +53,7 @@ export const Comment = ({ comment }) => {
 
 const ViewChatRoom = () => {
   const router = useRouter();
-  const { id } = router.query; // This will get the post ID from the URL
+  const { id } = router.query; // This will get the chatroom ID from the URL
 
   const [post, setPost] = useState(null);
   const [chatroom, setChatroom] = useState(null);

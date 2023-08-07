@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { FaCommentDots, FaThumbsUp } from "react-icons/fa";
 
+
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
 
@@ -31,7 +32,7 @@ const HomePage = () => {
             const chatroomData = await chatroomResponse.json();
             const userData = await userResponse.json();
 
-            return { ...post, user: userData, chatroom: chatroomData };
+            return { ...post, user: userData, chatroom: chatroomData };//spread the post itself, the user data gotten from post.userid, and the chatroom from post.chatroomId
           })
         );
         setPosts(postsWithUserDetails);
@@ -40,6 +41,7 @@ const HomePage = () => {
   }, []);
 
   return (
+    
     <div className="mx-auto max-w-4xl pl-16">
       <div className="flex flex-col justify-center mb-4">
         <div className="flex flex-col items-center pr-6 mr-[70px]">
@@ -81,6 +83,7 @@ const HomePage = () => {
               </div>
             </div>
           </Link>
+          
         ))}
       </div>
     </div>

@@ -187,21 +187,41 @@ module.exports = (db) => {
       res.status(500).send({ message: err.message });
     }
   });
+  //get chatroom id by name
+  // router.post("/chatRoomId", authenticateUser, async (req, res) => {
+  //     const name = req.params.chatroom;
+  //   try {
+  //     const newPost = await Post.create({
+  //       title: req.body.title,
+  //       content: req.body.content,
+  //       UserId: userId,
+  //       ChatroomId: req.body.chatroomId,
+  //     });
+
+  //     res.status(201).json(newPost);
+  //   } catch (err) {
+  //     handleErrors(err, res);
+  //   }
+  // });
 
   //create a post
   router.post("/", authenticateUser, async (req, res) => {
     const userId = req.session.userId;
-
+    const TITLE = req.body.title;
+    const CONTENT = req.body.content;
+    const CHATROOMID = req.body.chatroomId;//try parse int
     try {
       const newPost = await Post.create({
-        title: req.body.title,
-        content: req.body.content,
+        title: TITLE,
+        content: CONTENT,
         UserId: userId,
-        ChatroomId: req.body.chatroomId,
+        ChatroomId:parseInt(CHATROOMID),
       });
 
       res.status(201).json(newPost);
     } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: err.message});
       handleErrors(err, res);
     }
   });
@@ -228,6 +248,32 @@ module.exports = (db) => {
       handleErrors(err, res);
     }
   });
+
+  //create a reply to a comment
+  router.post("/:id/replyComments", async (req, res) => {
+    const postId = parseInt(req.params.id, 10);
+    const content = req.body.content;
+    const userId = req.session.userId;
+    console.log("Received new comment:", { postId, content, userId });
+    try {
+      const newComment = await Comment.create({
+        content: content,
+        UserId: userId,
+        CommentableId: postId,
+        commentableType: "comment",
+      });
+
+      res.status(201).json({
+        message: "Reply created succesfully",
+        comment: newComment,
+      });
+    } catch (err) {
+      handleErrors(err, res);
+    }
+  });
+
+
+
 
   //update a specific post
   router.patch("/:id", authenticateUser, async (req, res) => {
