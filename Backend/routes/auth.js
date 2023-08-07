@@ -10,11 +10,11 @@ router.get("/current_user", async (req, res) => {
       user: {
         id: user.id,
         email: user.email,
-        /*         firstName: user.firstName,
+        /* firstName: user.firstName,
         lastName: user.lastName,
         userName: user.userName,
-        password: user.password,
-        profilePicture: user.profilePicture, */
+        password: user.password, */
+        profilePicture: user.profilePicture,
       },
     });
   } else {
