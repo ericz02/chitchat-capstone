@@ -1,7 +1,6 @@
 import RootLayout from "@/app/layout";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { FaUserCircle } from "react-icons/fa";
 import PostCard from "@/components/PostCard";
 import CommentSection from "@/components/CommentSection";
 
@@ -9,6 +8,7 @@ const ViewPost = () => {
   const router = useRouter();
   const { id } = router.query; // This will get the post ID from the URL
   const [post, setPost] = useState(null);
+  const [replyContent, setReplyContent] = useState("");
 
   useEffect(() => {
     if (id) {
@@ -33,7 +33,12 @@ const ViewPost = () => {
       {post.comments && post.comments.length > 0 && (
         <div className="w-2/3 flex flex-col">
           {post.comments.map((comment) => (
-            <CommentSection key={comment.id} comment={comment} />
+            <CommentSection
+              key={comment.id}
+              comment={comment}
+              replyContent={replyContent}
+              setReplyContent={setReplyContent}
+            />
           ))}
         </div>
       )}

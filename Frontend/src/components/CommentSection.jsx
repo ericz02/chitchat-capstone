@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 
-const CommentSection = ({ comment }) => {
+const CommentSection = ({ comment, replyContent, setReplyContent }) => {
   const [user, setUser] = useState(null);
   const [showReplyInput, setShowReplyInput] = useState(false);
-  const [replyContent, setReplyContent] = useState("");
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     // Fetch the user's data based on the comment's UserId
@@ -14,14 +14,35 @@ const CommentSection = ({ comment }) => {
       .catch((error) => console.error("Error fetching user:", error));
   }, [comment.UserId]);
 
+  useEffect(() => {
+    // Initialize comments state with the comment's replies
+    setComments(comment.replies);
+  }, [comment.replies]);
+
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toDateString(); // Format the timestamp to display only the date
   };
 
   const handleReplySubmit = (replyContent, commentId) => {
-    // Implement the logic for submitting a reply
-    // This function will be called when the user clicks the "Submit Reply" button
+    // Fetch the backend API route to create a reply comment
+    fetch(`/api/posts/${commentId}/replyComments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: replyContent }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Clear the reply input
+        setReplyContent("");
+        // Hide the reply input after submitting the reply
+        setShowReplyInput(false);
+        // Update the comments state to include the new reply
+        setComments((prevComments) => [...prevComments, data]);
+      })
+      .catch((error) => console.error("Error creating reply:", error));
   };
 
   return (
@@ -75,10 +96,15 @@ const CommentSection = ({ comment }) => {
           Reply
         </button>
       )}
-      {comment.replies && comment.replies.length > 0 && (
+      {comments && comments.length > 0 && (
         <div className="mt-2">
-          {comment.replies.map((reply) => (
-            <CommentSection key={reply.id} comment={reply} />
+          {comments.map((reply) => (
+            <CommentSection
+              key={reply.id}
+              comment={reply}
+              replyContent={replyContent}
+              setReplyContent={setReplyContent}
+            />
           ))}
         </div>
       )}
