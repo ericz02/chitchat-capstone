@@ -8,19 +8,27 @@ const HomePage = () => {
 
   useEffect(() => {
     // Fetch posts from the server
-    fetch("http://localhost:4000/posts")
+    fetch("/api/posts", {
+      method: "GET",
+      credentials: "include",
+    })
       .then((response) => response.json())
       .then(async (data) => {
         // Fetch user details for each post
         const postsWithUserDetails = await Promise.all(
           data.map(async (post) => {
-            const userResponse = await fetch(
-              `http://localhost:4000/user/${post.UserId}`
-            );
+            const userResponse = await fetch(`/api/user/${post.UserId}`, {
+              method: "GET",
+              credentials: "include",
+            });
 
             // Fetch chatroom data (chatroom)
             const chatroomResponse = await fetch(
-              `http://localhost:4000/chatrooms/${post.ChatroomId}`
+              `/api/chatrooms/${post.ChatroomId}`,
+              {
+                method: "GET",
+                credentials: "include",
+              }
             );
 
             const chatroomData = await chatroomResponse.json();

@@ -1,3 +1,4 @@
+"use client";
 import RootLayout from "@/app/layout";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
@@ -6,10 +7,9 @@ import { FaUserCircle } from "react-icons/fa";
 export const Comment = ({ comment }) => {
   const [user, setUser] = useState(null);
 
-
   useEffect(() => {
     // Fetch the user's data based on the comment's UserId
-    fetch(`http://localhost:4000/users/${comment.UserId}`)
+    fetch(`/api/users/${comment.UserId}`)
       .then((response) => response.json())
       .then((data) => setUser(data))
       .catch((error) => console.error("Error fetching user:", error));
@@ -60,7 +60,7 @@ const ViewChatRoom = () => {
   useEffect(() => {
     if (id) {
       // Fetch post from the server based on the post ID
-      fetch(`http://localhost:4000/posts/${id}`)
+      fetch(`/api/posts/${id}`)
         .then((response) => response.json())
         .then((data) => setPost(data))
         .catch((error) => console.error("Error fetching post:", error));
@@ -69,7 +69,7 @@ const ViewChatRoom = () => {
   useEffect(() => {
     if (id) {
       // Fetch chatroom from the server based on the chatroom ID
-      fetch(`http://localhost:4000/chatrooms/${id}`)
+      fetch(`/api/chatrooms/${id}`)
         .then((response) => response.json())
         .then((data) => setChatroom(data))
         .catch((error) => console.error("Error fetching chatroom:", error));
@@ -86,17 +86,16 @@ const ViewChatRoom = () => {
         key={post.id}
         className="bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start"
       >
-          <h1 className="text-xl font-semibold mt-4 mb-4">
-            {chatroom.chatroomName}
-          </h1>
-          <p className="text-gray-600">{chatroom.chatroomDescription}</p>
+        <h1 className="text-xl font-semibold mt-4 mb-4">
+          {chatroom.chatroomName}
+        </h1>
+        <p className="text-gray-600">{chatroom.chatroomDescription}</p>
         <div className="flex flex-col justify-center mb-4">
           <h2 className="text-xl font-semibold">{post.title}</h2>
           <p className="text-gray-600">
             {/* Add the post details, e.g., author, date, etc., here */}
             {post.content}
           </p>
-        
         </div>
         <div className="flex items-center mt-4">
           {/* Render the comments */}

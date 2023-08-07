@@ -21,11 +21,10 @@ require("dotenv").config();
 // const dbHost = process.env.DB_HOST;
 // const dbDialect = "postgres";
 
-
 // const sequelize = new Sequelize(dbName, dbUsername, dbPassword, {
 //   host: dbHost,
 //   dialect: dbDialect,
-// }); 
+// });
 
 app.use(
   cors({
@@ -66,11 +65,10 @@ app.get("/", (req, res) => {
 app.use(errorHandler.forbiddenErrorHandler);
 app.use(errorHandler.notFoundErrorHandler);
 
-
-app.use("/chatrooms", chatroomRouter);
-app.use("/auth", authRouter);
-app.use("/posts", postRouter);
-app.use("/user", userRouter);
+app.use("/api/chatrooms", chatroomRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/posts", postRouter);
+app.use("/api/user", userRouter);
 
 // Server listening on port 4000 for requests from the client
 app.listen(port, () => {

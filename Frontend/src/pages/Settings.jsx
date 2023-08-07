@@ -4,17 +4,22 @@ import { AuthContext } from "@/app/contexts/AuthContext";
 
 const Settings = () => {
   const { currentUser } = useContext(AuthContext);
+  const [newProfilePicture, setNewProfilePicture] = useState("");
   const [userData, setUserData] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [showNewProfilePictureInput, setShowNewProfilePictureInput] =
+    useState(false);
+  const [showAboutMeInput, setShowAboutMeInput] = useState(false);
+  const [aboutMeText, setAboutMeText] = useState("");
 
   useEffect(() => {
     if (currentUser) {
-      console.log(currentUser);
       // Fetch user data from the server for the logged-in user
-      fetch(`http://localhost:4000/user/${currentUser.id}`)
+      fetch(`/api/user/${currentUser.id}`)
         .then((response) => response.json())
         .then((data) => {
           setUserData(data);
+          setAboutMeText(data.aboutMe || "");
         })
         .catch((error) => console.error("Error fetching user data:", error));
     }
@@ -24,7 +29,68 @@ const Settings = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  console.log(userData);
+  const handleToggleProfilePictureInput = () => {
+    setShowNewProfilePictureInput((prevShow) => !prevShow);
+  };
+
+  const handleUpdateProfilePicture = () => {
+    // Make a PUT request to update the profile picture
+    fetch(`/api/user/${currentUser.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        profilePicture: newProfilePicture,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Update the userData state with the updated profile picture
+        setUserData((prevUserData) => ({
+          ...prevUserData,
+          profilePicture: newProfilePicture,
+        }));
+        // Clear the input field after successful update
+        setNewProfilePicture("");
+      })
+      .catch((error) =>
+        console.error("Error updating profile picture:", error)
+      );
+  };
+
+  const handleToggleAboutMeInput = () => {
+    setShowAboutMeInput((prevShow) => !prevShow);
+  };
+
+  const handleSaveAboutMe = () => {
+    // Make a PUT request to update the "About Me" text
+    fetch(`/api/user/${currentUser.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        aboutMe: aboutMeText,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Update the userData state with the updated "About Me" text
+        setUserData((prevUserData) => ({
+          ...prevUserData,
+          aboutMe: aboutMeText,
+        }));
+        setShowAboutMeInput(false);
+      })
+      .catch((error) => console.error("Error updating 'About Me':", error));
+  };
+
+  const handleCancelAboutMe = () => {
+    // Reset the 'About Me' text to the original value from the server
+    setAboutMeText(userData.aboutMe || "");
+    setShowAboutMeInput(false);
+  };
 
   return (
     <div className="bg-[#F5F7FA] p-4 flex justify-center min-h-screen">
@@ -37,7 +103,8 @@ const Settings = () => {
                 alt="Profile"
                 width={100}
                 height={100}
-                className="rounded-full mr-4"
+                className="rounded-full mr-4 cursor-pointer"
+                onClick={handleToggleProfilePictureInput} // Show the input when clicked
               />
               <div className="text-[18px] font-semibold">
                 <p>My Username: {userData.userName}</p>
@@ -54,15 +121,75 @@ const Settings = () => {
                 </p>
               </div>
             </div>
+            {showNewProfilePictureInput && (
+              <input
+                type="text"
+                className="p-3 mt-4 border rounded w-full"
+                placeholder="New Profile Picture URL"
+                value={newProfilePicture}
+                onChange={(e) => setNewProfilePicture(e.target.value)}
+              />
+            )}
+            {showNewProfilePictureInput && (
+              <button
+                type="button"
+                className="bg-blue-500 text-white py-1 px-2 mt-4 rounded hover:bg-blue-600"
+                onClick={handleUpdateProfilePicture}
+              >
+                Update Profile Picture
+              </button>
+            )}
 
-            <div className="text-[20px]">
-              <p>About me:</p>
-              <p>{userData.aboutMe ? userData.aboutMe : "No content yet."}</p>
+            <div className="text-[18px] mt-6">
+              {showAboutMeInput ? (
+                <>
+                  <textarea
+                    className="p-3 border rounded w-full"
+                    value={aboutMeText}
+                    onChange={(e) => setAboutMeText(e.target.value)}
+                    rows={4}
+                  />
+                  <div className="flex mt-4">
+                    <button
+                      type="button"
+                      className="bg-blue-500 text-white py-1 px-2 mr-4 rounded hover:bg-blue-600"
+                      onClick={handleSaveAboutMe}
+                    >
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600"
+                      onClick={handleCancelAboutMe}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p>About me:</p>
+                  <p>
+                    {userData.aboutMe ? userData.aboutMe : "No content yet."}
+                  </p>
+                  <button
+                    type="button"
+                    className="mt-4 bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600"
+                    onClick={handleToggleAboutMeInput}
+                  >
+                    Edit About Me
+                  </button>
+                </>
+              )}
             </div>
           </>
-        ) : ( 
-          //if the user is not logged in then say so.
-          (!currentUser? <><p>Not Logged In</p></> : <p>Loading user data...</p>)
+        ) : // If the user is not logged in, then say so.
+        !currentUser ? (
+          <>
+            <p>Not Logged In</p>
+          </>
+        ) : (
+          <p>Loading user data...</p>
         )}
       </div>
     </div>

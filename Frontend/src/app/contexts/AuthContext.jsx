@@ -1,5 +1,6 @@
 "use client";
 import { useState, createContext, useEffect } from "react";
+
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -12,9 +13,8 @@ const AuthProvider = ({ children }) => {
       setIsAuthChecked(false);
 
       try {
-        const response = await fetch("http://localhost:4000/auth/current_user");
+        const response = await fetch("/api/auth/current_user");
         const { user } = await response.json();
-        console.log("Response from server: ", user);
 
         setCurrentUser(user);
       } catch (error) {
@@ -31,7 +31,7 @@ const AuthProvider = ({ children }) => {
     setIsAuthChecked(false);
 
     try {
-      const response = await fetch("http://localhost:4000/auth/signup", {
+      const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +66,7 @@ const AuthProvider = ({ children }) => {
     setIsAuthChecked(false);
 
     try {
-      const response = await fetch("http://localhost:4000/auth/login", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +76,6 @@ const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const { user } = await response.json();
-        console.log(user);
         setCurrentUser(user);
         setAuthError(null);
       } else {
@@ -98,7 +97,7 @@ const AuthProvider = ({ children }) => {
     setIsAuthChecked(false);
 
     try {
-      const response = await fetch("http://localhost:4000/auth/logout", {
+      const response = await fetch("/api/auth/logout", {
         method: "DELETE",
       });
 
