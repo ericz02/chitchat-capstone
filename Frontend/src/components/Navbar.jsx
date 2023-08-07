@@ -38,7 +38,6 @@ const Navbar = () => {
             required
           />
         </div>
-        {/* Display user's name when logged in */}
         {currentUser ? (
           <div className="flex items-center">
             <a href="#" className="ml-4 md:ml-0 md:mr-8" onClick={showModal}>
