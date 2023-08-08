@@ -354,8 +354,9 @@ module.exports = (db) => {
       const post = await getPost(req.params.id);
       await authorizePostDelete(req.session, post);
 
+      // Soft delete the post by setting isDeleted to true and updating the content and title
       await Post.update(
-        { isDeleted: true },
+        { isDeleted: true, content: "Deleted", title: "Deleted" },
         {
           where: {
             id: req.params.id,
