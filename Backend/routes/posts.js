@@ -209,19 +209,19 @@ module.exports = (db) => {
     const userId = req.session.userId;
     const TITLE = req.body.title;
     const CONTENT = req.body.content;
-    const CHATROOMID = req.body.chatroomId;//try parse int
+    const CHATROOMID = req.body.chatroomId; //try parse int
     try {
       const newPost = await Post.create({
         title: TITLE,
         content: CONTENT,
         UserId: userId,
-        ChatroomId:parseInt(CHATROOMID),
+        ChatroomId: parseInt(CHATROOMID),
       });
 
       res.status(201).json(newPost);
     } catch (err) {
       console.error(err);
-      res.status(500).send({ message: err.message});
+      res.status(500).send({ message: err.message });
       handleErrors(err, res);
     }
   });
@@ -249,6 +249,46 @@ module.exports = (db) => {
     }
   });
 
+  //see all the replies to a specific comment
+  router.get("/:commentId/replyComments/:replyId", async (req, res) => {
+    const commentId = parseInt(req.params.commentId, 10);
+    const replyId = parseInt(req.params.replyId, 10);
+    const userId = req.session.userId;
+
+    try {
+      const comment = await Comment.findOne({
+        where: {
+          id: commentId,
+          commentableType: "comment",
+        },
+      });
+
+      if (comment) {
+        const reply = await Comment.findOne({
+          where: {
+            id: replyId,
+            commentableType: "comment",
+          },
+        });
+
+        if (reply) {
+          const nestedComments = await Comment.getAllNestedComments(reply);
+          res.status(200).json({
+            ...reply.toJSON(),
+            replies: nestedComments,
+          });
+        } else {
+          res.status(404).send({ message: "Reply not found" });
+        }
+      } else {
+        res.status(404).send({ message: "Comment not found" });
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: err.message });
+    }
+  });
+
   //create a reply to a comment
   router.post("/:id/replyComments", async (req, res) => {
     const postId = parseInt(req.params.id, 10);
@@ -271,9 +311,6 @@ module.exports = (db) => {
       handleErrors(err, res);
     }
   });
-
-
-
 
   //update a specific post
   router.patch("/:id", authenticateUser, async (req, res) => {

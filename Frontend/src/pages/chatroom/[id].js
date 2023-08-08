@@ -6,10 +6,12 @@ import { FaUserCircle, FaCommentDots, FaThumbsUp } from "react-icons/fa";
 import Link from "next/link";
 
 
+
 const ViewChatRoom = () => {
   const router = useRouter();
   const { id } = router.query; // This will get the chatroom ID from the URL
   const [posts, setPosts] = useState(null);
+
   const [chatroom, setChatroom] = useState(null);
   const [info, setInfo] = useState({name:"", description:""});//this object contains {name, description, length}
   const [postLength, setPostLength] = useState(null);
@@ -145,3 +147,4 @@ const ViewChatRoom = () => {
 };
 
 export default ViewChatRoom;
+
