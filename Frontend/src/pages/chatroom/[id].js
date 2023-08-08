@@ -5,13 +5,15 @@ import { useState, useEffect,useContext } from "react";
 import { FaUserCircle, FaCommentDots, FaThumbsUp } from "react-icons/fa";
 import Link from "next/link";
 import { AuthContext } from "@/app/contexts/AuthContext";
+import dynamic from "next/dynamic";
+
 
 
 const ViewChatRoom = () => {
 
   const router = useRouter();
   const { id } = router.query; // This will get the chatroom ID from the URL
-  const [posts, setPosts] = useState(null);
+  const [posts, setPosts] = useState([]);
   const [chatroom, setChatroom] = useState(null);
   const [info, setInfo] = useState({name:"", description:""});//this object contains {name, description, length}
   const [postLength, setPostLength] = useState(null);
@@ -140,6 +142,7 @@ const ViewChatRoom = () => {
   console.log("info: ", info, " length: ", postLength);
   
   return (
+    <>
     <RootLayout  >
     <div className = " border-black border-2 m-10  w-4/5 flex-row self-center p-2">
             
@@ -224,7 +227,10 @@ const ViewChatRoom = () => {
 
     </div>
     </RootLayout>
+    </>
   );
 };
 
-export default ViewChatRoom;
+export default dynamic (() => Promise.resolve(ViewChatRoom), {ssr: false});
+
+// export default ViewChatRoom;
