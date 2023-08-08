@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
         <body className="h-screen" id="dynamic_page">
           <div className="flex">
             <Sidebar />
-            <div className="flex flex-col w-5/6 ml-auto z-20">
+            <div className="flex flex-col w-5/6 ml-auto">
               <div>
                 <Navbar />
               </div>

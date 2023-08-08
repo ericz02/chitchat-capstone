@@ -6,22 +6,61 @@ import CommentSection from "@/components/CommentSection";
 
 const ViewPost = () => {
   const router = useRouter();
-  const { id } = router.query; // This will get the post ID from the URL
   const [post, setPost] = useState(null);
   const [replyContent, setReplyContent] = useState("");
+  const [postId, setPostId] = useState(null);
 
   useEffect(() => {
-    if (id) {
-      // Fetch post from the server based on the post ID
-      fetch(`/api/posts/${id}`)
+    // Fetch the postId from the router query
+    const { id } = router.query;
+    setPostId(id);
+  }, [router.query]);
+
+  useEffect(() => {
+    if (postId) {
+      // Fetch the post details using the postId
+      fetch(`/api/posts/${postId}`)
         .then((response) => response.json())
         .then((data) => {
-          console.log("Data received:", data);
           setPost(data);
         })
         .catch((error) => console.error("Error fetching post:", error));
     }
-  }, [id]);
+  }, [postId]);
+
+  const handlePostContentUpdate = (newContent) => {
+    setPost((prevPost) => ({
+      ...prevPost,
+      content: newContent,
+    }));
+  };
+
+  const handleCommentRepliesUpdate = (commentId, updatedReplies) => {
+    setPost((prevPost) => {
+      // Find the comment in the post and update its replies
+      const updatedComments = prevPost.comments.map((comment) => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            replies: updatedReplies,
+          };
+        }
+        return comment;
+      });
+
+      return {
+        ...prevPost,
+        comments: updatedComments,
+      };
+    });
+  };
+
+  const handleCreateComment = (newComment) => {
+    setPost((prevPost) => ({
+      ...prevPost,
+      comments: [...prevPost.comments, newComment],
+    }));
+  };
 
   if (!post) {
     return <p>Loading...</p>;
@@ -29,7 +68,11 @@ const ViewPost = () => {
 
   return (
     <RootLayout>
-      <PostCard post={post} />
+      <PostCard
+        post={post}
+        onUpdate={handlePostContentUpdate}
+        onUpdateComments={handleCreateComment}
+      />
       {post.comments && post.comments.length > 0 && (
         <div className="w-2/3 h-[1100px] flex flex-col">
           {post.comments.map((comment) => (
@@ -38,6 +81,9 @@ const ViewPost = () => {
               comment={comment}
               replyContent={replyContent}
               setReplyContent={setReplyContent}
+              onUpdateReplies={(updatedReplies) =>
+                handleCommentRepliesUpdate(comment.id, updatedReplies)
+              }
             />
           ))}
         </div>

@@ -32,7 +32,7 @@ module.exports = (db) => {
     }
   };
 
-  const authorizeCommentDelete = (session, post) => {
+  const authorizeCommentDelete = (session, comment) => {
     if (parseInt(session.userId, 10) !== comment.UserId) {
       throw new ForbiddenError("You cannot delete someone else's comment");
     }
@@ -316,19 +316,19 @@ router.delete("/:id/like", async (req, res) => {
     const userId = req.session.userId;
     const TITLE = req.body.title;
     const CONTENT = req.body.content;
-    const CHATROOMID = req.body.chatroomId;//try parse int
+    const CHATROOMID = req.body.chatroomId; //try parse int
     try {
       const newPost = await Post.create({
         title: TITLE,
         content: CONTENT,
         UserId: userId,
-        ChatroomId:parseInt(CHATROOMID),
+        ChatroomId: parseInt(CHATROOMID),
       });
 
       res.status(201).json(newPost);
     } catch (err) {
       console.error(err);
-      res.status(500).send({ message: err.message});
+      res.status(500).send({ message: err.message });
       handleErrors(err, res);
     }
   });
@@ -357,6 +357,51 @@ router.delete("/:id/like", async (req, res) => {
     }
   });
 
+  //see all the replies to a specific comment
+  router.get(
+    "/:postId/comments/:commentId/replyComment/:replyId",
+    async (req, res) => {
+      const postId = parseInt(req.params.postId, 10);
+      const commentId = parseInt(req.params.commentId, 10);
+      const replyId = parseInt(req.params.replyId, 10);
+      const userId = req.session.userId;
+
+      try {
+        const comment = await Comment.findOne({
+          where: {
+            id: commentId,
+            commentableType: "post",
+            CommentableId: postId,
+          },
+        });
+
+        if (comment) {
+          const reply = await Comment.findOne({
+            where: {
+              id: replyId,
+              commentableType: "comment",
+            },
+          });
+
+          if (reply) {
+            const nestedComments = await Comment.getAllNestedComments(reply);
+            res.status(200).json({
+              ...reply.toJSON(),
+              replies: nestedComments,
+            });
+          } else {
+            res.status(404).send({ message: "Reply not found" });
+          }
+        } else {
+          res.status(404).send({ message: "Comment not found" });
+        }
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: err.message });
+      }
+    }
+  );
+
   //create a reply to a comment
   router.post("/:id/replyComments", async (req, res) => {
     const postId = parseInt(req.params.id, 10);
@@ -380,8 +425,24 @@ router.delete("/:id/like", async (req, res) => {
     }
   });
 
-
-
+  //update a reply to a comment
+  router.patch("/:postId/replyComments/:commentId", async (req, res) => {
+    const postId = parseInt(req.params.id, 10);
+    const content = req.body.content;
+    const userId = req.session.userId;
+    try {
+      const comment = await Comment.findOne({
+        where: {
+          id: req.params.commentId,
+        },
+      });
+      await authorizeCommentEdit;
+      const updatedComment = await comment.update(req.body);
+      res.status(200).json(updatedComment);
+    } catch (err) {
+      handleErrors(err, res);
+    }
+  });
 
   //update a specific post
   router.patch("/:id", authenticateUser, async (req, res) => {
@@ -420,8 +481,9 @@ router.delete("/:id/like", async (req, res) => {
       const post = await getPost(req.params.id);
       await authorizePostDelete(req.session, post);
 
+      // Soft delete the post by setting isDeleted to true and updating the content and title
       await Post.update(
-        { isDeleted: true },
+        { isDeleted: true, content: "Deleted", title: "Deleted" },
         {
           where: {
             id: req.params.id,
@@ -437,35 +499,29 @@ router.delete("/:id/like", async (req, res) => {
   });
 
   //Soft delete a comment
-  router.delete(
-    "/:postId/comments/:commentId",
-    authenticateUser,
-    async (req, res) => {
-      const postId = parseInt(req.params.postId, 10);
-      const commentId = parseInt(req.params.commentId, 10);
-      try {
-        const comment = await Comment.findOne({
-          where: {
-            id: commentId,
-            CommentableId: postId,
-            commentableType: "post",
-          },
-        });
-        await authorizeCommentDelete(req.session, comment);
+  router.delete("/comments/:commentId", authenticateUser, async (req, res) => {
+    //const postId = parseInt(req.params.postId, 10);
+    const commentId = parseInt(req.params.commentId, 10);
+    try {
+      const comment = await Comment.findOne({
+        where: {
+          id: commentId,
+        },
+      });
+      await authorizeCommentDelete(req.session, comment);
 
-        if (!comment) {
-          return res.status(404).send({ message: "Comment not found" });
-        }
-
-        await comment.update({ isDeleted: true });
-
-        res.status(200).json({ message: "Comment deleted successfully" });
-      } catch (err) {
-        console.error(err);
-        res.status(500).send({ message: err.message });
+      if (!comment) {
+        return res.status(404).send({ message: "Comment not found" });
       }
+
+      await comment.update({ isDeleted: true, content: "Deleted" });
+
+      res.status(200).json({ message: "Comment deleted successfully" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: err.message });
     }
-  );
+  });
 
   router.delete(
     "/:postId/comments/:commentId/replies/:replyId",

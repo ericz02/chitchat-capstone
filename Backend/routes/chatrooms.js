@@ -114,15 +114,22 @@ router.patch("/:id", authenticateUser, async (req, res) => {
 router.delete("/:id", authenticateUser, async (req, res) => {
   const chatroomId = parseInt(req.params.id, 10);
   try {
+    const deleteRelations = await UserChatRoom.destroy({
+      where:{ChatroomId:chatroomId},
+    })
     const deleteChatroom = await Chatroom.destroy({
       where: { id: chatroomId },
     });
+    
 
-    if (deleteChatroom > 0) {
+    if (deleteChatroom > 0 && deleteRelations>0) {
       res.status(200).send({ message: "Chatroom deleted successfully" });
     } else {
       res.status(404).send({ message: "Chatroom not found" });
     }
+    
+
+
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: err.message });
@@ -169,10 +176,10 @@ router.post("/:id/addCreator/:userId", async (req,res)=>{
 });
 
 //add a user to a chatroom
-router.post("/:id/addUser/:userId", async(req,res) =>{
+router.post("/:id/addUser",authenticateUser, async(req,res) =>{
   //the chatroom to add the user to and the user itself
   const chatroomId = parseInt(req.params.id,10);
-  const userId = parseInt(req.params.userId,10);
+  const userId = req.session.userId;
   try {
     const addedUser = await UserChatRoom.create({UserId: userId, ChatroomId:chatroomId, role:"member"});
     res.status(201).json(addedUser);
@@ -184,11 +191,31 @@ router.post("/:id/addUser/:userId", async(req,res) =>{
 
 });
 
+
+
+//check if the user is a member of a chatroom
+router.get('/isMemberOf/:id',authenticateUser, async(req,res) =>{
+  const userId = req.session.userId;
+  const chatroom = parseInt(req.params.id,10);
+  try{
+    const response = await UserChatRoom.findOne({where:{UserId:userId, ChatroomId:chatroom}});
+    if(response){
+      res.status(200).json({there:true, role:response.role});
+    }
+    else{
+      res.status(200).json({there:false});
+    }
+  }catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
 //remove a user from a chatroom
-router.delete("/:id/removeUser/:userId", async (req,res) =>{
+router.delete("/:id/removeUser",authenticateUser, async (req,res) =>{
   //the chatroom to remove the user from and the user itself
   const chatroomId = parseInt(req.params.id,10);
-  const userId = parseInt(req.params.userId,10);
+  const userId = req.session.userId;
   try{
     const deletedUser = await UserChatRoom.destroy({
       where:{UserId:userId, ChatroomId:chatroomId}
@@ -206,5 +233,27 @@ router.delete("/:id/removeUser/:userId", async (req,res) =>{
   }
 
 });
+// //remove a user from a chatroom
+// router.delete("/:id/removeUser/:userId", async (req,res) =>{
+//   //the chatroom to remove the user from and the user itself
+//   const chatroomId = parseInt(req.params.id,10);
+//   const userId = parseInt(req.params.userId,10);
+//   try{
+//     const deletedUser = await UserChatRoom.destroy({
+//       where:{UserId:userId, ChatroomId:chatroomId}
+//     });
+//     if(deletedUser>0){
+//       res.status(200).send({message: "user Removed Successfully"});
+//     }
+//     else{
+//       res.status(404).send({message:"chatroom or user not found."});
+//     }
+    
+//   }catch(err){
+//     console.log(err);
+//     res.status(500).json({ message: err.message });
+//   }
+
+// });
 
 module.exports = router;
