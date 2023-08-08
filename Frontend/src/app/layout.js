@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
               <div>
                 <Navbar />
               </div>
-              <div className="flex flex-col flex-1 mt-20">{children}</div>
+              <div className="flex flex-col flex-1 mt-20 min-h-screen pb-20 overflow-y-auto">{children}</div>
             </div>
           </div>
           <Footer />
