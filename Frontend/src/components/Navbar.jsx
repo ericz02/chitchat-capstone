@@ -4,7 +4,6 @@ import { BiSearch } from "react-icons/bi";
 import { useState, useContext } from "react";
 import Modal from "../ui/Modal";
 import DropdownForm from "./DropDownForm";
-import Cookies from "js-cookie";
 import { AuthContext } from "@/app/contexts/AuthContext"; // Import the AuthContext
 
 const Navbar = () => {
