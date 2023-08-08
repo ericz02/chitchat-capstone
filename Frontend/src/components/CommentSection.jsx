@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 
-const CommentSection = ({ comment, replyContent, setReplyContent }) => {
+const CommentSection = ({ comment, replyContent, setReplyContent, postId }) => {
   const [user, setUser] = useState(null);
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [comments, setComments] = useState([]);
+
+  console.log("The comment being passed:", comment);
+  console.log("post id:", postId);
 
   useEffect(() => {
     // Fetch the user's data based on the comment's UserId
@@ -27,32 +30,65 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
     return date.toDateString(); // Format the timestamp to display only the date
   };
 
-  const handleReplySubmit = (replyContent, commentId) => {
+  const handleReplySubmit = async (replyContent, commentId, postId) => {
     console.log("CommentId:", commentId);
     console.log("replyContent:", replyContent);
-    // Fetch the backend API route to create a reply comment
-    fetch(`/api/posts/${commentId}/replyComments`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ content: replyContent }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
+
+    try {
+      if (comment.commentableType === "comment") {
+        // If replying to a comment, use a POST request to create a reply comment
+        const response = await fetch(`/api/posts/${commentId}/replyComments`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ content: replyContent }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to create reply");
+        }
+
+        const data = await response.json();
         console.log(data);
-        setReplyContent("");
-        setShowReplyInput(false);
-        fetch(
-          `/api/posts/${data.comment.CommentableId}/replyComments/${data.comment.id}`
-        )
-          .then((response) => response.json())
-          .then((fullData) => {
-            setComments((prevComments) => [...prevComments, fullData]);
-          })
-          .catch((error) => console.error("Error fetching full reply:", error));
-      })
-      .catch((error) => console.error("Error creating reply:", error));
+
+        // Assuming new comments have no replies initially
+        const fullData = {
+          ...data.comment,
+          replies: [],
+        };
+        setComments((prevComments) => [...prevComments, fullData]);
+      } else {
+        // If replying to the original post, use a POST request to create a reply comment
+        const response = await fetch(`/api/posts/${commentId}/replyComments`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ content: replyContent }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to create reply");
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        // Assuming new comments have no replies initially
+        const fullData = {
+          ...data.comment,
+          replies: [],
+        };
+        setComments((prevComments) => [...prevComments, fullData]);
+      }
+
+      // Reset the reply input after successful reply creation
+      setReplyContent("");
+      setShowReplyInput(false);
+    } catch (error) {
+      console.error("Error creating reply:", error);
+    }
   };
 
   return (
@@ -91,7 +127,7 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
           />
           <button
             className="px-4 py-2 mt-2 bg-blue-500 text-white rounded-md"
-            onClick={() => handleReplySubmit(replyContent, comment.id)}
+            onClick={() => handleReplySubmit(replyContent, comment.id, postId)}
           >
             Submit Reply
           </button>
@@ -114,6 +150,7 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
               comment={reply}
               replyContent={replyContent}
               setReplyContent={setReplyContent}
+              postId={postId}
             />
           ))}
         </div>

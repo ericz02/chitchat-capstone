@@ -250,44 +250,49 @@ module.exports = (db) => {
   });
 
   //see all the replies to a specific comment
-  router.get("/:commentId/replyComments/:replyId", async (req, res) => {
-    const commentId = parseInt(req.params.commentId, 10);
-    const replyId = parseInt(req.params.replyId, 10);
-    const userId = req.session.userId;
+  router.get(
+    "/:postId/comments/:commentId/replyComment/:replyId",
+    async (req, res) => {
+      const postId = parseInt(req.params.postId, 10);
+      const commentId = parseInt(req.params.commentId, 10);
+      const replyId = parseInt(req.params.replyId, 10);
+      const userId = req.session.userId;
 
-    try {
-      const comment = await Comment.findOne({
-        where: {
-          id: commentId,
-          commentableType: "comment",
-        },
-      });
-
-      if (comment) {
-        const reply = await Comment.findOne({
+      try {
+        const comment = await Comment.findOne({
           where: {
-            id: replyId,
-            commentableType: "comment",
+            id: commentId,
+            commentableType: "post",
+            CommentableId: postId,
           },
         });
 
-        if (reply) {
-          const nestedComments = await Comment.getAllNestedComments(reply);
-          res.status(200).json({
-            ...reply.toJSON(),
-            replies: nestedComments,
+        if (comment) {
+          const reply = await Comment.findOne({
+            where: {
+              id: replyId,
+              commentableType: "comment",
+            },
           });
+
+          if (reply) {
+            const nestedComments = await Comment.getAllNestedComments(reply);
+            res.status(200).json({
+              ...reply.toJSON(),
+              replies: nestedComments,
+            });
+          } else {
+            res.status(404).send({ message: "Reply not found" });
+          }
         } else {
-          res.status(404).send({ message: "Reply not found" });
+          res.status(404).send({ message: "Comment not found" });
         }
-      } else {
-        res.status(404).send({ message: "Comment not found" });
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: err.message });
       }
-    } catch (err) {
-      console.error(err);
-      res.status(500).send({ message: err.message });
     }
-  });
+  );
 
   //create a reply to a comment
   router.post("/:id/replyComments", async (req, res) => {

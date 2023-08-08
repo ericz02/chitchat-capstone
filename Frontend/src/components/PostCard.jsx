@@ -13,6 +13,8 @@ const PostCard = ({ post, onUpdate }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [draftContent, setDraftContent] = useState(post.content);
+  const [newCommentContent, setNewCommentContent] = useState("");
+  const [showReplyTextarea, setShowReplyTextarea] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -76,6 +78,28 @@ const PostCard = ({ post, onUpdate }) => {
       .catch((error) => {
         console.error("Error updating post content:", error);
       });
+  };
+
+  const handleCreateComment = () => {
+    // Fetch the backend API route to create a new comment
+    fetch(`/api/posts/${post.id}/comments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: newCommentContent }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Optionally, you can update the local state to display the new comment immediately
+        // For example, if your backend returns the newly created comment, you can do:
+        // setComments((prevComments) => [...prevComments, data.comment]);
+
+        // Clear the input field after successful comment creation
+        setNewCommentContent("");
+        setShowReplyTextarea(false);
+      })
+      .catch((error) => console.error("Error creating comment:", error));
   };
 
   return (
@@ -177,9 +201,32 @@ const PostCard = ({ post, onUpdate }) => {
           Comments: {post.commentsCount}
         </span>
         <span className="ml-4">
-          <button className="px-4 py-2 bg-blue-500 text-white rounded-md">
-            Reply
-          </button>
+          {showReplyTextarea && (
+            <div>
+              <textarea
+                className="border border-gray-300 rounded-md w-full p-2 mt-2"
+                rows={5}
+                placeholder="Type your reply..."
+                value={newCommentContent}
+                onChange={(e) => setNewCommentContent(e.target.value)}
+              />
+              <button
+                className="px-4 py-2 mt-2 bg-blue-500 text-white rounded-md"
+                onClick={handleCreateComment}
+              >
+                Submit Reply
+              </button>
+            </div>
+          )}
+
+          {!showReplyTextarea && (
+            <button
+              className="px-4 py-2 mt-2 bg-blue-500 text-white rounded-md"
+              onClick={() => setShowReplyTextarea(true)}
+            >
+              Reply
+            </button>
+          )}
         </span>
       </div>
     </div>

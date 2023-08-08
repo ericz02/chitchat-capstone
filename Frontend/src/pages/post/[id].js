@@ -6,11 +6,12 @@ import CommentSection from "@/components/CommentSection";
 
 const ViewPost = () => {
   const router = useRouter();
-  const { id } = router.query;
+  //const { id } = router.query;
   const [post, setPost] = useState(null);
   const [replyContent, setReplyContent] = useState("");
+  const [postId, setPostId] = useState(null);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (id) {
       fetch(`/api/posts/${id}`)
         .then((response) => response.json())
@@ -20,7 +21,25 @@ const ViewPost = () => {
         })
         .catch((error) => console.error("Error fetching post:", error));
     }
-  }, [id]);
+  }, [id]); */
+
+  useEffect(() => {
+    if (postId) {
+      // Fetch the post details using the postId
+      fetch(`/api/posts/${postId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setPost(data);
+        })
+        .catch((error) => console.error("Error fetching post:", error));
+    }
+  }, [postId]);
+
+  useEffect(() => {
+    // Fetch the postId from the router query
+    const { id } = router.query;
+    setPostId(id);
+  }, [router.query]);
 
   const handlePostContentUpdate = (newContent) => {
     setPost((prevPost) => ({
@@ -64,6 +83,7 @@ const ViewPost = () => {
               comment={comment}
               replyContent={replyContent}
               setReplyContent={setReplyContent}
+              postId={post.id} // Pass the postId prop here for comments to a post
               onUpdateReplies={(updatedReplies) =>
                 handleCommentRepliesUpdate(comment.id, updatedReplies)
               }
