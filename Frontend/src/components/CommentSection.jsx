@@ -8,11 +8,14 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
 
   useEffect(() => {
     // Fetch the user's data based on the comment's UserId
-    fetch(`/api/user/${comment.UserId}`)
-      .then((response) => response.json())
-      .then((data) => setUser(data))
-      .catch((error) => console.error("Error fetching user:", error));
-  }, [comment.UserId]);
+    if (comment && comment.UserId) {
+      // Add a conditional check here
+      fetch(`/api/user/${comment.UserId}`)
+        .then((response) => response.json())
+        .then((data) => setUser(data))
+        .catch((error) => console.error("Error fetching user:", error));
+    }
+  }, [comment]);
 
   useEffect(() => {
     // Initialize comments state with the comment's replies
@@ -25,6 +28,8 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
   };
 
   const handleReplySubmit = (replyContent, commentId) => {
+    console.log("CommentId:", commentId);
+    console.log("replyContent:", replyContent);
     // Fetch the backend API route to create a reply comment
     fetch(`/api/posts/${commentId}/replyComments`, {
       method: "POST",
@@ -35,12 +40,17 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        // Clear the reply input
+        console.log(data);
         setReplyContent("");
-        // Hide the reply input after submitting the reply
         setShowReplyInput(false);
-        // Update the comments state to include the new reply
-        setComments((prevComments) => [...prevComments, data]);
+        fetch(
+          `/api/posts/${data.comment.CommentableId}/replyComments/${data.comment.id}`
+        )
+          .then((response) => response.json())
+          .then((fullData) => {
+            setComments((prevComments) => [...prevComments, fullData]);
+          })
+          .catch((error) => console.error("Error fetching full reply:", error));
       })
       .catch((error) => console.error("Error creating reply:", error));
   };

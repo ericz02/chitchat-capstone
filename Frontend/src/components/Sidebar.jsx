@@ -53,7 +53,7 @@ const Sidebar = () => {
               +
             </button>
           </Link>
-        <ChatroomList />
+        <ChatroomList  />
       </div>
     </div>
   );

@@ -169,7 +169,7 @@ router.post("/:id/addCreator/:userId", async (req,res)=>{
 });
 
 //add a user to a chatroom
-router.post("/:id/addUser/",authenticateUser, async(req,res) =>{
+router.post("/:id/addUser",authenticateUser, async(req,res) =>{
   //the chatroom to add the user to and the user itself
   const chatroomId = parseInt(req.params.id,10);
   const userId = req.session.userId;
@@ -183,6 +183,9 @@ router.post("/:id/addUser/",authenticateUser, async(req,res) =>{
   }
 
 });
+
+
+
 //check if the user is a member of a chatroom
 router.get('/isMemberOf/:id',authenticateUser, async(req,res) =>{
   const userId = req.session.userId;
@@ -202,10 +205,10 @@ router.get('/isMemberOf/:id',authenticateUser, async(req,res) =>{
 });
 
 //remove a user from a chatroom
-router.delete("/:id/removeUser/:userId", async (req,res) =>{
+router.delete("/:id/removeUser",authenticateUser, async (req,res) =>{
   //the chatroom to remove the user from and the user itself
   const chatroomId = parseInt(req.params.id,10);
-  const userId = parseInt(req.params.userId,10);
+  const userId = req.session.userId;
   try{
     const deletedUser = await UserChatRoom.destroy({
       where:{UserId:userId, ChatroomId:chatroomId}
@@ -223,5 +226,27 @@ router.delete("/:id/removeUser/:userId", async (req,res) =>{
   }
 
 });
+// //remove a user from a chatroom
+// router.delete("/:id/removeUser/:userId", async (req,res) =>{
+//   //the chatroom to remove the user from and the user itself
+//   const chatroomId = parseInt(req.params.id,10);
+//   const userId = parseInt(req.params.userId,10);
+//   try{
+//     const deletedUser = await UserChatRoom.destroy({
+//       where:{UserId:userId, ChatroomId:chatroomId}
+//     });
+//     if(deletedUser>0){
+//       res.status(200).send({message: "user Removed Successfully"});
+//     }
+//     else{
+//       res.status(404).send({message:"chatroom or user not found."});
+//     }
+    
+//   }catch(err){
+//     console.log(err);
+//     res.status(500).json({ message: err.message });
+//   }
+
+// });
 
 module.exports = router;

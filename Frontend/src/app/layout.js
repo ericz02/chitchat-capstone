@@ -19,11 +19,11 @@ export default function RootLayout({ children }) {
         <body className="h-screen" id="dynamic_page">
           <div className="flex">
             <Sidebar />
-            <div className="flex flex-col w-5/6 ml-auto z-20">
+            <div className="flex flex-col w-5/6 ml-auto">
               <div>
                 <Navbar />
               </div>
-              <div className="flex flex-col flex-1 mt-20">{children}</div>
+              <div className="flex flex-col flex-1 mt-20 min-h-screen pb-20 overflow-y-auto">{children}</div>
             </div>
           </div>
           <Footer />

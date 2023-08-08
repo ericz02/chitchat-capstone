@@ -3,62 +3,66 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
-const CreateChatroom = ()=>{
-    const { currentUser } = useContext(AuthContext);//this is to get the current user that is creating the chatroom
-    const [roomName, setChatroomName] = useState("");
-    const [roomDescription, setChatroomDescription] = useState("");
 
-    const handleSubmit =  async(e) =>{
-        e.preventDefault();
-
-        const chatroomData = {
-            chatroomName:roomName,
-            chatroomDescription:roomDescription
-        }
-        var chatroomid = null;
-        //create the chatroom in the database
-        try{
-            const response = await fetch("/api/chatrooms", {
-                method: "POST",
-                headers:{
-                    "Content-Type": "application/json",
-                },
-                body:JSON.stringify(chatroomData),
-                credentials:"include",
-            });
-            if (!response.ok) {
-                console.error("failed to create chatroom!");
-                return;
-            }
-            const parsedResponse = await response.json();
-            chatroomid = parsedResponse.id;
-            console.log("chatroom created successfully!");
-        }catch(error){
-            console.error("Error creating post:", error);
-        }
-
-        //add the creator of the chatroom as an admin in the userchatroom relation  
-        try{
-            const response = await fetch(`/api/chatrooms/${chatroomid}/addCreator/${currentUser.id}`,{
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
-            if(!response.ok){
-                console.error("failed to create chatroom!");
-                return;
-            }
-            console.log("creator is added as admin")
-        }
-        catch(error){
-            console.error("Error adding creator as admin:", error);
-        }
+const CreateChatroom = () => {
+  const { currentUser } = useContext(AuthContext); //this is to get the current user that is creating the chatroom
+  const [roomName, setChatroomName] = useState("");
+  const [roomDescription, setChatroomDescription] = useState("");
+  
 
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const chatroomData = {
+      chatroomName: roomName,
+      chatroomDescription: roomDescription,
     };
+    var chatroomid = null;
+    //create the chatroom in the database
+    try {
+      const response = await fetch("/api/chatrooms", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(chatroomData),
+        credentials: "include",
+      });
+      if (!response.ok) {
+        console.error("failed to create chatroom!");
+        return;
+      }
+      const parsedResponse = await response.json();
+      chatroomid = parsedResponse.id;
+      console.log("chatroom created successfully!");
 
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
+
+    //add the creator of the chatroom as an admin in the userchatroom relation
+    try {
+      const response = await fetch(
+        `/api/chatrooms/${chatroomid}/addCreator/${currentUser.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      if (!response.ok) {
+        console.error("failed to create chatroom!");
+        return;
+      }
+      console.log("creator is added as admin");
+    } catch (error) {
+      console.error("Error adding creator as admin:", error);
+    }
+    window.location.href = "/";
+  };
 
     return(
         <ProtectedRoute>
