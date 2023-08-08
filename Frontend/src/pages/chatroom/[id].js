@@ -4,37 +4,85 @@ import { useRouter } from "next/router";
 import { useState, useEffect,useContext } from "react";
 import { FaUserCircle, FaCommentDots, FaThumbsUp } from "react-icons/fa";
 import Link from "next/link";
-
+import { AuthContext } from "@/app/contexts/AuthContext";
 
 
 const ViewChatRoom = () => {
+
   const router = useRouter();
   const { id } = router.query; // This will get the chatroom ID from the URL
   const [posts, setPosts] = useState(null);
-
   const [chatroom, setChatroom] = useState(null);
   const [info, setInfo] = useState({name:"", description:""});//this object contains {name, description, length}
   const [postLength, setPostLength] = useState(null);
   const[joined,setJoined] = useState(false);
   const[role,setRole] = useState(null);
-  //check if the 
-  useEffect(()=>{
-    //check if user is a member of the chatroom
-    if(id){
-      fetch(`/api/chatrooms/isMemberOf/${id}`,{method:"GET"})
-      .then((response) => response.json())
-      .then((data)=>{
-        if(data.there){//if the user is there then set joined to true 
-          setJoined(true);
-          setRole(data.role);
-        }else{
-          setJoined(false);
-        }
-      })
-    }
-  },[joined]);
-  console.log("joined: ",joined, "role: ", role, "id: ",id);
+  const [joining, setJoining]  = useState(false);//purpose of this boolean is everythime a user leaves or joins a room they will rerender the page to show either the leave or join button
 
+  // if (currentUser) {
+  //   router.push("/");
+  //}
+  const handleJoin = async() =>{
+      try{
+        const response = await fetch(`/api/chatrooms/${id}/addUser`,{
+          method: "POST",
+          credentials: "include",
+        });
+        if(!response.ok){
+          console.log("failed to join chatroom!");
+          router.push("/login");
+          return;
+        }
+        console.log("joined successfully!");
+        setJoining(true);
+      }catch(error){
+        console.error("Error joining:", error);
+      }
+  };
+  const handleLeave = async() =>{
+    try {
+      const response = await fetch(`/api/chatrooms/${id}/removeUser`,{
+        method:"DELETE",
+        credentials:"include",
+      });
+      if(!response.ok){
+        console.log("failed to leave a chatroom!");
+        router.push("/login");
+        return;
+      }
+      console.log("successfully left chatroom");
+      setJoining(true);
+    } catch (error) {
+      console.error("Error joining:", error);
+    }
+  };
+  
+  //check if the logged in user is a member of this chatroom 
+  useEffect(()=>{
+    const checkMembership = async ()=>{
+      try{
+        const response = await fetch(`/api/chatrooms/isMemberOf/${id}`,{
+        method:"GET",
+      });
+      const data = await response.json();
+      if(data.there){
+        console.log("is there reqeuse MADEEE");
+        setJoined(true);
+        setRole(data.role);
+      }else{
+        setJoined(false);
+      }
+      }catch(error){
+        console.error("Error fetching membership:", error);
+      }
+    }
+    if(id){
+      checkMembership();
+      setJoining(false);//reset the boolean so that when the user joins another room it will rerender the page to say that they are a member
+    }
+  },[id,joining]);
+
+  console.log("joined: ",joined, "role: ", role, "id: ",id);
   //fetch all posts from this chatroom
   useEffect(() => {
     if (id) {
@@ -78,31 +126,38 @@ const ViewChatRoom = () => {
   console.log("info: ", info, " length: ", postLength);
   
   return (
-    <RootLayout >
+    <RootLayout  >
     <div className = " border-black border-2 m-10  w-4/5 flex-row self-center p-2">
 
       <div className = " p-4 flex flex-col justify-items-center bg-slate-100">
         <h1 className = "flex justify-center	text-5xl py-4">  {info.name}</h1>
 
           {(joined) ?(
-          <div className = "flex justify-center">
+          <div className = "flex justify-center" >
             <button
-              className="bg-red-300	 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-[#526D82] transition-colors 
-              duration-300 ease-in-out "
+              className="bg-red-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-red-500 transition-colors 
+              duration-300 ease-in-out border-black border-2"
+              onClick = {handleLeave}
             >
               Leave
             </button>
           </div> 
           ):(
-          <div className = "flex justify-center">
+          <div className = "flex justify-center" >
             <button
-                className="bg-green-300		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-[#526D82] transition-colors 
-                duration-300 ease-in-out "
+                className="bg-green-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-green-500 transition-colors 
+                duration-300 ease-in-out border-black border-2"
+                onClick = {handleJoin}
               >
                 Join
             </button>
           </div>)}
-            {(joined)?(<p>You are a {role} of this Room</p>):(<></>)}
+            {(joined)?(
+            <div className = "flex justify-center mb-2">
+              <p className = "font-mono">
+                You are a {role}.
+              </p>
+            </div>):(<></>)}
           <div className = "flex justify-center	">
             <h2 className = "border-black border-2 p-4 bg-cyan-50	 rounded-[10px]	 w-3/4 ">
               {info.description}
@@ -113,7 +168,7 @@ const ViewChatRoom = () => {
 
       <div className=" p-4    flex-row items-center">
         {(postLength>0)?(posts.map((post) => (
-          <Link href={`/post/${post.id}`} key={post.id} >
+          <Link href={`/post/${post.id}`} key={post.id}  >
             <div
               key={post.id}
               className="bg-[#DDE6ED] p-4 rounded-md shadow-md   my-6 cursor-pointer "
@@ -147,4 +202,3 @@ const ViewChatRoom = () => {
 };
 
 export default ViewChatRoom;
-

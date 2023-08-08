@@ -3,10 +3,13 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
+
 const CreateChatroom = () => {
   const { currentUser } = useContext(AuthContext); //this is to get the current user that is creating the chatroom
   const [roomName, setChatroomName] = useState("");
   const [roomDescription, setChatroomDescription] = useState("");
+  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +36,7 @@ const CreateChatroom = () => {
       const parsedResponse = await response.json();
       chatroomid = parsedResponse.id;
       console.log("chatroom created successfully!");
+
     } catch (error) {
       console.error("Error creating post:", error);
     }
@@ -57,6 +61,7 @@ const CreateChatroom = () => {
     } catch (error) {
       console.error("Error adding creator as admin:", error);
     }
+    window.location.href = "/";
   };
 
     return(
@@ -100,4 +105,3 @@ const CreateChatroom = () => {
     );
 }
 export default CreateChatroom;
-
