@@ -7,12 +7,14 @@ import {
 } from "react-icons/fa";
 import { AuthContext } from "@/app/contexts/AuthContext";
 
-const PostCard = ({ post, onUpdate }) => {
+const PostCard = ({ post, onUpdate, onUpdateComments }) => {
   const [user, setUser] = useState(null);
   const { currentUser } = useContext(AuthContext);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [draftContent, setDraftContent] = useState(post.content);
+  const [newCommentContent, setNewCommentContent] = useState("");
+  const [showReplyTextarea, setShowReplyTextarea] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -57,7 +59,19 @@ const PostCard = ({ post, onUpdate }) => {
     setIsEditMode(false);
   };
 
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    // Fetch the backend API route to delete the post
+    fetch(`/api/posts/${post.id}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        onUpdate();
+        window.location.href = "/";
+      })
+      .catch((error) => console.error("Error deleting post:", error));
+  };
 
   const handleSave = () => {
     fetch(`/api/posts/${post.id}`, {
@@ -78,111 +92,157 @@ const PostCard = ({ post, onUpdate }) => {
       });
   };
 
-  return (
-    <div
-      key={post.id}
-      className="bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start"
-    >
-      {currentUser && post.UserId === currentUser.id && (
-        <div className="flex justify-end">
-          {/* Dropdown container */}
-          <div className="relative">
-            <button
-              onClick={(e) => toggleDropdown(e)}
-              className="focus:outline-none"
-            >
-              <FaEllipsisH className="w-4 h-4" />
-            </button>
+  const handleCreateComment = () => {
+    fetch(`/api/posts/${post.id}/comments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: newCommentContent }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Call the onUpdateComments prop function to update the comments state in the parent component
+        onUpdateComments(data); // Assuming data is the newly created comment object
+        console.log("New Post Comment:", data);
+        setNewCommentContent("");
+        setShowReplyTextarea(false);
+      })
+      .catch((error) => console.error("Error creating comment:", error));
+  };
 
-            {/* Dropdown menu */}
-            {showDropdown && currentUser && post.UserId === currentUser.id && (
-              <div
-                ref={dropdownRef}
-                className="absolute top-8 right-2 bg-white shadow-md rounded-md"
+  return (
+    <>
+      <div
+        key={post.id}
+        className="bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start"
+      >
+        {currentUser && post.UserId === currentUser.id && (
+          <div className="flex justify-end">
+            {/* Dropdown container */}
+            <div className="relative">
+              <button
+                onClick={(e) => toggleDropdown(e)}
+                className="focus:outline-none"
               >
-                <button
-                  className="block w-full py-2 px-4 hover:bg-gray-100 text-left"
-                  onClick={handleEdit}
-                >
-                  Edit
-                </button>
-                <button
-                  className="block w-full py-2 px-4 hover:bg-gray-100 text-left"
-                  onClick={handleDelete}
-                >
-                  Delete
-                </button>
-              </div>
+                <FaEllipsisH className="w-4 h-4" />
+              </button>
+
+              {/* Dropdown menu */}
+              {showDropdown &&
+                currentUser &&
+                post.UserId === currentUser.id && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute top-8 right-2 bg-white shadow-md rounded-md"
+                  >
+                    <button
+                      className="block w-full py-2 px-4 hover:bg-gray-100 text-left"
+                      onClick={handleEdit}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="block w-full py-2 px-4 hover:bg-gray-100 text-left"
+                      onClick={handleDelete}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-col justify-center mb-4">
+          <h2 className="text-xl font-semibold">{post.title}</h2>
+          <div className="flex items-center text-gray-500 text-sm">
+            {user && user.profilePicture ? (
+              <img
+                className="w-4 h-4 mr-2 rounded-full"
+                src={user.profilePicture}
+                alt={`Avatar of ${user.userName}`}
+              />
+            ) : (
+              <FaUserCircle className="w-4 h-4 mr-2" />
             )}
+            {user ? user.userName : "Unknown User"}
+            <span className="mx-2">|</span>
+            {formatDate(post.createdAt)}
           </div>
         </div>
-      )}
 
-      <div className="flex flex-col justify-center mb-4">
-        <h2 className="text-xl font-semibold">{post.title}</h2>
-        <div className="flex items-center text-gray-500 text-sm">
-          {user && user.profilePicture ? (
-            <img
-              className="w-4 h-4 mr-2 rounded-full"
-              src={user.profilePicture}
-              alt={`Avatar of ${user.userName}`}
+        {isEditMode ? (
+          // Render the edit textarea when in edit mode
+          <div>
+            <textarea
+              className="border border-gray-300 rounded-md w-full p-2 mt-2"
+              rows={5}
+              value={draftContent}
+              onChange={(e) => setDraftContent(e.target.value)}
             />
-          ) : (
-            <FaUserCircle className="w-4 h-4 mr-2" />
-          )}
-          {user ? user.userName : "Unknown User"}
-          <span className="mx-2">|</span>
-          {formatDate(post.createdAt)}
+            <div className="flex justify-end mt-2">
+              <button
+                className="px-4 py-2 mr-2 bg-green-500 text-white rounded-md"
+                onClick={handleSave}
+              >
+                Save
+              </button>
+              <button
+                className="px-4 py-2 bg-red-500 text-white rounded-md"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          // Render the post content when not in edit mode
+          <p className="text-gray-600">{post.content}</p>
+        )}
+
+        <div className="flex items-center mt-4">
+          <span className="mr-4 text-gray-500 flex items-center">
+            <button>
+              <FaThumbsUp className="mr-2" />
+            </button>
+            Likes: {post.likesCount}
+          </span>
+          <span className="text-gray-500 ml-auto flex items-center">
+            <FaCommentDots className="mr-2" />
+            Comments: {post.commentsCount}
+          </span>
         </div>
       </div>
-
-      {isEditMode ? (
-        // Render the edit textarea when in edit mode
-        <div>
+      {showReplyTextarea && (
+        <div className="bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start">
           <textarea
             className="border border-gray-300 rounded-md w-full p-2 mt-2"
             rows={5}
-            value={draftContent}
-            onChange={(e) => setDraftContent(e.target.value)}
+            placeholder="Type your reply..."
+            value={newCommentContent}
+            onChange={(e) => setNewCommentContent(e.target.value)}
           />
-          <div className="flex justify-end mt-2">
-            <button
-              className="px-4 py-2 mr-2 bg-green-500 text-white rounded-md"
-              onClick={handleSave}
-            >
-              Save
-            </button>
-            <button
-              className="px-4 py-2 bg-red-500 text-white rounded-md"
-              onClick={handleCancel}
-            >
-              Cancel
-            </button>
-          </div>
+          <button
+            className="px-4 py-2 mt-2 bg-blue-500 text-white rounded-md"
+            onClick={handleCreateComment}
+          >
+            Submit Reply
+          </button>
         </div>
-      ) : (
-        // Render the post content when not in edit mode
-        <p className="text-gray-600">{post.content}</p>
       )}
 
-      <div className="flex items-center mt-4">
-        <span className="mr-4 text-gray-500 flex items-center">
-          <button>
-            <FaThumbsUp className="mr-2" />
-          </button>
-          Likes: {post.likesCount}
-        </span>
-        <span className="text-gray-500 ml-auto flex items-center">
-          <FaCommentDots className="mr-2" />
-          Comments: {post.commentsCount}
-        </span>
-        <span className="ml-4">
-          <button className="px-4 py-2 bg-blue-500 text-white rounded-md">
+      {!showReplyTextarea && (
+        <div className="ml-10">
+          <button
+            className="px-4 py-2 mt-2 bg-blue-500 text-white rounded-md"
+            onClick={() => setShowReplyTextarea(true)}
+          >
             Reply
           </button>
-        </span>
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 
