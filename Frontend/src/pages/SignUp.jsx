@@ -7,19 +7,22 @@ import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "../app/contexts/AuthContext";
 
-
 const SignUp = () => {
   const router = useRouter();
   //get the signup funciton, the current user and the error {if any occur during fetch}
-  const{signup,currentUser,authError} = useContext(AuthContext);
+  const { signup, currentUser, authError } = useContext(AuthContext);
 
-  const [firstName, setFirstName] = useState("");
+  if (currentUser) {
+    window.location.href = "/login";
+    //window.location.href = "/";
+  }
+  /* const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
-  const handleSubmit = async (e) => {
+ */
+  /* const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Prepare the user data to send to the server
@@ -30,18 +33,22 @@ const SignUp = () => {
       email,
       password,
     };
-   
+
     try {
       await signup(userData);
-      if(currentUser&&authError===null){
-        router.push("/");//want this to rout back to the login page instead of the home page but didn't work
-        return null;
-      }
+      console.log(currentUser);
+      //window.location.href = "/login"; //want this to rout back to the login page instead of the home page but didn't work
+      return null;
     } catch (error) {
-        console.error("Error during signup:", error);
+      console.error("Error during signup:", error);
     }
-    
+  }; */
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const credentials = Object.fromEntries(formData);
+    await signup(credentials);
   };
 
   return (
@@ -61,21 +68,23 @@ const SignUp = () => {
           <h2 className="flex justify-center text-2xl font-bold mb-4 mt-3">
             Sign Up
           </h2>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} method="post">
             <div className="flex justify-between">
               <input
                 className="w-64 h-10 bg-[#E6E6E6] boarder rounded p-2"
                 type="text"
                 placeholder="First Name:"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                name="firstName"
+                /* value={firstName}
+                onChange={(e) => setFirstName(e.target.value)} */
               />
               <input
                 className="w-64 h-10 bg-[#E6E6E6] boarder rounded p-2"
                 type="text"
                 placeholder="Last Name:"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                name="lastName"
+                /* value={lastName}
+                onChange={(e) => setLastName(e.target.value)} */
               />
             </div>
             <div>
@@ -83,8 +92,9 @@ const SignUp = () => {
                 className="w-full h-10 border rounded bg-[#E6E6E6] mt-3 p-2"
                 type="text"
                 placeholder="Username: "
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
+                name="userName"
+                /*  value={userName}
+                onChange={(e) => setUserName(e.target.value)} */
               />
             </div>
             <div>
@@ -92,8 +102,9 @@ const SignUp = () => {
                 className="w-full h-10 border rounded bg-[#E6E6E6] mt-3 p-2"
                 type="email"
                 placeholder="Email: "
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                name="email"
+                /* value={email}
+                onChange={(e) => setEmail(e.target.value)} */
               />
             </div>
             <div>
@@ -101,8 +112,9 @@ const SignUp = () => {
                 className="w-full h-10 border rounded bg-[#E6E6E6] mt-3 p-2"
                 type="password"
                 placeholder="Password: "
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                name="password"
+                /* value={password}
+                onChange={(e) => setPassword(e.target.value)} */
               />
             </div>
             {authError && (
