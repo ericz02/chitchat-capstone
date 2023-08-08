@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 
-const CommentSection = ({ comment, replyContent, setReplyContent, postId }) => {
+const CommentSection = ({ comment, replyContent, setReplyContent }) => {
   const [user, setUser] = useState(null);
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [comments, setComments] = useState([]);
-
-  console.log("The comment being passed:", comment);
-  console.log("post id:", postId);
 
   useEffect(() => {
     // Fetch the user's data based on the comment's UserId
@@ -30,7 +27,7 @@ const CommentSection = ({ comment, replyContent, setReplyContent, postId }) => {
     return date.toDateString(); // Format the timestamp to display only the date
   };
 
-  const handleReplySubmit = async (replyContent, commentId, postId) => {
+  const handleReplySubmit = async (replyContent, commentId) => {
     console.log("CommentId:", commentId);
     console.log("replyContent:", replyContent);
 
@@ -127,7 +124,7 @@ const CommentSection = ({ comment, replyContent, setReplyContent, postId }) => {
           />
           <button
             className="px-4 py-2 mt-2 bg-blue-500 text-white rounded-md"
-            onClick={() => handleReplySubmit(replyContent, comment.id, postId)}
+            onClick={() => handleReplySubmit(replyContent, comment.id)}
           >
             Submit Reply
           </button>
@@ -150,7 +147,6 @@ const CommentSection = ({ comment, replyContent, setReplyContent, postId }) => {
               comment={reply}
               replyContent={replyContent}
               setReplyContent={setReplyContent}
-              postId={postId}
             />
           ))}
         </div>

@@ -6,22 +6,15 @@ import CommentSection from "@/components/CommentSection";
 
 const ViewPost = () => {
   const router = useRouter();
-  //const { id } = router.query;
   const [post, setPost] = useState(null);
   const [replyContent, setReplyContent] = useState("");
   const [postId, setPostId] = useState(null);
 
-  /* useEffect(() => {
-    if (id) {
-      fetch(`/api/posts/${id}`)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Data received:", data);
-          setPost(data);
-        })
-        .catch((error) => console.error("Error fetching post:", error));
-    }
-  }, [id]); */
+  useEffect(() => {
+    // Fetch the postId from the router query
+    const { id } = router.query;
+    setPostId(id);
+  }, [router.query]);
 
   useEffect(() => {
     if (postId) {
@@ -35,22 +28,12 @@ const ViewPost = () => {
     }
   }, [postId]);
 
-  useEffect(() => {
-    // Fetch the postId from the router query
-    const { id } = router.query;
-    setPostId(id);
-  }, [router.query]);
-
   const handlePostContentUpdate = (newContent) => {
     setPost((prevPost) => ({
       ...prevPost,
       content: newContent,
     }));
   };
-
-  if (!post) {
-    return <p>Loading...</p>;
-  }
 
   const handleCommentRepliesUpdate = (commentId, updatedReplies) => {
     setPost((prevPost) => {
@@ -72,9 +55,24 @@ const ViewPost = () => {
     });
   };
 
+  const handleCreateComment = (newComment) => {
+    setPost((prevPost) => ({
+      ...prevPost,
+      comments: [...prevPost.comments, newComment],
+    }));
+  };
+
+  if (!post) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <RootLayout>
-      <PostCard post={post} onUpdate={handlePostContentUpdate} />
+      <PostCard
+        post={post}
+        onUpdate={handlePostContentUpdate}
+        onUpdateComments={handleCreateComment}
+      />
       {post.comments && post.comments.length > 0 && (
         <div className="w-2/3 h-[1100px] flex flex-col">
           {post.comments.map((comment) => (
@@ -83,7 +81,6 @@ const ViewPost = () => {
               comment={comment}
               replyContent={replyContent}
               setReplyContent={setReplyContent}
-              postId={post.id} // Pass the postId prop here for comments to a post
               onUpdateReplies={(updatedReplies) =>
                 handleCommentRepliesUpdate(comment.id, updatedReplies)
               }

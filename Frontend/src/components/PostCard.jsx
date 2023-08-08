@@ -7,7 +7,7 @@ import {
 } from "react-icons/fa";
 import { AuthContext } from "@/app/contexts/AuthContext";
 
-const PostCard = ({ post, onUpdate }) => {
+const PostCard = ({ post, onUpdate, onUpdateComments }) => {
   const [user, setUser] = useState(null);
   const { currentUser } = useContext(AuthContext);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -103,6 +103,9 @@ const PostCard = ({ post, onUpdate }) => {
     })
       .then((response) => response.json())
       .then((data) => {
+        // Call the onUpdateComments prop function to update the comments state in the parent component
+        onUpdateComments(data); // Assuming data is the newly created comment object
+        console.log("New Post Comment:", data);
         setNewCommentContent("");
         setShowReplyTextarea(false);
       })
