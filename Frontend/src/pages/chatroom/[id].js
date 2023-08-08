@@ -57,6 +57,7 @@ const ViewChatRoom = () => {
 
   const [post, setPost] = useState(null);
   const [chatroom, setChatroom] = useState(null);
+  
   useEffect(() => {
     if (id) {
       // Fetch post from the server based on the post ID
@@ -66,6 +67,7 @@ const ViewChatRoom = () => {
         .catch((error) => console.error("Error fetching post:", error));
     }
   }, [id]);
+
   useEffect(() => {
     if (id) {
       // Fetch chatroom from the server based on the chatroom ID

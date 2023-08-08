@@ -56,16 +56,16 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      /*       likesCount: {
+      likesCount: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
       },
-      commentsCount: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-      }, */
+      // commentsCount: {
+      //   type: DataTypes.INTEGER,
+      //   allowNull: false,
+      //   defaultValue: 0,
+      // },
       image_URL: {
         type: DataTypes.STRING,
         allowNull: true,
