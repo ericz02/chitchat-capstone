@@ -169,10 +169,10 @@ router.post("/:id/addCreator/:userId", async (req,res)=>{
 });
 
 //add a user to a chatroom
-router.post("/:id/addUser/:userId", async(req,res) =>{
+router.post("/:id/addUser/",authenticateUser, async(req,res) =>{
   //the chatroom to add the user to and the user itself
   const chatroomId = parseInt(req.params.id,10);
-  const userId = parseInt(req.params.userId,10);
+  const userId = req.session.userId;
   try {
     const addedUser = await UserChatRoom.create({UserId: userId, ChatroomId:chatroomId, role:"member"});
     res.status(201).json(addedUser);
@@ -182,6 +182,23 @@ router.post("/:id/addUser/:userId", async(req,res) =>{
     res.status(500).json({ message: err.message });
   }
 
+});
+//check if the user is a member of a chatroom
+router.get('/isMemberOf/:id',authenticateUser, async(req,res) =>{
+  const userId = req.session.userId;
+  const chatroom = parseInt(req.params.id,10);
+  try{
+    const response = await UserChatRoom.findOne({where:{UserId:userId, ChatroomId:chatroom}});
+    if(response){
+      res.status(200).json({there:true, role:response.role});
+    }
+    else{
+      res.status(200).json({there:false});
+    }
+  }catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err.message });
+  }
 });
 
 //remove a user from a chatroom

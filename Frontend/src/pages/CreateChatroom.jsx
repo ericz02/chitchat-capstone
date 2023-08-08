@@ -59,42 +59,45 @@ const CreateChatroom = () => {
     }
   };
 
-  return (
-    <div className="flex flex-col justify-center p-5 ">
-      <h1 className="flex justify-center text-2xl font-bold mb-4 mt-3">
-        Create Chatroom
-      </h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4 mx-auto w-3/4">
-          <input
-            className="w-full px-3 pb-10 pt-2 border rounded bg-[#E6E6E6] mt-3"
-            type="text"
-            id="chatroomName"
-            placeholder="Chatroom Name:"
-            value={roomName}
-            onChange={(e) => setChatroomName(e.target.value)}
-          />
-        </div>
-        <div className="mb-4 mx-auto w-3/4">
-          <textarea
-            className="w-full px-3 pb-10 pt-2 border rounded bg-[#E6E6E6] mt-3"
-            id="postDescription"
-            rows="4"
-            placeholder="Description:"
-            value={roomDescription}
-            onChange={(e) => setChatroomDescription(e.target.value)}
-          />
-        </div>
-        <div className="bg-[#FFFFFF] p-4 flex flex-col justify-center ">
-          <button
-            className="bg-[#14AE5C] hover:bg-[#0F8B49] text-white justify-center font-bold py-2 px-4 rounded mx-auto w-1/6"
-            type="submit"
-          >
-            Create
-          </button>
-        </div>
-      </form>
-    </div>
-  );
-};
+    return(
+        <ProtectedRoute>
+            <div className = "flex flex-col justify-center p-5 ">
+                <h1 className="flex justify-center text-2xl font-bold mb-4 mt-3">
+                    Create Chatroom
+                </h1>
+                <form onSubmit = {handleSubmit}>
+                    <div className="mb-4 mx-auto w-3/4">
+                        <input
+                        className="w-full px-3 pb-10 pt-2 border rounded bg-[#E6E6E6] mt-3"
+                        type="text"
+                        id="chatroomName"
+                        placeholder="Chatroom Name:"
+                        value = {roomName}
+                        onChange = {(e)=> setChatroomName(e.target.value)}
+                        />
+                    </div>
+                    <div className="mb-4 mx-auto w-3/4">
+                        <textarea
+                        className="w-full px-3 pb-10 pt-2 border rounded bg-[#E6E6E6] mt-3"
+                        id="postDescription"
+                        rows="4"
+                        placeholder="Description:"
+                        value = {roomDescription}
+                        onChange = {(e)=>setChatroomDescription(e.target.value)}
+                        />
+                    </div>
+                    <div className="bg-[#FFFFFF] p-4 flex flex-col justify-center ">
+                        <button
+                        className="bg-[#14AE5C] hover:bg-[#0F8B49] text-white justify-center font-bold py-2 px-4 rounded mx-auto w-1/6"
+                        type="submit"
+                        >
+                        Create
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </ProtectedRoute>
+    );
+}
 export default CreateChatroom;
+
