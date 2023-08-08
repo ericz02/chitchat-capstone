@@ -60,6 +60,8 @@ const ViewPost = () => {
       ...prevPost,
       comments: [...prevPost.comments, newComment],
     }));
+
+    window.location.reload();
   };
 
   if (!post) {
@@ -74,7 +76,7 @@ const ViewPost = () => {
         onUpdateComments={handleCreateComment}
       />
       {post.comments && post.comments.length > 0 && (
-        <div className="w-2/3 h-[1100px] flex flex-col">
+        <div className="w-2/3 h-[2100px] flex flex-col">
           {post.comments.map((comment) => (
             <CommentSection
               key={comment.id}

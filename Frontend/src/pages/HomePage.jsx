@@ -61,7 +61,7 @@ const HomePage = () => {
           <Link href={`/post/${post.id}`} key={post.id}>
             <div
               key={post.id}
-              className="bg-[#DDE6ED] p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 cursor-pointer"
+              className="bg-[#DDE6ED] hover:bg-[#C9D7E2] p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 cursor-pointer"
             >
               <div className="font-bold text-[20px]">
                 cc/{post.chatroom.chatroomName}
