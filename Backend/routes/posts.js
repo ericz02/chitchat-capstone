@@ -32,7 +32,7 @@ module.exports = (db) => {
     }
   };
 
-  const authorizeCommentDelete = (session, post) => {
+  const authorizeCommentDelete = (session, comment) => {
     if (parseInt(session.userId, 10) !== comment.UserId) {
       throw new ForbiddenError("You cannot delete someone else's comment");
     }
@@ -317,6 +317,25 @@ module.exports = (db) => {
     }
   });
 
+  //update a reply to a comment
+  router.patch("/:postId/replyComments/:commentId", async (req, res) => {
+    const postId = parseInt(req.params.id, 10);
+    const content = req.body.content;
+    const userId = req.session.userId;
+    try {
+      const comment = await Comment.findOne({
+        where: {
+          id: req.params.commentId,
+        },
+      });
+      await authorizeCommentEdit;
+      const updatedComment = await comment.update(req.body);
+      res.status(200).json(updatedComment);
+    } catch (err) {
+      handleErrors(err, res);
+    }
+  });
+
   //update a specific post
   router.patch("/:id", authenticateUser, async (req, res) => {
     try {
@@ -372,35 +391,29 @@ module.exports = (db) => {
   });
 
   //Soft delete a comment
-  router.delete(
-    "/:postId/comments/:commentId",
-    authenticateUser,
-    async (req, res) => {
-      const postId = parseInt(req.params.postId, 10);
-      const commentId = parseInt(req.params.commentId, 10);
-      try {
-        const comment = await Comment.findOne({
-          where: {
-            id: commentId,
-            CommentableId: postId,
-            commentableType: "post",
-          },
-        });
-        await authorizeCommentDelete(req.session, comment);
+  router.delete("/comments/:commentId", authenticateUser, async (req, res) => {
+    //const postId = parseInt(req.params.postId, 10);
+    const commentId = parseInt(req.params.commentId, 10);
+    try {
+      const comment = await Comment.findOne({
+        where: {
+          id: commentId,
+        },
+      });
+      await authorizeCommentDelete(req.session, comment);
 
-        if (!comment) {
-          return res.status(404).send({ message: "Comment not found" });
-        }
-
-        await comment.update({ isDeleted: true });
-
-        res.status(200).json({ message: "Comment deleted successfully" });
-      } catch (err) {
-        console.error(err);
-        res.status(500).send({ message: err.message });
+      if (!comment) {
+        return res.status(404).send({ message: "Comment not found" });
       }
+
+      await comment.update({ isDeleted: true, content: "Deleted" });
+
+      res.status(200).json({ message: "Comment deleted successfully" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: err.message });
     }
-  );
+  });
 
   router.delete(
     "/:postId/comments/:commentId/replies/:replyId",

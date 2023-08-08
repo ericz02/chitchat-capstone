@@ -93,7 +93,6 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
   };
 
   const handleCreateComment = () => {
-    // Fetch the backend API route to create a new comment
     fetch(`/api/posts/${post.id}/comments`, {
       method: "POST",
       headers: {
