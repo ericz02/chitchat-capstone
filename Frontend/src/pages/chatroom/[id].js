@@ -19,9 +19,23 @@ const ViewChatRoom = () => {
   const[role,setRole] = useState(null);
   const [joining, setJoining]  = useState(false);//purpose of this boolean is everythime a user leaves or joins a room they will rerender the page to show either the leave or join button
 
-  // if (currentUser) {
-  //   router.push("/");
-  //}
+  const handleDeleteChatroom = async() => {
+    try {
+      const response = await fetch(`/api/chatrooms/${id}`, {
+        method:"DELETE",
+        credentials: "include",
+      });
+      if(!response.ok){
+        console.log("failed to delete chatroom");
+      }
+      console.log("successfully deleted chatroom");
+      router.push("/");
+      return;
+      
+    } catch (error) {
+      console.error("Error joining:", error);
+    }
+  };
   const handleJoin = async() =>{
       try{
         const response = await fetch(`/api/chatrooms/${id}/addUser`,{
@@ -128,8 +142,20 @@ const ViewChatRoom = () => {
   return (
     <RootLayout  >
     <div className = " border-black border-2 m-10  w-4/5 flex-row self-center p-2">
-
+            
       <div className = " p-4 flex flex-col justify-items-center bg-slate-100">
+            {(role ==="admin")?(<div className = "flex justify-end	">
+              <button
+                className="bg-red-100	text-black  rounded-[10px] hover:bg-red-500 transition-colors 
+                duration-300 ease-in-out px-4 py-2  w-1/6 text-xs "
+                onClick = {handleDeleteChatroom}
+                >
+                Delete Chatroom
+              </button>
+            </div>) :(<></>)}
+            
+
+
         <h1 className = "flex justify-center	text-5xl py-4">  {info.name}</h1>
 
           {(joined) ?(

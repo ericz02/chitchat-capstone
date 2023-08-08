@@ -114,15 +114,22 @@ router.patch("/:id", authenticateUser, async (req, res) => {
 router.delete("/:id", authenticateUser, async (req, res) => {
   const chatroomId = parseInt(req.params.id, 10);
   try {
+    const deleteRelations = await UserChatRoom.destroy({
+      where:{ChatroomId:chatroomId},
+    })
     const deleteChatroom = await Chatroom.destroy({
       where: { id: chatroomId },
     });
+    
 
-    if (deleteChatroom > 0) {
+    if (deleteChatroom > 0 && deleteRelations>0) {
       res.status(200).send({ message: "Chatroom deleted successfully" });
     } else {
       res.status(404).send({ message: "Chatroom not found" });
     }
+    
+
+
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: err.message });
