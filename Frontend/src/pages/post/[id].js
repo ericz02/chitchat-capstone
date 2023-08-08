@@ -6,13 +6,12 @@ import CommentSection from "@/components/CommentSection";
 
 const ViewPost = () => {
   const router = useRouter();
-  const { id } = router.query; // This will get the post ID from the URL
+  const { id } = router.query;
   const [post, setPost] = useState(null);
   const [replyContent, setReplyContent] = useState("");
 
   useEffect(() => {
     if (id) {
-      // Fetch post from the server based on the post ID
       fetch(`/api/posts/${id}`)
         .then((response) => response.json())
         .then((data) => {
@@ -23,13 +22,40 @@ const ViewPost = () => {
     }
   }, [id]);
 
+  const handlePostContentUpdate = (newContent) => {
+    setPost((prevPost) => ({
+      ...prevPost,
+      content: newContent,
+    }));
+  };
+
   if (!post) {
     return <p>Loading...</p>;
   }
 
+  const handleCommentRepliesUpdate = (commentId, updatedReplies) => {
+    setPost((prevPost) => {
+      // Find the comment in the post and update its replies
+      const updatedComments = prevPost.comments.map((comment) => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            replies: updatedReplies,
+          };
+        }
+        return comment;
+      });
+
+      return {
+        ...prevPost,
+        comments: updatedComments,
+      };
+    });
+  };
+
   return (
     <RootLayout>
-      <PostCard post={post} />
+      <PostCard post={post} onUpdate={handlePostContentUpdate} />
       {post.comments && post.comments.length > 0 && (
         <div className="w-2/3 h-[1100px] flex flex-col">
           {post.comments.map((comment) => (
@@ -38,6 +64,9 @@ const ViewPost = () => {
               comment={comment}
               replyContent={replyContent}
               setReplyContent={setReplyContent}
+              onUpdateReplies={(updatedReplies) =>
+                handleCommentRepliesUpdate(comment.id, updatedReplies)
+              }
             />
           ))}
         </div>

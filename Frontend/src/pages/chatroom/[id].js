@@ -20,7 +20,8 @@ export const Comment = ({ comment }) => {
   };
   return (
     <div className="ml-4 border-l-2 pl-4 mt-4">
-      <div className="flex items-center mb-1">{/*console.log("user: ",user)*/}
+      <div className="flex items-center mb-1">
+        {/*console.log("user: ",user)*/}
         {user && user.profilePicture ? (
           <img
             className="w-8 h-8 rounded-full mr-2"
@@ -54,8 +55,8 @@ export const Comment = ({ comment }) => {
 const ViewChatRoom = () => {
   const router = useRouter();
   const { id } = router.query; // This will get the chatroom ID from the URL
-
   const [post, setPost] = useState(null);
+
   const [chatroom, setChatroom] = useState(null);
   useEffect(() => {
     if (id) {
@@ -90,15 +91,21 @@ const ViewChatRoom = () => {
           {chatroom.chatroomName}
         </h1>
         <p className="text-gray-600">{chatroom.chatroomDescription}</p>
-        <div className="flex flex-col justify-center mb-4">
+      </div>
+    </RootLayout>
+  );
+};
+
+export default ViewChatRoom;
+
+/*
+ <div className="flex flex-col justify-center mb-4">
           <h2 className="text-xl font-semibold">{post.title}</h2>
           <p className="text-gray-600">
-            {/* Add the post details, e.g., author, date, etc., here */}
             {post.content}
           </p>
         </div>
         <div className="flex items-center mt-4">
-          {/* Render the comments */}
           {post.comments && post.comments.length > 0 && (
             <div>
               {post.comments.map((comment) => (
@@ -106,10 +113,4 @@ const ViewChatRoom = () => {
               ))}
             </div>
           )}
-        </div>
-      </div>
-    </RootLayout>
-  );
-};
-
-export default ViewChatRoom;
+        </div>*/
