@@ -195,6 +195,9 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
       setComments((prevComments) =>
         prevComments.filter((c) => c.id !== comment.id)
       );
+
+      window.location.reload();
+
     } catch (error) {
       console.error("Error deleting comment:", error);
     }
@@ -226,7 +229,7 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
               onClick={(e) => toggleDropdown(e)}
               className="focus:outline-none"
             >
-              <FaEllipsisH className="w-4 h-4" />
+              <FaEllipsisH className="w-4 h-4 mr-2" />
             </button>
 
             {/* Dropdown menu */}
@@ -315,7 +318,7 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
       {/* Show the button to reveal the reply input */}
       {!showReplyInput && (
         <button
-          className="px-4 py-2 mt-2 bg-gray-200 rounded-md"
+          className="px-2 py-1 mt-2 ml-2 text-[12px] bg-gray-200 hover:bg-gray-300 rounded-md"
           onClick={handleReply}
         >
           Reply
