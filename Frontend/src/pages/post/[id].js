@@ -10,6 +10,8 @@ const ViewPost = () => {
   const [replyContent, setReplyContent] = useState("");
   const [postId, setPostId] = useState(null);
 
+  console.log("ViewPost state", post);
+
   useEffect(() => {
     // Fetch the postId from the router query
     const { id } = router.query;
@@ -56,12 +58,25 @@ const ViewPost = () => {
   };
 
   const handleCreateComment = (newComment) => {
+    console.log("HandleCreateComment has been called with", newComment);
     setPost((prevPost) => ({
       ...prevPost,
-      comments: [...prevPost.comments, newComment],
+      comments: [newComment.comment, ...prevPost.comments],
+      commentsCount: parseInt(prevPost.commentsCount) + 1,
     }));
+  };
 
-    window.location.reload();
+  const handleUpdateComment = (updatedComment) => {
+    setPost((prevPost) => {
+      const updatedComments = prevPost.comments.map((comment) =>
+        comment.id === updatedComment.id ? updatedComment : comment
+      );
+
+      return {
+        ...prevPost,
+        comments: updatedComments,
+      };
+    });
   };
 
   if (!post) {
@@ -71,6 +86,7 @@ const ViewPost = () => {
   return (
     <RootLayout>
       <PostCard
+        key={post.id}
         post={post}
         onUpdate={handlePostContentUpdate}
         onUpdateComments={handleCreateComment}
@@ -83,9 +99,11 @@ const ViewPost = () => {
               comment={comment}
               replyContent={replyContent}
               setReplyContent={setReplyContent}
+              newComment={null}
               onUpdateReplies={(updatedReplies) =>
                 handleCommentRepliesUpdate(comment.id, updatedReplies)
               }
+              onUpdateComment={handleUpdateComment}
             />
           ))}
         </div>

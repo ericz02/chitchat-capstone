@@ -14,12 +14,12 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
     if (currentUser) {
       // If the user is logged in, perform logout
       logout();
-      window.location.href = "/";
+      router.push("/");
     } else {
       // If the user is not logged in, redirect to the login page
       // You can add the appropriate route for the login page below
       // Replace "/login" with your actual login page route
-      window.location.href = "/login";
+      router.push("/login");
     }
   };
 

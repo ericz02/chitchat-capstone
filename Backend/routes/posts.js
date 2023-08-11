@@ -95,6 +95,7 @@ module.exports = (db) => {
             ],
           ],
         },
+        order: [["createdAt", "DESC"]],
       });
       res.status(200).json(allPosts);
     } catch (err) {
@@ -162,6 +163,7 @@ module.exports = (db) => {
               commentableType: "post",
             },
             required: false,
+            order: [["updatedDate", "DESC"]], // Ordering the comments based on updatedDate in descending order
           },
         ],
       });
@@ -187,6 +189,7 @@ module.exports = (db) => {
       res.status(500).send({ message: err.message });
     }
   });
+
   //get chatroom id by name
   // router.post("/chatRoomId", authenticateUser, async (req, res) => {
   //     const name = req.params.chatroom;
