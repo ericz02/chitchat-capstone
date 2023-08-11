@@ -3,11 +3,9 @@ import { AuthContext } from "@/app/contexts/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-
 const DropdownForm = ({ darkMode, setDarkMode }) => {
   const { currentUser, logout } = useContext(AuthContext);
   const router = useRouter();
-
 
   const handleDarkModeToggle = () => {
     setDarkMode((prevDarkMode) => !prevDarkMode);
