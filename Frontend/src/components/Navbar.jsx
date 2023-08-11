@@ -11,7 +11,7 @@ const Navbar = () => {
 
   const handleLogoClick = () => {
     // Add your logic here for what should happen when the logo is clicked
-    // For example, you can navigate to a different page using 'window.location.href'
+    // For example, you can navigate to a different page router.push()
   };
 
   const [isModalVisible, setIsModalVisible] = useState(false);
