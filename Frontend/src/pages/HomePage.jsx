@@ -75,9 +75,8 @@ const HomePage = () => {
       <div className="absolute top-2 right-2 flex items-center justify-end mt-4">
         <div>
           <LikeButton
-            currentUser={currentUser}
             postId={post.id}
-            likesCount={post.likesCount}
+            userId={post.UserId}
           />
         </div>
         <div className="flex items-center ml-4">

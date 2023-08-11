@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User, Post, Comment,Likes } = require("../models");
+const { User, Post, Comment, Likes } = require("../models");
 const { ForbiddenError, NotFoundError } = require("../middleware/errorHandler");
 const { authenticateUser } = require("../middleware/auth");
 
@@ -206,40 +206,61 @@ module.exports = (db) => {
 
   // get likes
   // Server-side route to get the likes for a post
-  router.get("/:id/likes", async (req, res) => {
+  router.get("/:id/like", async (req, res) => {
+    console.log("get likes");
     try {
       const postId = req.params.id;
-      const userId = req.query.userId
-  
+      const userId = req.query.userId;
+      const post = await Post.findByPk(postId);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
       // Fetch the likes for the specified post
       const likes = await Likes.findAll({
+        where: {
+          likeableType: "post",
+          likeableId: postId,
+        },
+      });
+      const finduser = await Likes.findOne({
         where: {
           likeableType: "post",
           likeableId: postId,
           userId: userId,
         },
       });
-  
-      res.status(200).json({ isLiked: !likes });
+      console.log(finduser);
+      console.log(likes.length);
+      if (finduser) {
+        console.log("user found");
+        res.status(200).json({ isLiked: true, likesCount: likes.length});
+      } else {
+        res.status(200).json({ isLiked: false, likesCount: likes.length });
+      }
     } catch (err) {
       console.error(err);
       res.status(500).send({ message: err.message });
     }
   });
-  
 
   //add to likes
   router.post("/:id/like", async (req, res) => {
+    console.log("add likes");
     try {
       const postId = req.params.id;
       const userId = req.body.userId;
-  
+
       // Check if the likeable (post or comment) exists
       const post = await Post.findByPk(postId);
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
       }
-  
+      const likes = await Likes.findAll({
+        where: {
+          likeableType: "post",
+          likeableId: postId,
+        },
+      });
       // Check if the user has already liked the post (prevent duplicate likes)
       const existingLike = await Likes.findOne({
         where: {
@@ -248,23 +269,20 @@ module.exports = (db) => {
           userId: userId,
         },
       });
-      if (existingLike) {
-        return res.status(409).json({ message: "User has already liked the post" });
-      }
-  
       // Create a new like entry in the database
-      await Likes.create({
-        likeableType: "post",
-        likeableId: postId,
-        userId: userId,
-      });
-  
-      // Increment the likes count on the post
-      post.likesCount += 1;
-      await post.save();
-  
+      if (!existingLike) {
+        await Likes.create({
+          likeableType: "post",
+          likeableId: postId,
+          userId: userId,
+        });
+
+        post.likesCount += 1;
+        await post.save();
+      }
+
       // Respond with the updated likes count
-      res.status(200).json({ likesCount: post.likesCount });
+      res.status(200).json({ likesCount: likes.length, isLiked: true });
     } catch (err) {
       console.error(err);
       res.status(500).send({ message: err.message });
@@ -272,44 +290,47 @@ module.exports = (db) => {
   });
 
   // Delete a like
-router.delete("/:id/like", async (req, res) => {
-  try {
-    const postId = req.params.id;
-    const userId = req.body.userId;
+  router.delete("/:id/like", async (req, res) => {
+    try {
+      const postId = req.params.id;
+      const userId = req.body.userId;
 
-    // Check if the likeable (post or comment) exists
-    const post = await Post.findByPk(postId);
-    if (!post) {
-      return res.status(404).json({ message: "Post not found" });
+      // Check if the likeable (post or comment) exists
+      const post = await Post.findByPk(postId);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      const likes = await Likes.findAll({
+        where: {
+          likeableType: "post",
+          likeableId: postId,
+        },
+      });
+      // Check if the user has already liked the post
+      const existingLike = await Likes.findOne({
+        where: {
+          likeableType: "post",
+          likeableId: postId,
+          userId: userId,
+        },
+      });
+      if (existingLike) {
+        await existingLike.destroy();
+        post.likesCount -= 1;
+        if (post.likesCount < 0) post.likesCount = 0;
+        await post.save();
+        return res
+          .status(200)
+          .json({ likesCount: likes.length, isLiked: false });
+      }
+      if (!existingLike) {
+        return res.status(404).json({ message: "Like not found" });
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: err.message });
     }
-
-    // Check if the user has already liked the post
-    const existingLike = await Likes.findOne({
-      where: {
-        likeableType: "post",
-        likeableId: postId,
-        userId: userId,
-      },
-    });
-
-    if (!existingLike) {
-      return res.status(404).json({ message: "Like not found" });
-    }
-
-    // Delete the like entry in the database
-     await existingLike.destroy();
-
-    // Decrement the likes count on the post
-    post.likesCount -= 1;
-    await post.save();
-
-    // Respond with the updated likes count
-    res.status(200).json({ likesCount: post.likesCount });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: err.message });
-  }
-});
+  });
 
   //create a post
   router.post("/", authenticateUser, async (req, res) => {
@@ -345,7 +366,6 @@ router.delete("/:id/like", async (req, res) => {
         UserId: userId,
         CommentableId: postId,
         commentableType: "post",
-      
       });
 
       res.status(201).json({
