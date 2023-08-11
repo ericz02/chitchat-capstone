@@ -6,6 +6,8 @@ import {
   FaThumbsUp,
 } from "react-icons/fa";
 import { AuthContext } from "@/app/contexts/AuthContext";
+import { useRouter } from "next/navigation";
+
 
 const PostCard = ({ post, onUpdate, onUpdateComments }) => {
   const [user, setUser] = useState(null);
@@ -16,6 +18,8 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
   const [newCommentContent, setNewCommentContent] = useState("");
   const [showReplyTextarea, setShowReplyTextarea] = useState(false);
   const dropdownRef = useRef(null);
+  const router = useRouter();
+
 
   console.log("PostCard props", post, onUpdate, onUpdateComments);
 
@@ -70,7 +74,7 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
       .then((data) => {
         console.log(data);
         onUpdate();
-        window.location.href = "/";
+        router.push("/");
       })
       .catch((error) => console.error("Error deleting post:", error));
   };
@@ -92,6 +96,14 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
       .catch((error) => {
         console.error("Error updating post content:", error);
       });
+  };
+
+  const handleReply = () => {
+    if (!currentUser) {
+      router.push("/login");
+    } else {
+      setShowReplyTextarea(true);
+    }
   };
 
   const handleCreateComment = () => {
@@ -256,7 +268,7 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
         <div className="ml-10">
           <button
             className="px-2 py-1 mt-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
-            onClick={() => setShowReplyTextarea(true)}
+            onClick={handleReply}
           >
             Reply
           </button>

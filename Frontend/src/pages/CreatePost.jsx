@@ -58,6 +58,7 @@ const CreatePost = () => {
 
       console.log("Post created successfully!");
       router.push("/");
+      router.push("/");
     } catch (error) {
       console.error("Error creating post:", error);
     }

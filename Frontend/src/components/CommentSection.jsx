@@ -176,6 +176,8 @@ const CommentSection = ({
       setComments((prevComments) =>
         prevComments.filter((c) => c.id !== comment.id)
       );
+
+      router.reload();
     } catch (error) {
       console.error("Error deleting comment:", error);
     }
