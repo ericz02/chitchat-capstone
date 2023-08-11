@@ -2,6 +2,8 @@
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { useRouter } from "next/navigation";
+
 
 const CreatePost = () => {
   const { currentUser } = useContext(AuthContext);
@@ -9,6 +11,8 @@ const CreatePost = () => {
   const [postDescription, setPostDescription] = useState("");
   const [postRoom, setPostRoom] = useState("");
   const [chatrooms, setChatrooms] = useState([]);
+  const router = useRouter();
+
 
   // Fetch all available chatrooms from the server
   useEffect(() => {
@@ -56,7 +60,7 @@ const CreatePost = () => {
       }
 
       console.log("Post created successfully!");
-      window.location.href = "/";
+      router.push("/");
     } catch (error) {
       console.error("Error creating post:", error);
     }

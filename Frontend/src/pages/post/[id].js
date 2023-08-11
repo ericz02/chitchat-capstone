@@ -60,8 +60,7 @@ const ViewPost = () => {
       ...prevPost,
       comments: [...prevPost.comments, newComment],
     }));
-
-    window.location.reload();
+    router.reload();
   };
 
   if (!post) {
