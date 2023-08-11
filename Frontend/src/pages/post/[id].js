@@ -10,8 +10,6 @@ const ViewPost = () => {
   const [replyContent, setReplyContent] = useState("");
   const [postId, setPostId] = useState(null);
 
-  console.log("ViewPost state", post);
-
   useEffect(() => {
     // Fetch the postId from the router query
     const { id } = router.query;
