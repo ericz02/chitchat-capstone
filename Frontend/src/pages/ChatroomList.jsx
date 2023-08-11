@@ -13,6 +13,7 @@ const ChatroomList = () => {
       .then((data) => setChatrooms(data))
       .catch((error) => console.error("Error fetching chatrooms:", error));
   }, []);
+  
 
   return (
     <div className="grid grid-cols-3 gap-4 mt-4"  >

@@ -151,7 +151,7 @@ const ViewChatRoom = () => {
         .catch((error) => console.error("Error fetching post:", error));
     }
   }, [id]);
-
+  posts.reverse();
   //fetch information about this chatroom
   useEffect(() => {
     if (id) {

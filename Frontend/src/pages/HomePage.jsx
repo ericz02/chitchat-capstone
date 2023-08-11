@@ -39,7 +39,9 @@ const HomePage = () => {
       })
       .catch((error) => console.error("Error fetching posts:", error));
   }, []);
-
+  //reverse the posts so that the most recent is first
+  posts.reverse();
+  
   return (
     
     <div className="mx-auto max-w-4xl pl-16">
