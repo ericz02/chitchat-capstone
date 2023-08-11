@@ -21,6 +21,8 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
   const router = useRouter();
 
 
+  console.log("PostCard props", post, onUpdate, onUpdateComments);
+
   useEffect(() => {
     // Fetch the user's data based on the post's UserId
     fetch(`/api/user/${post.UserId}`)
@@ -114,13 +116,31 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        // Call the onUpdateComments prop function to update the comments state in the parent component
-        onUpdateComments(data); // Assuming data is the newly created comment object
-        console.log("New Post Comment:", data);
+        console.log("Fetched post data", data);
+        onUpdateComments(data);
         setNewCommentContent("");
         setShowReplyTextarea(false);
       })
       .catch((error) => console.error("Error creating comment:", error));
+  };
+
+  const handleSaveComment = (commentId, newContent) => {
+    fetch(`/api/posts/${post.id}/comments/${commentId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: newContent }),
+    })
+      .then((response) => response.json())
+      .then((updatedComment) => {
+        // After successfully updating the comment on the server,
+        // call the prop function to update the parent's state
+        onUpdateComment(updatedComment);
+      })
+      .catch((error) => {
+        console.error("Error updating comment:", error);
+      });
   };
 
   return (

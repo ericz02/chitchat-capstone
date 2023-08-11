@@ -4,15 +4,12 @@ import { AuthContext } from "@/app/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useRouter } from "next/navigation";
 
-
 const CreatePost = () => {
-  const { currentUser } = useContext(AuthContext);
   const [postName, setPostName] = useState("");
   const [postDescription, setPostDescription] = useState("");
   const [postRoom, setPostRoom] = useState("");
   const [chatrooms, setChatrooms] = useState([]);
   const router = useRouter();
-
 
   // Fetch all available chatrooms from the server
   useEffect(() => {
@@ -60,6 +57,7 @@ const CreatePost = () => {
       }
 
       console.log("Post created successfully!");
+      router.push("/");
       router.push("/");
     } catch (error) {
       console.error("Error creating post:", error);
@@ -125,4 +123,3 @@ const CreatePost = () => {
 };
 
 export default CreatePost;
-
