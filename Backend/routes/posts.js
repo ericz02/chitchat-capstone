@@ -163,9 +163,9 @@ module.exports = (db) => {
               commentableType: "post",
             },
             required: false,
-            order: [["updatedDate", "DESC"]], // Ordering the comments based on updatedDate in descending order
           },
         ],
+        order: [[{ model: Comment, as: "comments" }, "updatedAt", "DESC"]],
       });
 
       if (post) {
@@ -249,6 +249,66 @@ module.exports = (db) => {
       });
     } catch (err) {
       handleErrors(err, res);
+    }
+  });
+
+  //get a specific comment
+  router.get("/:postId/comments/:commentId", async (req, res) => {
+    const postId = parseInt(req.params.postId, 10);
+    const commentId = parseInt(req.params.commentId, 10);
+
+    try {
+      const comment = await Comment.findOne({
+        where: {
+          id: commentId,
+          commentableType: "post",
+          CommentableId: postId,
+        },
+      });
+
+      res.status(200).json(comment);
+    } catch (err) {
+      handleErrors(err, res);
+    }
+  });
+
+  //get all comments to a specific post
+  router.get("/:postId/comments", async (req, res) => {
+    const postId = parseInt(req.params.postId, 10);
+
+    try {
+      const comments = await Comment.findAll({
+        where: {
+          CommentableId: postId,
+          commentableType: "post",
+        },
+        attributes: {
+          // Include any other attributes you need
+          include: ["isDeleted"],
+        },
+        order: [["updatedAt", "DESC"]],
+      });
+
+      if (!comments) {
+        return res
+          .status(404)
+          .send({ message: "No comments found for this post." });
+      }
+
+      const commentsWithReplies = await Promise.all(
+        comments.map(async (comment) => {
+          const commentData = {
+            ...comment.toJSON(),
+            replies: await Comment.getAllNestedComments(comment),
+          };
+          return commentData;
+        })
+      );
+
+      res.status(200).json(commentsWithReplies);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: err.message });
     }
   });
 
