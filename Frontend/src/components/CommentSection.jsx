@@ -26,8 +26,10 @@ const CommentSection = ({
   const router = useRouter();
 
   useEffect(() => {
-    // Initialize comments state with the comment's replies
-    setComments(comment.replies);
+    // Check if comment.replies exists and is an array before setting the state
+    if (Array.isArray(comment.replies)) {
+      setComments(comment.replies);
+    }
   }, [comment.replies]);
 
   useEffect(() => {
@@ -73,9 +75,7 @@ const CommentSection = ({
   };
 
   const handleSave = async () => {
-    console.log("handle save is called");
     try {
-      // Make the PATCH request to update the comment content
       const response = await fetch(
         `/api/posts/${comment.postId}/replyComments/${comment.id}`,
         {
@@ -91,13 +91,10 @@ const CommentSection = ({
         throw new Error("Failed to update comment");
       }
 
-      // Update the comment state with the updated content
       const data = await response.json();
-      console.log("API RESPONSE: ", data);
 
-      onUpdateComment(data);
+      onUpdateComment({ ...comment, content: draftContent });
 
-      // Exit edit mode and close the dropdown
       setIsEditMode(false);
       setShowDropdown(false);
     } catch (error) {
@@ -137,7 +134,7 @@ const CommentSection = ({
       console.log("New Comment Data:", fullData);
 
       // Add the new comment to the comments list immediately
-      setComments((prevComments) => [...prevComments, fullData]);
+      setComments((prevComments) => [...(prevComments || []), fullData]);
 
       // Reset the reply input after successful reply creation
       setReplyContent("");
@@ -150,12 +147,6 @@ const CommentSection = ({
   const toggleDropdown = (e) => {
     e.stopPropagation(); // Stop the event from propagating up the DOM tree
     setShowDropdown((prevShowDropdown) => !prevShowDropdown);
-  };
-
-  const handleEdit = () => {
-    setIsEditMode(true);
-    setDraftContent(comment.content); // Reset the draft content to the current comment content
-    setShowDropdown(false); // Close the dropdown when entering edit mode
   };
 
   const handleDelete = async () => {
@@ -172,15 +163,32 @@ const CommentSection = ({
         throw new Error("Failed to delete comment");
       }
 
-      // If the delete request is successful, update the comments state to reflect the deletion
-      setComments((prevComments) =>
-        prevComments.filter((c) => c.id !== comment.id)
-      );
+      /* console.log("COmment do be deleted");
 
-      router.reload();
+      setComments((prevComments) => {
+        console.log("Inside setComments, prevComments:", prevComments);
+
+        return Array.isArray(prevComments)
+          ? prevComments.map((c) =>
+              c.id === comment.id ? { ...c, content: "DELETED" } : c
+            )
+          : [];
+      }); */
+      onUpdateComment({ ...comment, content: "Deleted" });
+
+      setShowDropdown((prevShowDropdown) => !prevShowDropdown);
     } catch (error) {
       console.error("Error deleting comment:", error);
     }
+  };
+
+  const handleMainCommentUpdate = (updatedComment) => {
+    // Assuming 'allComments' is your main state in the parent component that stores all comments
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment.id === updatedComment.id ? updatedComment : comment
+      )
+    );
   };
 
   return (
@@ -317,7 +325,7 @@ const CommentSection = ({
               comment={reply}
               replyContent={replyContent}
               setReplyContent={setReplyContent}
-              onUpdateComment={onUpdateComment}
+              onUpdateComment={handleMainCommentUpdate}
             />
           ))}
         </div>
