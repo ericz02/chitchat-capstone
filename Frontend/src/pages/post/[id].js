@@ -64,7 +64,6 @@ const ViewPost = () => {
       comments: [newComment.comment, ...prevPost.comments],
       commentsCount: parseInt(prevPost.commentsCount) + 1,
     }));
-  };
 
   const handleUpdateComment = (updatedComment) => {
     setPost((prevPost) => {
@@ -77,6 +76,7 @@ const ViewPost = () => {
         comments: updatedComments,
       };
     });
+
   };
 
   if (!post) {

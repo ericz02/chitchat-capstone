@@ -127,8 +127,6 @@ router.delete("/:id", authenticateUser, async (req, res) => {
     } else {
       res.status(404).send({ message: "Chatroom not found" });
     }
-    
-
 
   } catch (err) {
     console.log(err);

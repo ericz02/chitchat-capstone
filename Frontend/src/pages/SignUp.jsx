@@ -13,36 +13,9 @@ const SignUp = () => {
   const { signup, currentUser, authError } = useContext(AuthContext);
 
   if (currentUser) {
-    window.location.href = "/login";
-    //window.location.href = "/";
+    router.push("/login");
   }
-  /* const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
- */
-  /* const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Prepare the user data to send to the server
-    const userData = {
-      firstName,
-      lastName,
-      userName,
-      email,
-      password,
-    };
-
-    try {
-      await signup(userData);
-      console.log(currentUser);
-      //window.location.href = "/login"; //want this to rout back to the login page instead of the home page but didn't work
-      return null;
-    } catch (error) {
-      console.error("Error during signup:", error);
-    }
-  }; */
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,16 +48,12 @@ const SignUp = () => {
                 type="text"
                 placeholder="First Name:"
                 name="firstName"
-                /* value={firstName}
-                onChange={(e) => setFirstName(e.target.value)} */
               />
               <input
                 className="w-64 h-10 bg-[#E6E6E6] boarder rounded p-2"
                 type="text"
                 placeholder="Last Name:"
                 name="lastName"
-                /* value={lastName}
-                onChange={(e) => setLastName(e.target.value)} */
               />
             </div>
             <div>
@@ -93,8 +62,6 @@ const SignUp = () => {
                 type="text"
                 placeholder="Username: "
                 name="userName"
-                /*  value={userName}
-                onChange={(e) => setUserName(e.target.value)} */
               />
             </div>
             <div>
@@ -103,8 +70,6 @@ const SignUp = () => {
                 type="email"
                 placeholder="Email: "
                 name="email"
-                /* value={email}
-                onChange={(e) => setEmail(e.target.value)} */
               />
             </div>
             <div>
@@ -113,8 +78,6 @@ const SignUp = () => {
                 type="password"
                 placeholder="Password: "
                 name="password"
-                /* value={password}
-                onChange={(e) => setPassword(e.target.value)} */
               />
             </div>
             {authError && (

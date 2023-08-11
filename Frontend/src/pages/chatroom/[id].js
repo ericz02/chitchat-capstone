@@ -5,7 +5,7 @@ import { useState, useEffect,useContext } from "react";
 import { FaUserCircle, FaCommentDots, FaThumbsUp } from "react-icons/fa";
 import Link from "next/link";
 import { AuthContext } from "@/app/contexts/AuthContext";
-import dynamic from "next/dynamic";
+import dynamic from "next/dynamic";//solution for the hydration error.
 
 
 
@@ -14,12 +14,37 @@ const ViewChatRoom = () => {
   const router = useRouter();
   const { id } = router.query; // This will get the chatroom ID from the URL
   const [posts, setPosts] = useState([]);
-  const [chatroom, setChatroom] = useState(null);
+  const [chatroom, setChatroom] = useState({});
   const [info, setInfo] = useState({name:"", description:""});//this object contains {name, description, length}
   const [postLength, setPostLength] = useState(null);
-  const[joined,setJoined] = useState(false);
+  const[isMember,setIsMember] = useState(false);
   const[role,setRole] = useState(null);
   const [joining, setJoining]  = useState(false);//purpose of this boolean is everythime a user leaves or joins a room they will rerender the page to show either the leave or join button
+  const [warning, setWarning] = useState(false);
+
+  //this function is for when an admin tries to leave their chatroom. this will remove the user from the chatroom and also delete the chatroom.
+  const adminLeave = async() =>{ 
+    try {
+    const leaveResponse = await fetch(`/api/chatrooms/${id}/removeUser`,{
+      method:"DELETE",
+      credentials:"include",
+    });
+    const deleteResponse = await fetch(`/api/chatrooms/${id}`, {
+      method:"DELETE",
+      credentials: "include",
+    });
+    if(!leaveResponse.ok && !deleteResponse.ok){
+      console.log("failed to leave a chatroom!");
+      router.push("/login");
+      return;
+    }
+    console.log("Admin successfully left ");
+    router.push("/");
+    return;
+  } catch (error) {
+    console.error("Error joining:", error);
+  }
+  };
 
   const handleDeleteChatroom = async() => {
     try {
@@ -38,6 +63,7 @@ const ViewChatRoom = () => {
       console.error("Error joining:", error);
     }
   };
+
   const handleJoin = async() =>{
       try{
         const response = await fetch(`/api/chatrooms/${id}/addUser`,{
@@ -55,6 +81,7 @@ const ViewChatRoom = () => {
         console.error("Error joining:", error);
       }
   };
+
   const handleLeave = async() =>{
     try {
       const response = await fetch(`/api/chatrooms/${id}/removeUser`,{
@@ -83,10 +110,10 @@ const ViewChatRoom = () => {
       const data = await response.json();
       if(data.there){
         console.log("is there reqeuse MADEEE");
-        setJoined(true);
+        setIsMember(true);
         setRole(data.role);
       }else{
-        setJoined(false);
+        setIsMember(false);
       }
       }catch(error){
         console.error("Error fetching membership:", error);
@@ -98,7 +125,8 @@ const ViewChatRoom = () => {
     }
   },[id,joining]);
 
-  console.log("joined: ",joined, "role: ", role, "id: ",id);
+  console.log("joined: ",isMember, "role: ", role, "id: ",id);
+
   //fetch all posts from this chatroom
   useEffect(() => {
     if (id) {
@@ -147,7 +175,7 @@ const ViewChatRoom = () => {
     <div className = " border-black border-2 m-10  w-4/5 flex-row self-center p-2">
             
       <div className = " p-4 flex flex-col justify-items-center bg-slate-100">
-            {(role ==="admin")?(<div className = "flex justify-end	">
+              {((role ==="admin")&&(isMember))?(<div className = "flex justify-end">{/*set it to if ismember and role = admin then put this button.*/}
               <button
                 className="bg-red-100	text-black  rounded-[10px] hover:bg-red-500 transition-colors 
                 duration-300 ease-in-out px-4 py-2  w-1/6 text-xs "
@@ -159,18 +187,43 @@ const ViewChatRoom = () => {
             
 
 
-        <h1 className = "flex justify-center	text-5xl py-4">  {info.name}</h1>
+        <h1 className = "flex justify-center	text-5xl py-4">  {info.name} </h1>
 
-          {(joined) ?(
-          <div className = "flex justify-center" >
-            <button
-              className="bg-red-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-red-500 transition-colors 
-              duration-300 ease-in-out border-black border-2"
-              onClick = {handleLeave}
-            >
-              Leave
-            </button>
-          </div> 
+          {(isMember) ?(
+          <div >
+            <div className = "flex justify-center" >
+              <button
+                className="bg-red-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-red-500 transition-colors 
+                duration-300 ease-in-out border-black border-2"
+                onClick = {((role ==="admin"))?(()=>{setWarning(true)}):(handleLeave)}
+              >
+                Leave
+              </button>
+            </div> {console.log("warning:", warning)}
+              {(warning)?(
+                <div className = "flex justify-center ">
+                  <div className = "text-xs flex-col border-black border-1 bg-red-200	p-4 rounded-[20px]">
+                    <p className = "mb-2">You are the ADMIN if you leave this room will be deleted. Are you sure you want to leave? </p>
+                    <div className = "flex justify-center">
+                      <button
+                        className="bg-red-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-red-500 transition-colors 
+                        duration-300 ease-in-out border-black border-2"
+                        onClick = {adminLeave}
+                        >
+                        Yes
+                      </button>
+                      <button
+                        className="bg-red-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-red-500 transition-colors 
+                        duration-300 ease-in-out border-black border-2"
+                        onClick = {()=>{setWarning(false)}}
+                        >
+                        No
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ):(<></>)}
+          </div>
           ):(
           <div className = "flex justify-center" >
             <button
@@ -181,7 +234,7 @@ const ViewChatRoom = () => {
                 Join
             </button>
           </div>)}
-            {(joined)?(
+            {(isMember)?(
             <div className = "flex justify-center mb-2">
               <p className = "font-mono">
                 You are a {role}.
@@ -231,6 +284,6 @@ const ViewChatRoom = () => {
   );
 };
 
-export default dynamic (() => Promise.resolve(ViewChatRoom), {ssr: false});
+export default dynamic (() => Promise.resolve(ViewChatRoom), {ssr: false});//this solves the hydration error.
 
 // export default ViewChatRoom;
