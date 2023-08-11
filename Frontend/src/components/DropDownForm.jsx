@@ -1,9 +1,13 @@
 import { useEffect, useContext } from "react";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 
 const DropdownForm = ({ darkMode, setDarkMode }) => {
   const { currentUser, logout } = useContext(AuthContext);
+  const router = useRouter();
+
 
   const handleDarkModeToggle = () => {
     setDarkMode((prevDarkMode) => !prevDarkMode);
@@ -14,12 +18,14 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
     if (currentUser) {
       // If the user is logged in, perform logout
       logout();
-      window.location.href = "/";
+      router.push("/");
+      return;
     } else {
       // If the user is not logged in, redirect to the login page
       // You can add the appropriate route for the login page below
       // Replace "/login" with your actual login page route
-      window.location.href = "/login";
+      router.push("/login");
+      return;
     }
   };
 

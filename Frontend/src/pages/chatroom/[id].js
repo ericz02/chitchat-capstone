@@ -22,9 +22,7 @@ const ViewChatRoom = () => {
   const [joining, setJoining]  = useState(false);//purpose of this boolean is everythime a user leaves or joins a room they will rerender the page to show either the leave or join button
   const [warning, setWarning] = useState(false);
 
-  // const warningMessage = async() =>{
-  //   setWarning(true);
-  // };
+  //this function is for when an admin tries to leave their chatroom. this will remove the user from the chatroom and also delete the chatroom.
   const adminLeave = async() =>{ 
     try {
     const leaveResponse = await fetch(`/api/chatrooms/${id}/removeUser`,{

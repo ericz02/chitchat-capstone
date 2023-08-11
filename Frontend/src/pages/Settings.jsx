@@ -185,9 +185,9 @@ const Settings = () => {
           </>
         ) : // If the user is not logged in, then say so.
         !currentUser ? (
-          <>
+          <div className = "text-xl">
             <p>Not Logged In</p>
-          </>
+          </div>
         ) : (
           <p>Loading user data...</p>
         )}
