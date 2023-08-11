@@ -64,21 +64,25 @@ const HomePage = () => {
     >
       <div className="font-bold text-[20px]">
         cc/{post.chatroom.chatroomName}
+        <p className="text-[10px] font-light">Posted by | {post.user.userName}</p>
       </div>
       <div className="flex justify-between items-center mb-4">
         <Link href={`/post/${post.id}`}>
           <h2 className="text-xl">{post.title}</h2>
         </Link>
-        <p className="text-[10px]">Posted by | {post.user.userName}</p>
+      
       </div>
       <p className="text-gray-600">{post.content}</p>
       <div className="absolute top-2 right-2 flex items-center justify-end mt-4">
+
         <div>
+      
           <LikeButton
             postId={post.id}
             userId={post.UserId}
           />
         </div>
+       
         <div className="flex items-center ml-4">
           <FaCommentDots className="mr-2" />
           <p className="text-[13px]">{post.commentsCount}</p>
