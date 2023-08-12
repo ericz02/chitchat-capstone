@@ -37,6 +37,7 @@ const LikeButton = ({postId, userId}) => {
       console.log("likesCount", data.likesCount);
       setIsLiked(data.isLiked);
       setLikesCount(data.likesCount);
+      checkLikes();
     } catch (error) {
       console.error("Error liking post:", error);
 
