@@ -31,12 +31,12 @@ const LikeButton = ({postId, userId}) => {
         },
         body: JSON.stringify({ userId }),
       });
-      const data = await response.json();
-      console.log(data);
-      console.log("isLiked", data.isLiked);
-      console.log("likesCount", data.likesCount);
-      setIsLiked(data.isLiked);
-      setLikesCount(data.likesCount);
+      // const data = await response.json();
+      // console.log(data);
+      // console.log("isLiked", data.isLiked);
+      // console.log("likesCount", data.likesCount);
+      // setIsLiked(data.isLiked);
+      // setLikesCount(data.likesCount);
       checkLikes();
     } catch (error) {
       console.error("Error liking post:", error);
