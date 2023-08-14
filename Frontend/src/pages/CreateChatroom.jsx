@@ -4,14 +4,11 @@ import { AuthContext } from "@/app/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useRouter } from "next/navigation";
 
-
-
 const CreateChatroom = () => {
   const { currentUser } = useContext(AuthContext); //this is to get the current user that is creating the chatroom
   const [roomName, setChatroomName] = useState("");
   const [roomDescription, setChatroomDescription] = useState("");
   const router = useRouter();
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,7 +35,6 @@ const CreateChatroom = () => {
       const parsedResponse = await response.json();
       chatroomid = parsedResponse.id;
       console.log("chatroom created successfully!");
-
     } catch (error) {
       console.error("Error creating post:", error);
     }
@@ -66,44 +62,48 @@ const CreateChatroom = () => {
     router.push("/");
   };
 
-    return(
-        <ProtectedRoute>
-            <div className = "flex flex-col justify-center p-5 ">
-                <h1 className="flex justify-center text-2xl font-bold mb-4 mt-3">
-                    Create Chatroom
-                </h1>
-                <form onSubmit = {handleSubmit}>
-                    <div className="mb-4 mx-auto w-3/4">
-                        <input
-                        className="w-full px-3 pb-10 pt-2 border rounded bg-[#E6E6E6] mt-3"
-                        type="text"
-                        id="chatroomName"
-                        placeholder="Chatroom Name:"
-                        value = {roomName}
-                        onChange = {(e)=> setChatroomName(e.target.value)}
-                        />
-                    </div>
-                    <div className="mb-4 mx-auto w-3/4">
-                        <textarea
-                        className="w-full px-3 pb-10 pt-2 border rounded bg-[#E6E6E6] mt-3"
-                        id="postDescription"
-                        rows="4"
-                        placeholder="Description:"
-                        value = {roomDescription}
-                        onChange = {(e)=>setChatroomDescription(e.target.value)}
-                        />
-                    </div>
-                    <div className="bg-[#FFFFFF] p-4 flex flex-col justify-center ">
-                        <button
-                        className="bg-[#14AE5C] hover:bg-[#0F8B49] text-white justify-center font-bold py-2 px-4 rounded mx-auto w-1/6"
-                        type="submit"
-                        >
-                        Create
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </ProtectedRoute>
-    );
-}
+  return (
+    // <ProtectedRoute>
+      <div className="flex justify-center items-center h-1/2 m-11 ">
+        <form
+          onSubmit={handleSubmit}
+          method="post"
+          className="bg-[#DDE6ED] p-8 w-full md:w-1/2 lg:w-1/3 xl:w-1/4 rounded-md shadow-md my-6"
+        >
+          <h1 className="text-center text-2xl font-bold mb-4 mt-3">
+            Create Chatroom
+          </h1>
+          <div className="mb-4 ">
+            <input
+              className="w-full px-3 py-2 border rounded bg-white"
+              type="text"
+              id="chatroomName"
+              placeholder="Chatroom Name:"
+              value={roomName}
+              onChange={(e) => setChatroomName(e.target.value)}
+            />
+          </div>
+          <div className="mb-4 ">
+            <textarea
+              className="w-full px-3 py-2 border rounded bg-white"
+              id="postDescription"
+              rows="4"
+              placeholder="Description:"
+              value={roomDescription}
+              onChange={(e) => setChatroomDescription(e.target.value)}
+            />
+          </div>
+          <div className="bg-[#FFFFFF] ">
+            <button
+              className="bg-[#14AE5C] hover:bg-[#0F8B49] text-white  font-bold py-2 px-4 rounded w-full"
+              type="submit"
+            >
+              Create
+            </button>
+          </div>
+        </form>
+      </div>
+    // </ProtectedRoute>
+  );
+};
 export default CreateChatroom;
