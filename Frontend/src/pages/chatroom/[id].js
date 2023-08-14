@@ -316,18 +316,18 @@ const ViewChatRoom = () => {
           <div className="flex-col justify-items-center">
                 <div className = "flex justify-center">
                   <button className="bg-[#E6E6E6]	text-black rounded-[10px] hover:bg-[#526D82] transition-colors 
-                    duration-300 ease-in-out p-2 mt-6" onClick = {()=>{setShowForm(true)}}>
+                    duration-300 ease-in-out p-2 mt-6" onClick = {()=>{setShowForm(!showForm)}}>
                       Create Post
                   </button>
                 </div>
 
                 {(showForm) &&
-                  (<div className = " flex justify-center" >
-                      <div className = "border-black border-2 ">
-                        <form onSubmit = {handleCreatePost} method="post">
-                          <div>
+                  (<div className = " flex justify-center m-4 " >
+                      <div className = "border-black border-2 p-2 w-3/4 rounded-md">
+                        <form onSubmit = {handleCreatePost} method="post" className = "w-full ">
+                          <div className = "m-4">
                             <input 
-                              className = "border-black border-2" 
+                              className = "border-slate-400 border-2 w-full rounded-md p-2" 
                               placeholder = "Title: "
                               type = "text"
                               id = "title"
@@ -335,16 +335,17 @@ const ViewChatRoom = () => {
                               onChange = {(e) => {setPostData({...postData, postName:e.target.value})}}
                             />
                           </div>
-                          <div>
+                          <div className = "m-4">
                             <textarea 
-                              className = "border-black border-2"
+                              className = "border-slate-400 border-2 w-full rounded-md p-2"
                               placeholder = "Description: "
                               id = "postDescription"
+                              rows="4"
                               value = {postData.postDescription}
                               onChange = {(e) => {setPostData({...postData, postDescription: e.target.value})}}
                             />
                           </div>
-                          <div>
+                          <div className = "flex justify-center mb-2">
                             <input 
                               className="px-4 py-2 mr-2 bg-blue-500 text-white rounded-md"
                               type = "submit"
