@@ -8,7 +8,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { AuthContext } from "@/app/contexts/AuthContext";
-
+import LikeButton from "./LikeButton";
 const CommentSection = ({
   comment,
   replyContent,
@@ -192,7 +192,7 @@ const CommentSection = ({
   };
 
   return (
-    <div className="relative ml-10 border-l-2 pl-4 mt-4 bg-gray-100 p-4 rounded-md shadow-md">
+    <div className="relative ml-10 border-l-2 pl-4 mt-4 bg-gray-100 p-4 rounded-md shadow-md pb-4">
       {/* Display the user's avatar and username */}
       <div className="flex items-center mb-1">
         {user && user.profilePicture ? (
@@ -243,6 +243,7 @@ const CommentSection = ({
       {/* Display the comment content */}
       {!isEditMode ? (
         <p className="text-gray-600">{comment.content}</p>
+
       ) : (
         <div>
           <textarea
@@ -275,6 +276,7 @@ const CommentSection = ({
       {comment.createdAt && (
         <span className="text-gray-500 text-xs">
           {formatDate(comment.createdAt)}
+          <LikeButton postId={comment.id} userId={comment.UserId} />
         </span>
       )}
       {/* Show the reply input when the button is clicked */}
@@ -330,6 +332,7 @@ const CommentSection = ({
           ))}
         </div>
       )}
+           
     </div>
   );
 };
