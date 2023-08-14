@@ -93,8 +93,8 @@ const Settings = () => {
   };
 
   return (
-    <div className="bg-[#F5F7FA] p-4 flex justify-center min-h-screen">
-      <div className="bg-white p-8 h-[560px] rounded-md shadow-md w-2/3 my-6 cursor-pointer">
+    <div className=" p-4 flex justify-center min-h-screen">
+      <div className="bg-[#DDE6ED] p-8 h-[560px] rounded-md shadow-md w-2/3 my-6 cursor-pointer">
         {userData ? (
           <>
             <div className="flex flex-row items-center mb-6">

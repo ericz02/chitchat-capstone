@@ -1,94 +1,91 @@
 "use client";
 import RootLayout from "@/app/layout";
 import { useRouter } from "next/router";
-import { useState, useEffect,useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { FaUserCircle, FaCommentDots, FaThumbsUp } from "react-icons/fa";
 import Link from "next/link";
 import { AuthContext } from "@/app/contexts/AuthContext";
-import dynamic from "next/dynamic";//solution for the hydration error.
-
-
+import dynamic from "next/dynamic"; //solution for the hydration error.
+import LikeButton from "@/components/LikeButton";
 
 const ViewChatRoom = () => {
-
   const router = useRouter();
   const { id } = router.query; // This will get the chatroom ID from the URL
   const [posts, setPosts] = useState([]);
   const [chatroom, setChatroom] = useState({});
-  const [info, setInfo] = useState({name:"", description:""});//this object contains {name, description, length}
+  const [info, setInfo] = useState({ name: "", description: "" }); //this object contains {name, description, length}
   const [postLength, setPostLength] = useState(null);
-  const[isMember,setIsMember] = useState(false);
-  const[role,setRole] = useState(null);
-  const [joining, setJoining]  = useState(false);//purpose of this boolean is everythime a user leaves or joins a room they will rerender the page to show either the leave or join button
+  const [isMember, setIsMember] = useState(false);
+  const [role, setRole] = useState(null);
+  const [joining, setJoining] = useState(false); //purpose of this boolean is everythime a user leaves or joins a room they will rerender the page to show either the leave or join button
   const [warning, setWarning] = useState(false);
 
   //this function is for when an admin tries to leave their chatroom. this will remove the user from the chatroom and also delete the chatroom.
-  const adminLeave = async() =>{ 
+  const adminLeave = async () => {
     try {
-    const leaveResponse = await fetch(`/api/chatrooms/${id}/removeUser`,{
-      method:"DELETE",
-      credentials:"include",
-    });
-    const deleteResponse = await fetch(`/api/chatrooms/${id}`, {
-      method:"DELETE",
-      credentials: "include",
-    });
-    if(!leaveResponse.ok && !deleteResponse.ok){
-      console.log("failed to leave a chatroom!");
-      router.push("/login");
-      return;
-    }
-    console.log("Admin successfully left ");
-    router.push("/");
-    return;
-  } catch (error) {
-    console.error("Error joining:", error);
-  }
-  };
-
-  const handleDeleteChatroom = async() => {
-    try {
-      const response = await fetch(`/api/chatrooms/${id}`, {
-        method:"DELETE",
+      const leaveResponse = await fetch(`/api/chatrooms/${id}/removeUser`, {
+        method: "DELETE",
         credentials: "include",
       });
-      if(!response.ok){
-        console.log("failed to delete chatroom");
+      const deleteResponse = await fetch(`/api/chatrooms/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!leaveResponse.ok && !deleteResponse.ok) {
+        console.log("failed to leave a chatroom!");
+        router.push("/login");
+        return;
       }
-      console.log("successfully deleted chatroom");
+      console.log("Admin successfully left ");
       router.push("/");
       return;
-      
     } catch (error) {
       console.error("Error joining:", error);
     }
   };
 
-  const handleJoin = async() =>{
-      try{
-        const response = await fetch(`/api/chatrooms/${id}/addUser`,{
-          method: "POST",
-          credentials: "include",
-        });
-        if(!response.ok){
-          console.log("failed to join chatroom!");
-          router.push("/login");
-          return;
-        }
-        console.log("joined successfully!");
-        setJoining(true);
-      }catch(error){
-        console.error("Error joining:", error);
+  const handleDeleteChatroom = async () => {
+    try {
+      const response = await fetch(`/api/chatrooms/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!response.ok) {
+        console.log("failed to delete chatroom");
       }
+      console.log("successfully deleted chatroom");
+      router.push("/");
+      return;
+    } catch (error) {
+      console.error("Error joining:", error);
+    }
   };
 
-  const handleLeave = async() =>{
+  const handleJoin = async () => {
     try {
-      const response = await fetch(`/api/chatrooms/${id}/removeUser`,{
-        method:"DELETE",
-        credentials:"include",
+      const response = await fetch(`/api/chatrooms/${id}/addUser`, {
+        method: "POST",
+        credentials: "include",
       });
-      if(!response.ok){
+      if (!response.ok) {
+        console.log("failed to join chatroom!");
+        router.push("/login");
+        return;
+      }
+      console.log("joined successfully!");
+      setJoining(true);
+    } catch (error) {
+      console.error("Error joining:", error);
+    }
+  };
+
+  const handleLeave = async () => {
+    try {
+      const response = await fetch(`/api/chatrooms/${id}/removeUser`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!response.ok) {
         console.log("failed to leave a chatroom!");
         router.push("/login");
         return;
@@ -99,42 +96,42 @@ const ViewChatRoom = () => {
       console.error("Error joining:", error);
     }
   };
-  
-  //check if the logged in user is a member of this chatroom 
-  useEffect(()=>{
-    const checkMembership = async ()=>{
-      try{
-        const response = await fetch(`/api/chatrooms/isMemberOf/${id}`,{
-        method:"GET",
-      });
-      const data = await response.json();
-      if(data.there){
-        console.log("is there reqeuse MADEEE");
-        setIsMember(true);
-        setRole(data.role);
-      }else{
-        setIsMember(false);
-      }
-      }catch(error){
+
+  //check if the logged in user is a member of this chatroom
+  useEffect(() => {
+    const checkMembership = async () => {
+      try {
+        const response = await fetch(`/api/chatrooms/isMemberOf/${id}`, {
+          method: "GET",
+        });
+        const data = await response.json();
+        if (data.there) {
+          console.log("is there reqeuse MADEEE");
+          setIsMember(true);
+          setRole(data.role);
+        } else {
+          setIsMember(false);
+        }
+      } catch (error) {
         console.error("Error fetching membership:", error);
       }
-    }
-    if(id){
+    };
+    if (id) {
       checkMembership();
-      setJoining(false);//reset the boolean so that when the user joins another room it will rerender the page to say that they are a member
+      setJoining(false); //reset the boolean so that when the user joins another room it will rerender the page to say that they are a member
     }
-  },[id,joining]);
+  }, [id, joining]);
 
-  console.log("joined: ",isMember, "role: ", role, "id: ",id);
+  console.log("joined: ", isMember, "role: ", role, "id: ", id);
 
   //fetch all posts from this chatroom
   useEffect(() => {
     if (id) {
-      fetch(`/api/chatrooms/${id}/posts`,{method:"GET"})
+      fetch(`/api/chatrooms/${id}/posts`, { method: "GET" })
         .then((response) => response.json())
         .then(async (data) => {
           setPostLength(data.length);
-          //fetch user data so that the posts state will contain posts and user who created 
+          //fetch user data so that the posts state will contain posts and user who created
           const postsWithUserDetails = await Promise.all(
             data.map(async (post) => {
               //get user information
@@ -142,11 +139,11 @@ const ViewChatRoom = () => {
                 method: "GET",
               });
               const userData = await userResponse.json();
-  
-              return { ...post, user: userData };//spread the post itself, the user data gotten from post.userid, and the chatroom from post.chatroomId
+
+              return { ...post, user: userData }; //spread the post itself, the user data gotten from post.userid, and the chatroom from post.chatroomId
             })
           );
-            setPosts(postsWithUserDetails);
+          setPosts(postsWithUserDetails);
         })
         .catch((error) => console.error("Error fetching post:", error));
     }
@@ -155,135 +152,159 @@ const ViewChatRoom = () => {
   //fetch information about this chatroom
   useEffect(() => {
     if (id) {
-      fetch(`/api/chatrooms/${id}`,{method:"GET"})
+      fetch(`/api/chatrooms/${id}`, { method: "GET" })
         .then((response) => response.json())
-        .then( (data) => {
+        .then((data) => {
           setChatroom(data);
-          setInfo({name:data.chatroomName, description: data.chatroomDescription});
+          setInfo({
+            name: data.chatroomName,
+            description: data.chatroomDescription,
+          });
         })
         .catch((error) => console.error("Error fetching chatroom:", error));
     }
   }, [id]);
-  
+
   console.log("here are all the posts in this chatroom: ", posts);
   console.log("this chatrooms information:", chatroom);
   console.log("info: ", info, " length: ", postLength);
-  
+
   return (
     <>
-    <RootLayout  >
-    <div className = " border-black border-2 m-10  w-4/5 flex-row self-center p-2">
-            
-      <div className = " p-4 flex flex-col justify-items-center bg-slate-100">
-              {((role ==="admin")&&(isMember))?(<div className = "flex justify-end">{/*set it to if ismember and role = admin then put this button.*/}
-              <button
-                className="bg-red-100	text-black  rounded-[10px] hover:bg-red-500 transition-colors 
+      <RootLayout>
+        <div className="bg-[#DDE6ED]  border-black border-2 m-10 rounded-md shadow-md w-4/5 flex-row self-center p-2">
+          <div className=" p-4 flex flex-col justify-items-center">
+            {role === "admin" && isMember ? (
+              <div className="flex justify-end">
+                {/*set it to if ismember and role = admin then put this button.*/}
+                <button
+                  className="bg-red-100	text-black  rounded-[10px] hover:bg-red-500 transition-colors 
                 duration-300 ease-in-out px-4 py-2  w-1/6 text-xs "
-                onClick = {handleDeleteChatroom}
+                  onClick={handleDeleteChatroom}
                 >
-                Delete Chatroom
-              </button>
-            </div>) :(<></>)}
-            
+                  Delete Chatroom
+                </button>
+              </div>
+            ) : (
+              <></>
+            )}
 
+            <h1 className="flex justify-center	text-5xl py-4"> {info.name} </h1>
 
-        <h1 className = "flex justify-center	text-5xl py-4">  {info.name} </h1>
-
-          {(isMember) ?(
-          <div >
-            <div className = "flex justify-center" >
-              <button
-                className="bg-red-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-red-500 transition-colors 
+            {isMember ? (
+              <div>
+                <div className="flex justify-center">
+                  <button
+                    className="bg-red-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-red-500 transition-colors 
                 duration-300 ease-in-out border-black border-2"
-                onClick = {((role ==="admin"))?(()=>{setWarning(true)}):(handleLeave)}
-              >
-                Leave
-              </button>
-            </div> {console.log("warning:", warning)}
-              {(warning)?(
-                <div className = "flex justify-center ">
-                  <div className = "text-xs flex-col border-black border-1 bg-red-200	p-4 rounded-[20px]">
-                    <p className = "mb-2">You are the ADMIN if you leave this room will be deleted. Are you sure you want to leave? </p>
-                    <div className = "flex justify-center">
-                      <button
-                        className="bg-red-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-red-500 transition-colors 
+                    onClick={
+                      role === "admin"
+                        ? () => {
+                            setWarning(true);
+                          }
+                        : handleLeave
+                    }
+                  >
+                    Leave
+                  </button>
+                </div>{" "}
+                {console.log("warning:", warning)}
+                {warning ? (
+                  <div className="flex justify-center ">
+                    <div className="text-xs flex-col border-black border-1 bg-red-200	p-4 rounded-[20px]">
+                      <p className="mb-2">
+                        You are the ADMIN if you leave this room will be
+                        deleted. Are you sure you want to leave?{" "}
+                      </p>
+                      <div className="flex justify-center">
+                        <button
+                          className="bg-red-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-red-500 transition-colors 
                         duration-300 ease-in-out border-black border-2"
-                        onClick = {adminLeave}
+                          onClick={adminLeave}
                         >
-                        Yes
-                      </button>
-                      <button
-                        className="bg-red-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-red-500 transition-colors 
+                          Yes
+                        </button>
+                        <button
+                          className="bg-red-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-red-500 transition-colors 
                         duration-300 ease-in-out border-black border-2"
-                        onClick = {()=>{setWarning(false)}}
+                          onClick={() => {
+                            setWarning(false);
+                          }}
                         >
-                        No
-                      </button>
+                          No
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
+            ) : (
+              <div className="flex justify-center">
+                <button
+                  className="bg-green-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-green-500 transition-colors 
+                duration-300 ease-in-out border-black border-2"
+                  onClick={handleJoin}
+                >
+                  Join
+                </button>
+              </div>
+            )}
+            {isMember ? (
+              <div className="flex justify-center mb-2">
+                <p className="font-mono">You are a {role}.</p>
+              </div>
+            ) : (
+              <></>
+            )}
+            <div className="flex justify-center	">
+              <h2 className="border-black border-2 p-4 bg-cyan-50 rounded-[10px]	 w-3/4 ">
+                {info.description}
+              </h2>
+            </div>
+          </div>
+
+          <div className=" p-4    flex-row items-center">
+            {postLength > 0 ? (
+              posts.map((post) => (
+                <div
+                  key={post.id}
+                  className=" bg-cyan-50 p-4 rounded-md shadow-md   my-6 cursor-pointer "
+                >
+                  <Link href={`/post/${post.id}`} key={post.id}>
+                    <div className="font-bold text-[20px]">cc/{info.name}</div>
+                    <div className="flex justify-between items-center mb-4">
+                      <h2 className="text-xl">{post.title}</h2>
+                      <p className="text-[10px]">
+                        Posted by | {post.user.userName}
+                      </p>
+                    </div>
+                    <p className="text-gray-600">{post.content}</p>
+                  </Link>
+                  <div className="flex items-center justify-start mt-4">
+                    <div className="flex items-center mr-4">
+                      <LikeButton postId={post.id} userId={post.UserId} />
+                    </div>
+                    <div className="flex items-center">
+                      <FaCommentDots className="mr-2" />
+                      <p className="text-[13px]">{post.commentsCount}</p>
                     </div>
                   </div>
                 </div>
-              ):(<></>)}
-          </div>
-          ):(
-          <div className = "flex justify-center" >
-            <button
-                className="bg-green-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-green-500 transition-colors 
-                duration-300 ease-in-out border-black border-2"
-                onClick = {handleJoin}
-              >
-                Join
-            </button>
-          </div>)}
-            {(isMember)?(
-            <div className = "flex justify-center mb-2">
-              <p className = "font-mono">
-                You are a {role}.
+              ))
+            ) : (
+              <p className="text-xlf flex justify-center	 text-red text-5xl">
+                No Posts
               </p>
-            </div>):(<></>)}
-          <div className = "flex justify-center	">
-            <h2 className = "border-black border-2 p-4 bg-cyan-50	 rounded-[10px]	 w-3/4 ">
-              {info.description}
-            </h2>
+            )}
           </div>
-      </div>
-   
-
-      <div className=" p-4    flex-row items-center">
-        {(postLength>0)?(posts.map((post) => (
-          <Link href={`/post/${post.id}`} key={post.id}  >
-            <div
-              key={post.id}
-              className="bg-[#DDE6ED] p-4 rounded-md shadow-md   my-6 cursor-pointer "
-            >
-              <div className="font-bold text-[20px]">
-                 cc/{info.name}
-              </div>
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl">{post.title}</h2>
-                  <p className="text-[10px]">Posted by | {post.user.userName}</p>
-                </div>
-                <p className="text-gray-600">{post.content}</p>
-                <div className="flex items-center justify-end mt-4">
-                  <div className="flex items-center mr-4">
-                  <FaThumbsUp className="mr-2" />
-                    <p className="text-[13px]">{post.likesCount}</p>
-                </div>
-                <div className="flex items-center">
-                  <FaCommentDots className="mr-2" />
-                  <p className="text-[13px]">{post.commentsCount}</p>
-                </div>
-              </div>
-            </div>
-          </Link>
-        ))):(<p className="text-xlf flex justify-center	 text-red text-5xl">No Posts</p>)}
-      </div>
-
-    </div>
-    </RootLayout>
+        </div>
+      </RootLayout>
     </>
   );
 };
 
-export default dynamic (() => Promise.resolve(ViewChatRoom), {ssr: false});//this solves the hydration error.
+export default dynamic(() => Promise.resolve(ViewChatRoom), { ssr: false }); //this solves the hydration error.
 
 // export default ViewChatRoom;

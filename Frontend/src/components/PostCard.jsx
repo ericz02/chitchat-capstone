@@ -7,7 +7,7 @@ import {
 } from "react-icons/fa";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-
+import LikeButton from "./LikeButton";
 
 const PostCard = ({ post, onUpdate, onUpdateComments }) => {
   const [user, setUser] = useState(null);
@@ -136,7 +136,7 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
       .then((updatedComment) => {
         // After successfully updating the comment on the server,
         // call the prop function to update the parent's state
-        onUpdateComment(updatedComment);
+        onUpdateComments(updatedComment);
       })
       .catch((error) => {
         console.error("Error updating comment:", error);
@@ -147,7 +147,7 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
     <>
       <div
         key={post.id}
-        className="bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start"
+        className="bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start "
       >
         {currentUser && post.UserId === currentUser.id && (
           <div className="flex justify-end">
@@ -234,12 +234,7 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
         )}
 
         <div className="flex items-center mt-4">
-          <span className="mr-4 text-gray-500 flex items-center">
-            <button>
-              <FaThumbsUp className="mr-2" />
-            </button>
-            Likes: {post.likesCount}
-          </span>
+         <LikeButton postId={post.id} userId={post.UserId} />
           <span className="text-gray-500 ml-auto flex items-center">
             <FaCommentDots className="mr-2" />
             Comments: {post.commentsCount}
