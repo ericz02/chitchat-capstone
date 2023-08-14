@@ -42,15 +42,17 @@ const SignUp = () => {
             Sign Up
           </h2>
           <form onSubmit={handleSubmit} method="post">
-            <div className="flex justify-between">
+            <div >
               <input
-                className="w-64 h-10 bg-[#E6E6E6] boarder rounded p-2"
+                className="w-full h-10 border rounded bg-[#E6E6E6] mt-3 p-2"
                 type="text"
                 placeholder="First Name:"
                 name="firstName"
               />
+              </div>
+              <div>
               <input
-                className="w-64 h-10 bg-[#E6E6E6] boarder rounded p-2"
+                className="w-full h-10 border rounded bg-[#E6E6E6] mt-3 p-2"
                 type="text"
                 placeholder="Last Name:"
                 name="lastName"
