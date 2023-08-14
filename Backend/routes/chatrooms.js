@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Chatroom, Post, UserChatRoom } = require("../models");
+const { Chatroom, Post, UserChatRoom, Comment} = require("../models");
 const { authenticateUser } = require("../middleware/auth");
 
 // functions to ensure users only update or delete their own chatrooms. depending on userChatroom role.
@@ -58,28 +58,29 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//get all chatroom posts
-router.get("/:id/posts", async (req, res) => {
-  const chatroomId = parseInt(req.params.id, 10);
+// //get all chatroom posts this route no longer in use the one in posts is used for retrieving comment counts.
+// router.get("/:id/posts", async (req, res) => {
+//   const chatroomId = parseInt(req.params.id, 10);
 
-  try {
-    const chatroomPosts = await Post.findAll({
-      where: {
-        ChatroomId: chatroomId,
-      },
-      order: [["createdAt", "DESC"]],
-    });
+//   try {
+//     const chatroomPosts = await Post.findAll({
+//       where: {
+//         ChatroomId: chatroomId,
+        
+//       },
+//       order: [["createdAt", "DESC"]],
+//     });
 
-    if (chatroomPosts) {
-      res.status(200).json(chatroomPosts);
-    } else {
-      res.status(404).send({ message: "Chatroom not found" });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: err.message });
-  }
-});
+//     if (chatroomPosts) {
+//       res.status(200).json(chatroomPosts);
+//     } else {
+//       res.status(404).send({ message: "Chatroom not found" });
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send({ message: err.message });
+//   }
+// });
 
 // create a new chatroom
 router.post("/", authenticateUser, async (req, res) => {
