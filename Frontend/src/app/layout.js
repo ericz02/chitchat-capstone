@@ -14,9 +14,13 @@ const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("darkMode") === "true";
-  });
+  const [darkMode, setDarkMode] = useState(false); // Set an initial value
+
+  useEffect(() => {
+    // Fetch the darkMode value from localStorage only on client-side
+    const isDarkMode = localStorage.getItem("darkMode") === "true";
+    setDarkMode(isDarkMode);
+  }, []);
 
   useEffect(() => {
     if (darkMode) {
