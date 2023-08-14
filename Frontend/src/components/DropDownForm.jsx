@@ -8,6 +8,11 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
   const router = useRouter();
 
   const handleDarkModeToggle = () => {
+    if(!currentUser){
+      router.push("/login");
+      return
+    }
+    
     setDarkMode((prevDarkMode) => !prevDarkMode);
   };
 
@@ -27,15 +32,15 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
     }
   };
 
-  let background = document.getElementById("dynamic_page");
+  // let background = document.getElementById("dynamic_page");
 
-  useEffect(() => {
-    if (darkMode) {
-      background.classList.add("bg-gray-500");
-    } else {
-      background.classList.remove("bg-gray-500");
-    }
-  }, [darkMode]);
+  // useEffect(() => {
+  //   if (darkMode) {
+  //     background.classList.add("bg-gray-500");
+  //   } else {
+  //     background.classList.remove("bg-gray-500");
+  //   }
+  // }, [darkMode]);
 
   return (
     <div className="flex flex-col space-y-4 " >

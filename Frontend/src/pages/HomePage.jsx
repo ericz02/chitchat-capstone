@@ -47,9 +47,9 @@ const HomePage = () => {
   };
   
   return (
-    <div className="mx-auto max-w-4xl pl-16">
-      <div className="flex flex-col justify-center mb-4">
-        <div className="flex flex-col items-center pr-6 mr-[70px]">
+    <div className="w-full h-[2100px] flex flex-col ">
+      <div className="flex flex-col justify-center mb-4 ">
+        <div className="flex flex-col items-center pr-6 mr-[70px] ">
           <Link href="/create">
             <button
               className="bg-[#E6E6E6] text-black px-4 py-2 rounded-[10px] hover:bg-[#526D82] transition-colors 
@@ -61,11 +61,11 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="ml-[70px]">
+      <div className="w-3/4 flex flex-col">
   {posts.map((post) => (
     <div
       key={post.id}
-      className="bg-[#DDE6ED] p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 cursor-pointer relative"
+      className="bg-[#DDE6ED] py-11 px-6 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 cursor-pointer relative "
     >
       <div className="font-bold text-[20px] ">
         cc/{post.chatroom.chatroomName}

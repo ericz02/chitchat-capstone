@@ -1,0 +1,17 @@
+{
+  "name": "chitchat-capstone",
+  "version": "1.0.0",
+  "description": "<!-- ![ChitChat Logo](chitchat_logo.png) -->",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "frontend": "npm run dev --prefix Frontend",
+    "backend": "npm start --prefix Backend",
+    "deploy": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
