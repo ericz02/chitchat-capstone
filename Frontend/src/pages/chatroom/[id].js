@@ -240,7 +240,8 @@ const ViewChatRoom = () => {
               <></>
             )}
 
-            <h1 className="flex justify-center	text-5xl py-4"> {info.name} </h1>
+            <h1 className="flex justify-center	text-5xl py-2"> {info.name} </h1>
+            <div className = "flex justify-center text-sm py-2">Created on: {formatDate(chatroom.createdAt)}</div>
 
             {isMember ? (
               <div>

@@ -28,7 +28,7 @@ const Chatroom = ()=>{
                     >
                         <div className = "">
                             <Link href={`/chatroom/${chatroom.id}`}>
-                            <div className = "text-xl font-semibold flex justify-center underline">{chatroom.chatroomName}</div>
+                            <div className = "text-xl font-semibold flex justify-center underline mb-1">{chatroom.chatroomName}</div>
                             <div className = " text-sm font-normal flex justify-center ">{chatroom.chatroomDescription}</div>
                             </Link>
                         </div>
