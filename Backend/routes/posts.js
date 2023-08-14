@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User, Post, Comment } = require("../models");
+const { User, Post, Comment, Likes } = require("../models");
 const { ForbiddenError, NotFoundError } = require("../middleware/errorHandler");
 const { authenticateUser } = require("../middleware/auth");
 
@@ -95,6 +95,7 @@ module.exports = (db) => {
             ],
           ],
         },
+        order: [["createdAt", "DESC"]],
       });
       res.status(200).json(allPosts);
     } catch (err) {
@@ -164,6 +165,7 @@ module.exports = (db) => {
             required: false,
           },
         ],
+        order: [[{ model: Comment, as: "comments" }, "updatedAt", "DESC"]],
       });
 
       if (post) {
@@ -187,6 +189,7 @@ module.exports = (db) => {
       res.status(500).send({ message: err.message });
     }
   });
+
   //get chatroom id by name
   // router.post("/chatRoomId", authenticateUser, async (req, res) => {
   //     const name = req.params.chatroom;
@@ -203,6 +206,134 @@ module.exports = (db) => {
   //     handleErrors(err, res);
   //   }
   // });
+
+  // get likes
+  // Server-side route to get the likes for a post
+  router.get("/:id/like", async (req, res) => {
+    console.log("get likes");
+    try {
+      const postId = req.params.id;
+      const userId = req.query.userId;
+      const post = await Post.findByPk(postId);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      // Fetch the likes for the specified post
+      const likes = await Likes.findAll({
+        where: {
+          likeableType: "post",
+          likeableId: postId,
+        },
+      });
+      const finduser = await Likes.findOne({
+        where: {
+          likeableType: "post",
+          likeableId: postId,
+          userId: userId,
+        },
+      });
+      console.log(finduser);
+      console.log(likes.length);
+      if (finduser) {
+        console.log("user found");
+        res.status(200).json({ isLiked: true, likesCount: likes.length});
+      } else {
+        res.status(200).json({ isLiked: false, likesCount: likes.length });
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: err.message });
+    }
+  });
+
+  //add to likes
+  router.post("/:id/like", async (req, res) => {
+    console.log("add likes");
+    try {
+      const postId = req.params.id;
+      const userId = req.body.userId;
+
+      // Check if the likeable (post or comment) exists
+      const post = await Post.findByPk(postId);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      const likes = await Likes.findAll({
+        where: {
+          likeableType: "post",
+          likeableId: postId,
+        },
+      });
+      // Check if the user has already liked the post (prevent duplicate likes)
+      const existingLike = await Likes.findOne({
+        where: {
+          likeableType: "post",
+          likeableId: postId,
+          userId: userId,
+        },
+      });
+      // Create a new like entry in the database
+      if (!existingLike) {
+        await Likes.create({
+          likeableType: "post",
+          likeableId: postId,
+          userId: userId,
+        });
+
+        post.likesCount += 1;
+        await post.save();
+      }
+
+      // Respond with the updated likes count
+      res.status(200).json({ likesCount: likes.length, isLiked: true });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: err.message });
+    }
+  });
+
+  // Delete a like
+  router.delete("/:id/like", async (req, res) => {
+    try {
+      const postId = req.params.id;
+      const userId = req.body.userId;
+
+      // Check if the likeable (post or comment) exists
+      const post = await Post.findByPk(postId);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      const likes = await Likes.findAll({
+        where: {
+          likeableType: "post",
+          likeableId: postId,
+        },
+      });
+      // Check if the user has already liked the post
+      const existingLike = await Likes.findOne({
+        where: {
+          likeableType: "post",
+          likeableId: postId,
+          userId: userId,
+        },
+      });
+      if (existingLike) {
+        await existingLike.destroy();
+        post.likesCount -= 1;
+        if (post.likesCount < 0) post.likesCount = 0;
+        await post.save();
+        return res
+          .status(200)
+          .json({ likesCount: likes.length, isLiked: false });
+      }
+      if (!existingLike) {
+        return res.status(404).json({ message: "Like not found" });
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: err.message });
+    }
+  });
 
   //create a post
   router.post("/", authenticateUser, async (req, res) => {
@@ -246,6 +377,66 @@ module.exports = (db) => {
       });
     } catch (err) {
       handleErrors(err, res);
+    }
+  });
+
+  //get a specific comment
+  router.get("/:postId/comments/:commentId", async (req, res) => {
+    const postId = parseInt(req.params.postId, 10);
+    const commentId = parseInt(req.params.commentId, 10);
+
+    try {
+      const comment = await Comment.findOne({
+        where: {
+          id: commentId,
+          commentableType: "post",
+          CommentableId: postId,
+        },
+      });
+
+      res.status(200).json(comment);
+    } catch (err) {
+      handleErrors(err, res);
+    }
+  });
+
+  //get all comments to a specific post
+  router.get("/:postId/comments", async (req, res) => {
+    const postId = parseInt(req.params.postId, 10);
+
+    try {
+      const comments = await Comment.findAll({
+        where: {
+          CommentableId: postId,
+          commentableType: "post",
+        },
+        attributes: {
+          // Include any other attributes you need
+          include: ["isDeleted"],
+        },
+        order: [["updatedAt", "DESC"]],
+      });
+
+      if (!comments) {
+        return res
+          .status(404)
+          .send({ message: "No comments found for this post." });
+      }
+
+      const commentsWithReplies = await Promise.all(
+        comments.map(async (comment) => {
+          const commentData = {
+            ...comment.toJSON(),
+            replies: await Comment.getAllNestedComments(comment),
+          };
+          return commentData;
+        })
+      );
+
+      res.status(200).json(commentsWithReplies);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: err.message });
     }
   });
 

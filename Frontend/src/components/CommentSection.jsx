@@ -9,7 +9,13 @@ import {
 } from "react-icons/fa";
 import { AuthContext } from "@/app/contexts/AuthContext";
 
-const CommentSection = ({ comment, replyContent, setReplyContent }) => {
+const CommentSection = ({
+  comment,
+  replyContent,
+  setReplyContent,
+  newComment,
+  onUpdateComment,
+}) => {
   const [user, setUser] = useState(null);
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [comments, setComments] = useState([]);
@@ -18,6 +24,13 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [draftContent, setDraftContent] = useState(comment.content);
   const router = useRouter();
+
+  useEffect(() => {
+    // Check if comment.replies exists and is an array before setting the state
+    if (Array.isArray(comment.replies)) {
+      setComments(comment.replies);
+    }
+  }, [comment.replies]);
 
   useEffect(() => {
     // Fetch the user's data based on the comment's UserId
@@ -29,11 +42,6 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
         .catch((error) => console.error("Error fetching user:", error));
     }
   }, [comment]);
-
-  useEffect(() => {
-    // Initialize comments state with the comment's replies
-    setComments(comment.replies);
-  }, [comment.replies]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -68,7 +76,6 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
 
   const handleSave = async () => {
     try {
-      // Make the PATCH request to update the comment content
       const response = await fetch(
         `/api/posts/${comment.postId}/replyComments/${comment.id}`,
         {
@@ -84,15 +91,10 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
         throw new Error("Failed to update comment");
       }
 
-      // Update the comment state with the updated content
       const data = await response.json();
-      setComments((prevComments) =>
-        prevComments.map((c) =>
-          c.id === comment.id ? { ...c, content: editedContent } : c
-        )
-      );
 
-      // Exit edit mode and close the dropdown
+      onUpdateComment({ ...comment, content: draftContent });
+
       setIsEditMode(false);
       setShowDropdown(false);
     } catch (error) {
@@ -106,57 +108,33 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
   };
 
   const handleReplySubmit = async (replyContent, commentId) => {
-    console.log("CommentId:", commentId);
-    console.log("replyContent:", replyContent);
-
     try {
-      if (comment.commentableType === "comment") {
-        // If replying to a comment, use a POST request to create a reply comment
-        const response = await fetch(`/api/posts/${commentId}/replyComments`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ content: replyContent }),
-        });
+      // If replying to a comment or the original post, use a POST request to create a reply comment
+      const response = await fetch(`/api/posts/${commentId}/replyComments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: replyContent }),
+      });
 
-        if (!response.ok) {
-          throw new Error("Failed to create reply");
-        }
-
-        const data = await response.json();
-        console.log(data);
-
-        // Assuming new comments have no replies initially
-        const fullData = {
-          ...data.comment,
-          replies: [],
-        };
-        setComments((prevComments) => [...prevComments, fullData]);
-      } else {
-        // If replying to the original post, use a POST request to create a reply comment
-        const response = await fetch(`/api/posts/${commentId}/replyComments`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ content: replyContent }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to create reply");
-        }
-
-        const data = await response.json();
-        console.log(data);
-
-        // Assuming new comments have no replies initially
-        const fullData = {
-          ...data.comment,
-          replies: [],
-        };
-        setComments((prevComments) => [...prevComments, fullData]);
+      if (!response.ok) {
+        throw new Error("Failed to create reply");
       }
+
+      const data = await response.json();
+      console.log(data);
+
+      // Assuming new comments have no replies initially
+      const fullData = {
+        ...data.comment,
+        replies: [],
+      };
+
+      console.log("New Comment Data:", fullData);
+
+      // Add the new comment to the comments list immediately
+      setComments((prevComments) => [...(prevComments || []), fullData]);
 
       // Reset the reply input after successful reply creation
       setReplyContent("");
@@ -169,12 +147,6 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
   const toggleDropdown = (e) => {
     e.stopPropagation(); // Stop the event from propagating up the DOM tree
     setShowDropdown((prevShowDropdown) => !prevShowDropdown);
-  };
-
-  const handleEdit = () => {
-    setIsEditMode(true);
-    setDraftContent(comment.content); // Reset the draft content to the current comment content
-    setShowDropdown(false); // Close the dropdown when entering edit mode
   };
 
   const handleDelete = async () => {
@@ -191,16 +163,32 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
         throw new Error("Failed to delete comment");
       }
 
-      // If the delete request is successful, update the comments state to reflect the deletion
-      setComments((prevComments) =>
-        prevComments.filter((c) => c.id !== comment.id)
-      );
+      /* console.log("COmment do be deleted");
 
-      router.reload();
+      setComments((prevComments) => {
+        console.log("Inside setComments, prevComments:", prevComments);
 
+        return Array.isArray(prevComments)
+          ? prevComments.map((c) =>
+              c.id === comment.id ? { ...c, content: "DELETED" } : c
+            )
+          : [];
+      }); */
+      onUpdateComment({ ...comment, content: "Deleted" });
+
+      setShowDropdown((prevShowDropdown) => !prevShowDropdown);
     } catch (error) {
       console.error("Error deleting comment:", error);
     }
+  };
+
+  const handleMainCommentUpdate = (updatedComment) => {
+    // Assuming 'allComments' is your main state in the parent component that stores all comments
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment.id === updatedComment.id ? updatedComment : comment
+      )
+    );
   };
 
   return (
@@ -279,6 +267,11 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
           </div>
         </div>
       )}
+      {newComment && (
+        <div className="bg-green-100 p-2 mt-2 rounded-md">
+          <p className="text-green-800">{newComment.content}</p>
+        </div>
+      )}
       {comment.createdAt && (
         <span className="text-gray-500 text-xs">
           {formatDate(comment.createdAt)}
@@ -332,6 +325,7 @@ const CommentSection = ({ comment, replyContent, setReplyContent }) => {
               comment={reply}
               replyContent={replyContent}
               setReplyContent={setReplyContent}
+              onUpdateComment={handleMainCommentUpdate}
             />
           ))}
         </div>
