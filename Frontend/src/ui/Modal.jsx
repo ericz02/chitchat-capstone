@@ -1,4 +1,5 @@
 import { CgCloseR } from "react-icons/cg";
+
 function Modal({ children, isVisible, hideModal }) {
   if (!isVisible) {
     return null;
