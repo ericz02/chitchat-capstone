@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import PostCard from "@/components/PostCard";
 import CommentSection from "@/components/CommentSection";
-
+import Loading from "@/app/loading";
 const ViewPost = () => {
   const router = useRouter();
   const [post, setPost] = useState(null);
@@ -78,7 +78,7 @@ const ViewPost = () => {
   };
 
   if (!post) {
-    return <p>Loading...</p>;
+    return <Loading />;
   }
 
   return (
@@ -90,7 +90,7 @@ const ViewPost = () => {
         onUpdateComments={handleCreateComment}
       />
       {post.comments && post.comments.length > 0 && (
-        <div className="w-2/3 h-[2100px] flex flex-col">
+        <div className="w-2/3 flex flex-col min-h-screen">
           {post.comments.map((comment) => (
             <CommentSection
               key={comment.id}
