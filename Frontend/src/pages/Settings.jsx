@@ -94,7 +94,7 @@ const Settings = () => {
 
   return (
     <div className=" p-4 flex justify-center min-h-screen">
-      <div className="bg-[#DDE6ED] p-8 h-[560px] rounded-md shadow-md w-2/3 my-6 cursor-pointer">
+      <div className="bg-stone-100	 p-8 h-[560px] rounded-md shadow-md w-2/3 my-6 cursor-pointer">
         {userData ? (
           <div >
             <div className="flex flex-row items-center mb-6">
@@ -167,7 +167,7 @@ const Settings = () => {
                   </div>
                 </>
               ) : (
-                <div className = "border-yellow-400 border-2 rounded-md p-4 m-2 ">
+                <div className = "border-black border-2 rounded-md p-4 m-2 ">
                   <p>About me:</p>
                   <p>
                     {userData.aboutMe ? userData.aboutMe : "No content yet."}

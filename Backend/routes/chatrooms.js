@@ -67,6 +67,7 @@ router.get("/:id/posts", async (req, res) => {
       where: {
         ChatroomId: chatroomId,
       },
+      order: [["createdAt", "DESC"]],
     });
 
     if (chatroomPosts) {
