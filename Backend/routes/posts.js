@@ -340,7 +340,7 @@ module.exports = (db) => {
     const userId = req.session.userId;
     const TITLE = req.body.title;
     const CONTENT = req.body.content;
-    const CHATROOMID = req.body.chatroomId; //try parse int
+    const CHATROOMID = req.body.chatroomId; 
     try {
       const newPost = await Post.create({
         title: TITLE,

@@ -5,6 +5,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { useRouter } from "next/navigation";
 
 const CreatePost = () => {
+  
   const [postName, setPostName] = useState("");
   const [postDescription, setPostDescription] = useState("");
   const [postRoom, setPostRoom] = useState("");
@@ -25,7 +26,7 @@ const CreatePost = () => {
 
   const handleNewPost = async (e) => {
     e.preventDefault();
-
+    
     const selectedChatroom = chatrooms.find(
       (chatroom) => chatroom.chatroomName === postRoom
     );

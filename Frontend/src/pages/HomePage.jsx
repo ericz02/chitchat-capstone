@@ -53,7 +53,7 @@ const HomePage = () => {
           <Link href="/create">
             <button
               className="bg-[#E6E6E6] text-black px-4 py-2 rounded-[10px] hover:bg-[#526D82] transition-colors 
-              duration-300 ease-in-out mt-8"
+              duration-300 ease-in-out mt-14"
             >
               Create Post
             </button>{" "}

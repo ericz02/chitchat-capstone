@@ -4,9 +4,11 @@ import { useRouter } from "next/router";
 import { useState, useEffect, useContext } from "react";
 import { FaUserCircle, FaCommentDots, FaThumbsUp } from "react-icons/fa";
 import Link from "next/link";
-import { AuthContext } from "@/app/contexts/AuthContext";
 import dynamic from "next/dynamic"; //solution for the hydration error.
 import LikeButton from "@/components/LikeButton";
+import CreatePost from "../CreatePost";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { AuthContext } from "@/app/contexts/AuthContext";
 
 const ViewChatRoom = () => {
   const router = useRouter();
@@ -19,8 +21,11 @@ const ViewChatRoom = () => {
   const [role, setRole] = useState(null);
   const [joining, setJoining] = useState(false); //purpose of this boolean is everythime a user leaves or joins a room they will rerender the page to show either the leave or join button
   const [warning, setWarning] = useState(false);
+  const[showForm, setShowForm] = useState(false);
+  const [postData, setPostData] = useState({postName:"", postDescription:""});
+  const [createPostWarning, setCreatePostWarning] = useState(false);
+    //this function is for when an admin tries to leave their chatroom. this will remove the user from the chatroom and also delete the chatroom.
 
-  //this function is for when an admin tries to leave their chatroom. this will remove the user from the chatroom and also delete the chatroom.
   const adminLeave = async () => {
     try {
       const leaveResponse = await fetch(`/api/chatrooms/${id}/removeUser`, {
@@ -102,6 +107,43 @@ const ViewChatRoom = () => {
     return date.toDateString(); // Format the timestamp to display only the date
   };
 
+  const handleCreatePost = async (e)=>{
+    e.preventDefault();
+    //reset the state to check if the user is a member or not.
+    setCreatePostWarning(false);
+    //prep the data to post
+    if(!isMember&&role===null){
+      console.log("you are either not a member or not logged in!");
+      setCreatePostWarning(true);
+      setShowForm(false);
+      return;
+    }
+    const data = {
+      title:postData.postName,
+      content:postData.postDescription,
+      chatroomId:id,
+    }
+    console.log(" send this data to the post request: ", postData);
+    try {
+      const response = await fetch("/api/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+      if (!response.ok) {
+        console.error("Failed to create post.");
+        return;
+      }
+      console.log("Post created successfully!");
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
+    setShowForm(false);
+  };
+
   //check if the logged in user is a member of this chatroom
   useEffect(() => {
     const checkMembership = async () => {
@@ -114,6 +156,7 @@ const ViewChatRoom = () => {
           console.log("is there reqeuse MADEEE");
           setIsMember(true);
           setRole(data.role);
+          
         } else {
           setIsMember(false);
         }
@@ -270,7 +313,66 @@ const ViewChatRoom = () => {
             </div>
           </div>
 
-          <div className=" p-4    flex-row items-center">
+          <div className="flex-col justify-items-center">
+                <div className = "flex justify-center">
+                  <button className="bg-[#E6E6E6]	text-black rounded-[10px] hover:bg-[#526D82] transition-colors 
+                    duration-300 ease-in-out p-2 mt-6" onClick = {()=>{setShowForm(true)}}>
+                      Create Post
+                  </button>
+                </div>
+
+                {(showForm) &&
+                  (<div className = " flex justify-center" >
+                      <div className = "border-black border-2 ">
+                        <form onSubmit = {handleCreatePost} method="post">
+                          <div>
+                            <input 
+                              className = "border-black border-2" 
+                              placeholder = "Title: "
+                              type = "text"
+                              id = "title"
+                              value = {postData.postName}
+                              onChange = {(e) => {setPostData({...postData, postName:e.target.value})}}
+                            />
+                          </div>
+                          <div>
+                            <textarea 
+                              className = "border-black border-2"
+                              placeholder = "Description: "
+                              id = "postDescription"
+                              value = {postData.postDescription}
+                              onChange = {(e) => {setPostData({...postData, postDescription: e.target.value})}}
+                            />
+                          </div>
+                          <div>
+                            <input 
+                              className="px-4 py-2 mr-2 bg-blue-500 text-white rounded-md"
+                              type = "submit"
+                            />
+                            <button
+                              className="px-4 py-2 bg-red-500 text-white rounded-md"
+                              onClick={()=>{setShowForm(false)}}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  )}
+
+                  {(createPostWarning)&&
+                  (<div className = "text-center text-red-500">
+                    <p>
+                      Create Post Failed, you are either not a member or not logged in.
+                    </p>
+                  </div>)}
+          </div>
+
+
+
+
+          <div className=" p-4  flex-row items-center">
             {postLength > 0 ? (
               posts.map((post) => (
                 <div
@@ -308,7 +410,7 @@ const ViewChatRoom = () => {
                 </div>
               ))
             ) : (
-              <p className="text-xlf flex justify-center	 text-red text-5xl">
+              <p className="text-xlf flex justify-center text-red text-5xl">
                 No Posts
               </p>
             )}
