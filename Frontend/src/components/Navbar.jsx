@@ -38,8 +38,8 @@ const Navbar = () => {
           />
         </div>
         {currentUser ? (
-          <div className="flex items-center">
-            <a href="#" className="ml-4 md:ml-0 md:mr-8" onClick={showModal}>
+          <div className="flex items-center ">
+            <a href="#" className="ml-4 md:ml-0 md:mr-8 " onClick={showModal} >
               <img
                 src={currentUser.profilePicture}
                 alt="Profile"
@@ -50,8 +50,8 @@ const Navbar = () => {
             </a>
           </div>
         ) : (
-          <div className="flex items-center">
-            <a href="#" className="ml-4 md:ml-0 md:mr-8" onClick={showModal}>
+          <div className="flex items-center ">
+            <a href="#" className="ml-4 md:ml-0 md:mr-8 " onClick={showModal} >
               <img
                 src="/female-icon.png"
                 alt="Profile"
@@ -63,8 +63,8 @@ const Navbar = () => {
           </div>
         )}
       </div>
-      <Modal isVisible={isModalVisible} hideModal={hideModal}>
-        <DropdownForm darkMode={darkMode} setDarkMode={setDarkMode} />
+      <Modal isVisible={isModalVisible} hideModal={hideModal} >
+        <DropdownForm darkMode={darkMode} setDarkMode={setDarkMode}/>
       </Modal>
     </div>
   );

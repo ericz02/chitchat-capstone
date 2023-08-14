@@ -40,8 +40,11 @@ const HomePage = () => {
       })
       .catch((error) => console.error("Error fetching posts:", error));
   }, []);
-  //reverse the posts so that the most recent is first
-  posts.reverse();
+  
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toDateString(); // Format the timestamp to display only the date
+  };
   
   return (
     <div className="mx-auto max-w-4xl pl-16">
@@ -64,17 +67,19 @@ const HomePage = () => {
       key={post.id}
       className="bg-[#DDE6ED] p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 cursor-pointer relative"
     >
-      <div className="font-bold text-[20px]">
+      <div className="font-bold text-[20px] ">
         cc/{post.chatroom.chatroomName}
         <p className="text-[10px] font-light">Posted by | {post.user.userName}</p>
+        <p className="text-[10px] font-light">{formatDate(post.createdAt)}</p>
       </div>
-      <div className="flex justify-between items-center mb-4">
-        <Link href={`/post/${post.id}`}>
-          <h2 className="text-xl">{post.title}</h2>
+        <Link href={`/post/${post.id}`} >
+          <div className = "bg-[#f0f9ff] p-3 m-2 rounded-md">
+            <div className="flex justify-between items-center mb-4 ">
+                <h2 className="text-xl">{post.title}</h2>
+            </div>
+            <p className="text-gray-600">{post.content}</p>
+          </div>
         </Link>
-      
-      </div>
-      <p className="text-gray-600">{post.content}</p>
       <div className="absolute top-2 right-2 flex items-center justify-end mt-4">
 
         <div>

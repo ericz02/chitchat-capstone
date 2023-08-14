@@ -97,6 +97,11 @@ const ViewChatRoom = () => {
     }
   };
 
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toDateString(); // Format the timestamp to display only the date
+  };
+
   //check if the logged in user is a member of this chatroom
   useEffect(() => {
     const checkMembership = async () => {
@@ -148,7 +153,7 @@ const ViewChatRoom = () => {
         .catch((error) => console.error("Error fetching post:", error));
     }
   }, [id]);
-  posts.reverse();
+
   //fetch information about this chatroom
   useEffect(() => {
     if (id) {
@@ -270,23 +275,32 @@ const ViewChatRoom = () => {
               posts.map((post) => (
                 <div
                   key={post.id}
-                  className="bg-[#DDE6ED] p-4 rounded-md shadow-md   my-6 cursor-pointer "
+                  className="bg-[#DDE6ED] p-4 rounded-md shadow-md my-6 cursor-pointer relative"
                 >
-                  <Link href={`/post/${post.id}`} key={post.id}>
-                    <div className="font-bold text-[20px]">cc/{info.name}</div>
-                    <div className="flex justify-between items-center mb-4">
-                      <h2 className="text-xl">{post.title}</h2>
-                      <p className="text-[10px]">
-                        Posted by | {post.user.userName}
-                      </p>
+                  <div className="font-bold text-[20px] ">
+                    cc/{info.name}
+                    <p className="text-[10px] font-light">Posted by | {post.user.userName}</p>
+                    <p className="text-[10px] font-light">{formatDate(post.createdAt)}</p>
+                  </div>
+                    <Link href={`/post/${post.id}`} >
+                      <div className = "bg-[#f0f9ff] p-3 m-2 rounded-md">
+                        <div className="flex justify-between items-center mb-4 ">
+                            <h2 className="text-xl">{post.title}</h2>
+                        </div>
+                        <p className="text-gray-600">{post.content}</p>
+                      </div>
+                    </Link>
+                  <div className="absolute top-2 right-2 flex items-center justify-end mt-4">
+            
+                    <div>
+                  
+                      <LikeButton
+                        postId={post.id}
+                        userId={post.UserId}
+                      />
                     </div>
-                    <p className="text-gray-600">{post.content}</p>
-                  </Link>
-                  <div className="flex items-center justify-start mt-4">
-                    <div className="flex items-center mr-4">
-                      <LikeButton postId={post.id} userId={post.UserId} />
-                    </div>
-                    <div className="flex items-center">
+                   
+                    <div className="flex items-center ml-4">
                       <FaCommentDots className="mr-2" />
                       <p className="text-[13px]">{post.commentsCount}</p>
                     </div>

@@ -38,7 +38,7 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
   }, [darkMode]);
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col space-y-4 " >
       {/* Dark Mode Switch */}
       <div className="flex items-center justify-between">
         <label htmlFor="darkModeSwitch" className="text-gray-800">
