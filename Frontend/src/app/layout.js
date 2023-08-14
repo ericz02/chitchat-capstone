@@ -14,9 +14,7 @@ const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("darkMode") === "true";
-  });
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
@@ -24,7 +22,7 @@ export default function RootLayout({ children }) {
     } else {
       document.body.classList.remove("bg-gray-500");
     }
-    localStorage.setItem("darkMode", darkMode);
+
   }, [darkMode]);
 
   return (
