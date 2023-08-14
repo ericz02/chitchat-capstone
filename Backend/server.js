@@ -6,6 +6,7 @@ const chatroomRouter = require("./routes/chatrooms");
 const postRouter = require("./routes/posts")(db);
 const userRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
+const searchRouter = require("./routes/search");
 const errorHandler = require("./middleware/errorHandler");
 const app = express();
 const port = 4000;
@@ -70,6 +71,7 @@ app.use("/api/chatrooms", chatroomRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/user", userRouter);
+app.use("/api/search", searchRouter);
 
 // Server listening on port 4000 for requests from the client
 app.listen(port, () => {

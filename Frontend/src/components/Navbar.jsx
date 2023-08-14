@@ -5,17 +5,12 @@ import { useState, useContext } from "react";
 import Modal from "../ui/Modal";
 import DropdownForm from "./DropDownForm";
 import { AuthContext } from "@/app/contexts/AuthContext"; // Import the AuthContext
-
-const Navbar = () => {
+import SearchBar from "./SearchBar";
+const Navbar = ({ darkMode, setDarkMode }) => {
   const { currentUser } = useContext(AuthContext); // Access the currentUser from the AuthContext
 
-  const handleLogoClick = () => {
-    // Add your logic here for what should happen when the logo is clicked
-    // For example, you can navigate to a different page router.push()
-  };
-
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  // const [darkMode, setDarkMode] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -27,18 +22,12 @@ const Navbar = () => {
 
   return (
     <div className="bg-[#526D82] py-4 fixed w-5/6 z-10">
-      <div className="flex flex-shrink-0 md:flex-row items-center justify-between text-white px-4 pl-24">
-        <div className="relative flex items-center mb-2 md:mb-0 mx-auto md:mr-auto">
-          <BiSearch className="text-white absolute left-4" size={20} />
-          <input
-            type="search"
-            className="p-3 pl-10 w-full md:w-[400px] bg-transparent rounded-[10px] border border-gray-300 dark:bg-transparent dark:border border-l-gray-700 dark:border-gray-400 dark:placeholder-gray-100 dark:text-white outline-none"
-            placeholder="Search Communities, Posts, Users..."
-            required
-          />
+      <div className="flex flex-shrink-0 md:flex-row items-center text-blue px-4 pl-24">
+        <div className="flex items-center justify-center ml-auto">
+          <SearchBar />
         </div>
-        {currentUser ? (
-          <div className="flex items-center">
+        <div className="flex items-center ml-auto">
+          {currentUser ? (
             <a href="#" className="ml-4 md:ml-0 md:mr-8" onClick={showModal}>
               <img
                 src={currentUser.profilePicture}
@@ -48,9 +37,7 @@ const Navbar = () => {
                 className="rounded-full cursor-pointer ml-1"
               />
             </a>
-          </div>
-        ) : (
-          <div className="flex items-center">
+          ) : (
             <a href="#" className="ml-4 md:ml-0 md:mr-8" onClick={showModal}>
               <img
                 src="/female-icon.png"
@@ -60,8 +47,8 @@ const Navbar = () => {
                 className="rounded-full cursor-pointer ml-4 md:ml-0 md:mr-8"
               />
             </a>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       <Modal isVisible={isModalVisible} hideModal={hideModal}>
         <DropdownForm darkMode={darkMode} setDarkMode={setDarkMode} />

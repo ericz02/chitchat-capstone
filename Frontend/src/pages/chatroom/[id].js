@@ -172,8 +172,8 @@ const ViewChatRoom = () => {
   return (
     <>
       <RootLayout>
-        <div className=" border-black border-2 m-10  w-4/5 flex-row self-center p-2">
-          <div className=" p-4 flex flex-col justify-items-center bg-slate-100">
+        <div className="bg-[#DDE6ED]  border-black border-2 m-10 rounded-md shadow-md w-4/5 flex-row self-center p-2">
+          <div className=" p-4 flex flex-col justify-items-center">
             {role === "admin" && isMember ? (
               <div className="flex justify-end">
                 {/*set it to if ismember and role = admin then put this button.*/}
@@ -259,7 +259,7 @@ const ViewChatRoom = () => {
               <></>
             )}
             <div className="flex justify-center	">
-              <h2 className="border-black border-2 p-4 bg-cyan-50	 rounded-[10px]	 w-3/4 ">
+              <h2 className="border-black border-2 p-4 bg-cyan-50 rounded-[10px]	 w-3/4 ">
                 {info.description}
               </h2>
             </div>
@@ -270,7 +270,7 @@ const ViewChatRoom = () => {
               posts.map((post) => (
                 <div
                   key={post.id}
-                  className="bg-[#DDE6ED] p-4 rounded-md shadow-md   my-6 cursor-pointer "
+                  className=" bg-cyan-50 p-4 rounded-md shadow-md   my-6 cursor-pointer "
                 >
                   <Link href={`/post/${post.id}`} key={post.id}>
                     <div className="font-bold text-[20px]">cc/{info.name}</div>
