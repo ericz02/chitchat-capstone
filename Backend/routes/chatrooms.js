@@ -67,6 +67,7 @@ router.get("/:id/posts", async (req, res) => {
       where: {
         ChatroomId: chatroomId,
       },
+      order: [["createdAt", "DESC"]],
     });
 
     if (chatroomPosts) {
@@ -198,7 +199,7 @@ router.get('/isMemberOf/:id',authenticateUser, async(req,res) =>{
   try{
     const response = await UserChatRoom.findOne({where:{UserId:userId, ChatroomId:chatroom}});
     if(response){
-      res.status(200).json({there:true, role:response.role});
+      res.status(200).json({there:true, role:response.role, USERID:response.UserId});
     }
     else{
       res.status(200).json({there:false});

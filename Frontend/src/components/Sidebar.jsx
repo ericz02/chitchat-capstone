@@ -40,10 +40,11 @@ const Sidebar = () => {
           </Link>
         </div>
 
-        {/* TODO: Wrap in link component to chitchatrooms */}
-        <div className="flex items-center mt-16 text-[20px] text-white hover:text-gray-400 self-center">
-          <FaComments style={{ marginRight: "8px" }} size={24} /> ChitChatRooms{" "}
-        </div>
+        <Link href = "/chatroomPage">
+          <div className="flex items-center mt-16 text-[20px] text-white hover:text-gray-400 self-center">
+            <FaComments style={{ marginRight: "8px" }} size={24} /> ChitChatRooms{" "}
+          </div>
+        </Link>
         <div className="mt-4">
           <Link href="/createChatroom">
             <button

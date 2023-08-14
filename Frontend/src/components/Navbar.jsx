@@ -50,8 +50,8 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           )}
         </div>
       </div>
-      <Modal isVisible={isModalVisible} hideModal={hideModal}>
-        <DropdownForm darkMode={darkMode} setDarkMode={setDarkMode} />
+      <Modal isVisible={isModalVisible} hideModal={hideModal} >
+        <DropdownForm darkMode={darkMode} setDarkMode={setDarkMode}/>
       </Modal>
     </div>
   );
