@@ -66,7 +66,7 @@ const HomePage = () => {
           <div className=" flex justify-center my-6">
             <div
               key={post.id}
-              className="bg-zinc-100 rounded-md shadow-md cursor-pointer relative border-gray-400 border-2 w-2/3 p-4 hover:scale-105 hover:skew-y-1"
+              className="bg-zinc-100 rounded-md shadow-md cursor-pointer relative border-gray-400 border-2 w-2/3 p-4 hover:scale-105 "
               // py-11 px-6 w-2/3 pr-5 my-6 ml-10
             >
               <div className="font-bold text-[20px] ">

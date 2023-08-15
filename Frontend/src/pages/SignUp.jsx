@@ -25,10 +25,10 @@ const SignUp = () => {
   };
 
   return (
-    <div className="bg-[#cee2ff] flex flex-col justify-center items-center min-h-screen">
+    <div className="bg-[#cee2ff] flex flex-col justify-center items-center min-h-screen p-2 mt-5 ">
       <Link href="/">
         <Image
-          className="m-auto"
+          className="m-auto mt-20"
           src={chitchatLogo}
           alt="Company Logo"
           height={200}
@@ -36,9 +36,9 @@ const SignUp = () => {
         />
       </Link>
 
-      <div className="bg-[#DDE6ED] mb-52 px-24 py-10 rounded-md shadow-md ">
-        <div  className="flex flex-col justify-center my-52 mx-52">
-          <h2 className="flex text-2xl font-bold justify-center mx-52  ">
+      <div className="bg-[#DDE6ED] rounded-md shadow-md border-gray-700 border-1 border mx-52 mb-52 px-40 pt-6 pb-5 ">
+        <div  className="flex flex-col justify-center ">
+          <h2 className=" text-2xl font-bold justify-center mx-40  ">
             Sign Up
           </h2>
           <form onSubmit={handleSubmit} method="post">
