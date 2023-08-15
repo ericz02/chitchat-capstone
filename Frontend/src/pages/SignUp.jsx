@@ -3,7 +3,7 @@
 import chitchatLogo from "../public/images/chitchat.png";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "../app/contexts/AuthContext";
 
