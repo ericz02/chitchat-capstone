@@ -5,7 +5,7 @@ const page = () => {
     <div>
       <ForgotPassword />
     </div>
-  )
-}
+  );
+};
 
 export default page;
