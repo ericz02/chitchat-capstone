@@ -1,9 +1,7 @@
-import Contact from "@/pages/Contact"
+import Contact from "@/pages/Contact";
 
 const page = () => {
-  return (
-    <Contact />
-  )
-}
+  return <Contact />;
+};
 
 export default page;

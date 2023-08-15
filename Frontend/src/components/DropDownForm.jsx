@@ -1,6 +1,6 @@
-import { useEffect, useContext } from "react";
+import { useContext } from "react";
 import { AuthContext } from "@/app/contexts/AuthContext";
-import Link from "next/link";
+//import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const DropdownForm = ({ darkMode, setDarkMode }) => {
@@ -8,11 +8,11 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
   const router = useRouter();
 
   const handleDarkModeToggle = () => {
-    if(!currentUser){
+    if (!currentUser) {
       router.push("/login");
-      return
+      return;
     }
-    
+
     setDarkMode((prevDarkMode) => !prevDarkMode);
   };
 
@@ -43,7 +43,7 @@ const DropdownForm = ({ darkMode, setDarkMode }) => {
   // }, [darkMode]);
 
   return (
-    <div className="flex flex-col space-y-4 " >
+    <div className="flex flex-col space-y-4 ">
       {/* Dark Mode Switch */}
       <div className="flex items-center justify-between">
         <label htmlFor="darkModeSwitch" className="text-gray-800">

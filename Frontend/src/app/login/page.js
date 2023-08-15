@@ -1,4 +1,3 @@
-
 import Login from "@/pages/Login";
 
 const page = () => {

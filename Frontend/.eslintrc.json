@@ -6,7 +6,13 @@
     "es6": true,
     "node": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended", "next"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "next",
+    "next/babel",
+    "next/cor-web-vitals"
+  ],
   "rules": {
     "indent": ["error", 2] // Set the tab size to 2 spaces
   }

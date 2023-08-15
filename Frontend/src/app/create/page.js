@@ -1,7 +1,6 @@
 import CreatePost from "@/pages/CreatePost";
 
 const page = () => {
-  
   return <CreatePost />;
 };
 

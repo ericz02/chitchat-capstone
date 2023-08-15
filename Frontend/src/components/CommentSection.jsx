@@ -3,9 +3,9 @@ import { useRouter } from "next/router";
 import {
   FaUserCircle,
   FaEllipsisH,
-  FaCommentDots,
-  FaThumbsUp,
-  FaTimes,
+  //FaCommentDots,
+  //FaThumbsUp,
+  //FaTimes,
 } from "react-icons/fa";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import LikeButton from "./LikeButton";
@@ -243,7 +243,6 @@ const CommentSection = ({
       {/* Display the comment content */}
       {!isEditMode ? (
         <p className="text-gray-600">{comment.content}</p>
-
       ) : (
         <div>
           <textarea
@@ -332,7 +331,6 @@ const CommentSection = ({
           ))}
         </div>
       )}
-           
     </div>
   );
 };
