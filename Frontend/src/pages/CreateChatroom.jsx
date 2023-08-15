@@ -59,7 +59,7 @@ const CreateChatroom = () => {
     } catch (error) {
       console.error("Error adding creator as admin:", error);
     }
-    router.push("/");
+    router.push("/chatroomPage");
   };
 
   return (
