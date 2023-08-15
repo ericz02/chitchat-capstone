@@ -405,7 +405,7 @@ const ViewChatRoom = () => {
               posts.map((post) => (
                 <div
                   key={post.id}
-                  className=" bg-zinc-100 rounded-md shadow-md   cursor-pointer border-gray-400 border-2 my-6 p-4 "
+                  className=" bg-zinc-100 rounded-md shadow-md   cursor-pointer border-gray-400 border-2 my-6 p-4 hover:skew-y-1"
                 >
                   <div className="font-bold text-[20px] ">
                     cc/{info.name}

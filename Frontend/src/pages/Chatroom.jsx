@@ -16,12 +16,12 @@ const Chatroom = () => {
   return (
     <div>
       <h1 className="text-center mt-12 text-2xl font-bold">Chatrooms</h1>
-      <div className="grid grid-cols-3 gap-4 mt-12 justify-items-center ">
+      <div className="grid grid-cols-3 gap-6 mt-12 justify-items-center ">
         {chatrooms.map((chatroom) => (
           <div className="w-4/5 ">
             <div
               key={chatroom.id}
-              className="border-black border-2 bg-white h-32 p-4 rounded-lg"
+              className="border-black border-2 bg-white h-32 p-4 rounded-lg shadow-lg shadow-lime-100 hover:scale-105 hover:skew-y-1 "
               title={chatroom.chatroomName} // Add the 'title' attribute
             >
               <div className="">
