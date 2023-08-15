@@ -27,20 +27,23 @@ const Settings = () => {
     }
   }, [currentUser]);
 
-  useEffect(()=>{
+  useEffect(() => {
     //get all of the chatrooms this user is a member of.
-    const getChatrooms = async ()=>{
+    const getChatrooms = async () => {
       try {
         const response = await fetch(`/api/user/${currentUser.id}/chatrooms`, {
           method: "GET",
         });
         const parsedChatrooms = await response.json();
-        if(response.ok){
+        if (response.ok) {
           const chatroomsWithData = await Promise.all(
-            parsedChatrooms.map(async (chatroom)=>{
-              const chatroomResponse = await fetch(`/api/chatrooms/${chatroom.ChatroomId}`, {method:"GET",});
+            parsedChatrooms.map(async (chatroom) => {
+              const chatroomResponse = await fetch(
+                `/api/chatrooms/${chatroom.ChatroomId}`,
+                { method: "GET" }
+              );
               const chatroomData = await chatroomResponse.json();
-              return {...chatroom, chatroomData:chatroomData};
+              return { ...chatroom, chatroomData: chatroomData };
             })
           );
           setChatrooms(chatroomsWithData);
@@ -48,8 +51,8 @@ const Settings = () => {
       } catch (error) {
         console.error("Error fetching membership:", error);
       }
-    }
-    if(currentUser){
+    };
+    if (currentUser) {
       getChatrooms();
     }
   }, [currentUser]);
@@ -127,7 +130,7 @@ const Settings = () => {
     <div className=" p-4 flex justify-center  ">
       <div className="bg-stone-100	p-8 rounded-md shadow-md w-2/3 my-6 h-fit">
         {userData ? (
-          <div >
+          <div>
             <div className="flex flex-row items-center mb-6">
               <img
                 src={userData.profilePicture} // Replace with the actual image path
@@ -155,7 +158,7 @@ const Settings = () => {
             {showNewProfilePictureInput && (
               <input
                 type="text"
-                className="p-3 mt-4 border rounded w-full"
+                className="p-3 mt-4 border border-gray-800  border-2 rounded w-full"
                 placeholder="New Profile Picture URL"
                 value={newProfilePicture}
                 onChange={(e) => setNewProfilePicture(e.target.value)}
@@ -164,7 +167,7 @@ const Settings = () => {
             {showNewProfilePictureInput && (
               <button
                 type="button"
-                className="bg-blue-500 text-white py-1 px-2 mt-4 rounded hover:bg-blue-600"
+                className="bg-blue-500 text-[13px] text-white py-1 px-2 mt-4 rounded hover:bg-blue-600"
                 onClick={handleUpdateProfilePicture}
               >
                 Update Profile Picture
@@ -198,14 +201,14 @@ const Settings = () => {
                   </div>
                 </>
               ) : (
-                <div className = "border-black border-2 rounded-md p-4 m-2 ">
+                <div className="border-black border-2 rounded-md p-4 m-2 ">
                   <p>About me:</p>
-                  <p>
+                  <p className="text-[15px] text-gray-500">
                     {userData.aboutMe ? userData.aboutMe : "No content yet."}
                   </p>
                   <button
                     type="button"
-                    className="mt-4 bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600"
+                    className="mt-4 bg-blue-500 text-white py-1 px-2 text-[15px] rounded hover:bg-blue-600"
                     onClick={handleToggleAboutMeInput}
                   >
                     Edit About Me
@@ -215,22 +218,32 @@ const Settings = () => {
             </div>
 
             <div>
-              <h3 className = "text-center m-4 font-bold text-xl">My Chatrooms</h3>
-              {chatrooms.map((chatroom) =>(
-                <Link href = {`/chatroom/${chatroom.ChatroomId}`}>
-                <div className = "border-gray-400 border-2 m-4 p-2 rounded-md">
-                    <div className = "flex justify-center text-xl underline font-semibold">{chatroom.chatroomData.chatroomName}</div>
-                    <div className = "flex justify-center text-sm">role: {chatroom.role}</div>
-                    <div className = "flex justify-center text-sm">descripton: {chatroom.chatroomData.chatroomDescription}</div>
-                </div> 
-               </Link>
+              <h3 className="text-center m-4 font-bold text-xl">
+                My Chatrooms
+              </h3>
+              {chatrooms.map((chatroom) => (
+                <Link href={`/chatroom/${chatroom.ChatroomId}`}>
+                  <div className="border-gray-400 border-2 m-4 p-2 rounded-md">
+                    <div className="flex text-indigo-700 justify-center text-xl underline font-semibold">
+                      {chatroom.chatroomData.chatroomName}
+                    </div>
+                    <div className="flex justify-center text-sm">
+                      <p className="mr-1 text-blue-400">role:</p>
+                      <p>{chatroom.role}</p>
+                      {/* role: {chatroom.role} */}
+                    </div>
+                    <div className="flex justify-center text-sm">
+                      <p className="mr-1 text-blue-400">description:</p>
+                      <p>{chatroom.chatroomData.chatroomDescription}</p>
+                    </div>
+                  </div>
+                </Link>
               ))}
             </div>
-
           </div>
         ) : // If the user is not logged in, then say so.
         !currentUser ? (
-          <div className = "text-xl">
+          <div className="text-xl">
             <p>Not Logged In</p>
           </div>
         ) : (

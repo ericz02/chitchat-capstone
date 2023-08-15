@@ -262,7 +262,7 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
       {!showReplyTextarea && (
         <div className="ml-10">
           <button
-            className="px-2 py-1 mt-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
+            className="px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
             onClick={handleReply}
           >
             Reply

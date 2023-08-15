@@ -4,7 +4,6 @@ import Link from "next/link";
 
 const ChatroomList = () => {
   const [chatrooms, setChatrooms] = useState([]);
-  
 
   useEffect(() => {
     // Fetch the list of chatrooms from the server
@@ -13,10 +12,9 @@ const ChatroomList = () => {
       .then((data) => setChatrooms(data))
       .catch((error) => console.error("Error fetching chatrooms:", error));
   }, []);
-  
 
   return (
-    <div className="grid grid-cols-3 gap-4 mt-4"  >
+    <div className="grid grid-cols-3 gap-4 mt-4">
       {chatrooms.map((chatroom) => (
         <div
           key={chatroom.id}
