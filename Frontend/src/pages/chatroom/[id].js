@@ -417,7 +417,7 @@ const ViewChatRoom = () => {
                     </p>
                   </div>
                   <Link href={`/post/${post.id}`}>
-                    <div className="	bg-cyan-50	 p-3 m-2 rounded-md">
+                    <div className="	bg-cyan-50	 p-3 m-2 rounded-md hover:skew-x-2">
                       <div className="flex justify-between items-center mb-4 ">
                         <h2 className="text-xl">{post.title}</h2>
                       </div>
