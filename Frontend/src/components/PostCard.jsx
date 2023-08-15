@@ -64,7 +64,11 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
   const handleCancel = () => {
     setIsEditMode(false);
   };
-
+  
+  const handleReplyCancel = () => {
+    setShowReplyTextarea(false);
+  }
+  
   const handleDelete = () => {
     // Fetch the backend API route to delete the post
     fetch(`/api/posts/${post.id}`, {
@@ -147,7 +151,7 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
     <>
       <div
         key={post.id}
-        className="bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start "
+        className="bg-white border border-1 border-gray-700 p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start "
       >
         {currentUser && post.UserId === currentUser.id && (
           <div className="flex justify-end">
@@ -242,25 +246,33 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
         </div>
       </div>
       {showReplyTextarea && (
-        <div className="bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start">
+        <div className="border border-1 border-gray-700 bg-white p-4 rounded-md shadow-md w-2/3 pr-5 my-6 ml-10 flex flex-col sm:flex-col md:flex-col justify-start">
           <textarea
-            className="border border-gray-300 rounded-md w-full p-2 mt-2"
+            className="border border-gray-700 rounded-md w-full p-2 mt-2"
             rows={5}
             placeholder="Type your reply..."
             value={newCommentContent}
             onChange={(e) => setNewCommentContent(e.target.value)}
           />
-          <button
-            className="px-4 py-2 mt-2 bg-blue-500 text-white rounded-md"
-            onClick={handleCreateComment}
-          >
-            Submit Reply
-          </button>
+          <div className="flex flex-row justify-between mt-2">
+            <button 
+              className="px-4 py-2 mt-2 bg-red-500 text-white rounded-md hover:bg-red-700"
+              onClick={handleReplyCancel}
+              >
+              Cancel
+            </button>
+            <button
+              className="px-4 py-2 mt-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
+              onClick={handleCreateComment}
+              >
+              Submit Reply
+            </button>
+          </div>
         </div>
       )}
 
       {!showReplyTextarea && (
-        <div className="ml-10">
+        <div className="ml-10 ">
           <button
             className="px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
             onClick={handleReply}
