@@ -91,6 +91,7 @@ const HomePage = () => {
                   <LikeButton
                     postId={post.id}
                     userId={post.UserId}
+                    commentableType="post"
                   />
                 </div>
               

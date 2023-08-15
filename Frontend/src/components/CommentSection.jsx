@@ -273,9 +273,9 @@ const CommentSection = ({
         </div>
       )}
       {comment.createdAt && (
-        <span className="text-gray-500 text-xs">
+        <span className="text-black text-xs">
           {formatDate(comment.createdAt)}
-          <LikeButton postId={comment.id} userId={comment.UserId} />
+         
         </span>
       )}
       {/* Show the reply input when the button is clicked */}
@@ -311,12 +311,17 @@ const CommentSection = ({
       )}
       {/* Show the button to reveal the reply input */}
       {!showReplyInput && (
-        <button
+        <>        <button
           className="px-2 py-1 mt-2 ml-2 text-[12px] bg-gray-200 hover:bg-gray-300 rounded-md"
           onClick={handleReply}
         >
           Reply
         </button>
+        <span className="flex justify-end">
+           <LikeButton postId={comment.id} userId={comment.UserId} commentableType="comment" />
+        </span>
+        </>
+
       )}
       {comments && comments.length > 0 && (
         <div className="mt-2">

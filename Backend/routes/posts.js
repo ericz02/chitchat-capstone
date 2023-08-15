@@ -107,7 +107,7 @@ module.exports = (db) => {
   //get all posts from a specific chatroom
   router.get("/:id/chatroomPosts", async (req, res) => {
     const chatroomId = parseInt(req.params.id, 10);
-  
+
     try {
       const chatroomPosts = await Post.findAll({
         where: {
@@ -131,7 +131,7 @@ module.exports = (db) => {
         },
         order: [["createdAt", "DESC"]],
       });
-  
+
       if (chatroomPosts) {
         res.status(200).json(chatroomPosts);
       } else {
@@ -253,20 +253,26 @@ module.exports = (db) => {
     try {
       const postId = req.params.id;
       const userId = req.query.userId;
-      const post = await Post.findByPk(postId);
-      if (!post) {
-        return res.status(404).json({ message: "Post not found" });
+      const commentableType = req.query.commentableType;
+
+      const item =
+        commentableType === "comment"
+          ? await Comment.findByPk(postId)
+          : await Post.findByPk(postId);
+
+      if (!item) {
+        return res.status(404).json({ message: "Item not found" });
       }
       // Fetch the likes for the specified post
       const likes = await Likes.findAll({
         where: {
-          likeableType: "post",
+          likeableType: commentableType,
           likeableId: postId,
         },
       });
       const finduser = await Likes.findOne({
         where: {
-          likeableType: "post",
+          likeableType: commentableType,
           likeableId: postId,
           userId: userId,
         },
@@ -275,7 +281,7 @@ module.exports = (db) => {
       console.log(likes.length);
       if (finduser) {
         console.log("user found");
-        res.status(200).json({ isLiked: true, likesCount: likes.length});
+        res.status(200).json({ isLiked: true, likesCount: likes.length });
       } else {
         res.status(200).json({ isLiked: false, likesCount: likes.length });
       }
@@ -284,46 +290,51 @@ module.exports = (db) => {
       res.status(500).send({ message: err.message });
     }
   });
-
-  //add to likes
+  //add likes
   router.post("/:id/like", async (req, res) => {
     console.log("add likes");
     try {
-      const postId = req.params.id;
+      const itemId = req.params.id;
       const userId = req.body.userId;
+      const commentableType = req.body.commentableType || "post"; // Default to "post"
 
-      // Check if the likeable (post or comment) exists
-      const post = await Post.findByPk(postId);
-      if (!post) {
-        return res.status(404).json({ message: "Post not found" });
+      let item;
+      if (commentableType === "comment") {
+        item = await Comment.findByPk(itemId);
+      } else {
+        item = await Post.findByPk(itemId);
       }
+
+      if (!item) {
+        return res.status(404).json({ message: "Item not found" });
+      }
+
       const likes = await Likes.findAll({
         where: {
-          likeableType: "post",
-          likeableId: postId,
+          likeableType: commentableType,
+          likeableId: itemId,
         },
       });
-      // Check if the user has already liked the post (prevent duplicate likes)
+
       const existingLike = await Likes.findOne({
         where: {
-          likeableType: "post",
-          likeableId: postId,
+          likeableType: commentableType,
+          likeableId: itemId,
           userId: userId,
         },
       });
-      // Create a new like entry in the database
+
       if (!existingLike) {
         await Likes.create({
-          likeableType: "post",
-          likeableId: postId,
+          likeableType: commentableType,
+          likeableId: itemId,
           userId: userId,
         });
 
-        post.likesCount += 1;
-        await post.save();
+        item.likesCount += 1;
+        await item.save();
       }
 
-      // Respond with the updated likes count
       res.status(200).json({ likesCount: likes.length, isLiked: true });
     } catch (err) {
       console.error(err);
@@ -334,37 +345,46 @@ module.exports = (db) => {
   // Delete a like
   router.delete("/:id/like", async (req, res) => {
     try {
-      const postId = req.params.id;
+      const itemId = req.params.id;
       const userId = req.body.userId;
+      const commentableType = req.body.commentableType || "post"; // Default to "post"
 
-      // Check if the likeable (post or comment) exists
-      const post = await Post.findByPk(postId);
-      if (!post) {
-        return res.status(404).json({ message: "Post not found" });
+      let item;
+      if (commentableType === "comment") {
+        item = await Comment.findByPk(itemId);
+      } else {
+        item = await Post.findByPk(itemId);
       }
+
+      if (!item) {
+        return res.status(404).json({ message: "Item not found" });
+      }
+
       const likes = await Likes.findAll({
         where: {
-          likeableType: "post",
-          likeableId: postId,
+          likeableType: commentableType,
+          likeableId: itemId,
         },
       });
-      // Check if the user has already liked the post
+
       const existingLike = await Likes.findOne({
         where: {
-          likeableType: "post",
-          likeableId: postId,
+          likeableType: commentableType,
+          likeableId: itemId,
           userId: userId,
         },
       });
+
       if (existingLike) {
         await existingLike.destroy();
-        post.likesCount -= 1;
-        if (post.likesCount < 0) post.likesCount = 0;
-        await post.save();
+        item.likesCount -= 1;
+        if (item.likesCount < 0) item.likesCount = 0;
+        await item.save();
         return res
           .status(200)
           .json({ likesCount: likes.length, isLiked: false });
       }
+
       if (!existingLike) {
         return res.status(404).json({ message: "Like not found" });
       }
@@ -379,7 +399,7 @@ module.exports = (db) => {
     const userId = req.session.userId;
     const TITLE = req.body.title;
     const CONTENT = req.body.content;
-    const CHATROOMID = req.body.chatroomId; 
+    const CHATROOMID = req.body.chatroomId;
     try {
       const newPost = await Post.create({
         title: TITLE,

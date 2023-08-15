@@ -426,8 +426,8 @@ const ViewChatRoom = () => {
                   </Link>
 
                   <div className="top-2 right-2 flex items-center justify-end mt-4">
-                    <div>
-                      <LikeButton postId={post.id} userId={post.UserId} />
+                    <div  >
+                      <LikeButton postId={post.id} userId={post.UserId} commentableType="post" />
                     </div>
 
                     <div className="flex items-center ml-4 ">

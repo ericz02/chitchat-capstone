@@ -234,7 +234,7 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
         )}
 
         <div className="flex items-center mt-4">
-         <LikeButton postId={post.id} userId={post.UserId} />
+         <LikeButton postId={post.id} userId={post.UserId} commentableType="post" />
           <span className="text-gray-500 ml-auto flex items-center">
             <FaCommentDots className="mr-2" />
             Comments: {post.commentsCount}
