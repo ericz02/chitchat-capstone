@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function Loading() {
   
   return (
-    <div className="flex justify-center items-center min-h-screen bg-blue-950">
+    <div className="flex justify-center items-center h-screen bg-blue-950">
       <div className="text-center">
         <Image src={chitchatlogo} alt="Floating Image" className="animate-float w-32 h-32 mx-auto" />
         <p className="mt-4">Loading...</p>
