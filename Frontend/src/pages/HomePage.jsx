@@ -57,7 +57,7 @@ const HomePage = () => {
 
   return (
     <div className="w-full flex flex-col ">
-      <div className="flex flex-col justify-center mb-4 ">
+      <div className="flex flex-col justify-center mb-4">
         <div className="flex flex-col items-center">
           <Link href="/create">
             <button
@@ -70,12 +70,12 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="flex-col">
+      <div className="flex-col ">
         {posts.map((post) => (
           <div className=" flex justify-center my-6">
             <div
               key={post.id}
-              className="bg-zinc-100 rounded-md shadow-md cursor-pointer relative border-gray-400 border-2 w-2/3 p-4 hover:scale-105 hover:skew-y-1"
+              className="bg-zinc-100 rounded-md shadow-md cursor-pointer relative border-gray-400 border-2 w-2/3 p-4 hover:scale-105 "
               // py-11 px-6 w-2/3 pr-5 my-6 ml-10
             >
               <div className="font-bold text-[20px] ">
@@ -97,7 +97,11 @@ const HomePage = () => {
               </Link>
               <div className="absolute top-2 right-2 flex items-center justify-end mt-4">
                 <div>
-                  <LikeButton postId={post.id} userId={post.UserId} />
+                  <LikeButton
+                    postId={post.id}
+                    userId={post.UserId}
+                    commentableType="post"
+                  />
                 </div>
 
                 <div className="flex items-center ml-4">

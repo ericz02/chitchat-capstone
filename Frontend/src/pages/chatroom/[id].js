@@ -334,7 +334,7 @@ const ViewChatRoom = () => {
             </div>
 
             {showForm && (
-              <div className=" flex justify-center m-4 ">
+              <div className="flex justify-center m-4 ">
                 <div className="border-black border-2 p-2 w-3/4 rounded-md">
                   <form
                     onSubmit={handleCreatePost}
@@ -405,7 +405,7 @@ const ViewChatRoom = () => {
               posts.map((post) => (
                 <div
                   key={post.id}
-                  className=" bg-zinc-100 rounded-md shadow-md   cursor-pointer border-gray-400 border-2 my-6 p-4 hover:skew-y-1"
+                  className=" bg-zinc-100 rounded-md shadow-md  cursor-pointer border-black border-2 my-6 mx-6 p-4 hover:scale-105"
                 >
                   <div className="font-bold text-[20px] ">
                     cc/{info.name}
@@ -417,7 +417,7 @@ const ViewChatRoom = () => {
                     </p>
                   </div>
                   <Link href={`/post/${post.id}`}>
-                    <div className="	bg-cyan-50	 p-3 m-2 rounded-md">
+                    <div className="	bg-cyan-50	 p-3 m-2 rounded-md hover:skew-x-2">
                       <div className="flex justify-between items-center mb-4 ">
                         <h2 className="text-xl">{post.title}</h2>
                       </div>
@@ -426,8 +426,8 @@ const ViewChatRoom = () => {
                   </Link>
 
                   <div className="top-2 right-2 flex items-center justify-end mt-4">
-                    <div>
-                      <LikeButton postId={post.id} userId={post.UserId} />
+                    <div  >
+                      <LikeButton postId={post.id} userId={post.UserId} commentableType="post" />
                     </div>
 
                     <div className="flex items-center ml-4 ">

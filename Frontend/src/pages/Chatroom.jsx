@@ -21,7 +21,7 @@ const Chatroom = () => {
           <div className="w-4/5 ">
             <div
               key={chatroom.id}
-              className="border-black border-2 bg-white h-32 p-4 rounded-lg shadow-lg shadow-lime-100 hover:scale-105 hover:skew-y-1 "
+              className="border-black border-2 bg-white h-32 p-4 rounded-lg shadow-lg shadow-lime-100 hover:scale-105  "
               title={chatroom.chatroomName} // Add the 'title' attribute
             >
               <div className="">
