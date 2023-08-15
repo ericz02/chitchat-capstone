@@ -178,7 +178,7 @@ const ViewChatRoom = () => {
   //fetch all posts from this chatroom
   useEffect(() => {
     if (id) {
-      fetch(`/api/chatrooms/${id}/posts`, { method: "GET" })
+      fetch(`/api/posts/${id}/chatroomPosts`, { method: "GET" })
         .then((response) => response.json())
         .then(async (data) => {
           setPostLength(data.length);
@@ -240,7 +240,8 @@ const ViewChatRoom = () => {
               <></>
             )}
 
-            <h1 className="flex justify-center	text-5xl py-4"> {info.name} </h1>
+            <h1 className="flex justify-center	text-5xl py-2"> {info.name} </h1>
+            <div className = "flex justify-center text-sm py-2">Created on: {formatDate(chatroom.createdAt)}</div>
 
             {isMember ? (
               <div>
@@ -394,21 +395,22 @@ const ViewChatRoom = () => {
                         <p className="text-gray-600">{post.content}</p>
                       </div>
                     </Link>
-                  <div className="absolute top-2 right-2 flex items-center justify-end mt-4">
-            
+
+                  <div className="top-2 right-2 flex items-center justify-end mt-4">
                     <div>
-                  
                       <LikeButton
                         postId={post.id}
                         userId={post.UserId}
                       />
                     </div>
                    
-                    <div className="flex items-center ml-4">
+                    <div className="flex items-center ml-4 ">
                       <FaCommentDots className="mr-2" />
                       <p className="text-[13px]">{post.commentsCount}</p>
+                      {console.log("comment coutn: ", post.commentsCount)}
                     </div>
                   </div>
+
                 </div>
               ))
             ) : (

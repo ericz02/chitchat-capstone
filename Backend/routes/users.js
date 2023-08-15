@@ -81,7 +81,6 @@ router.get("/:id/comments", async (req, res) => {
 //get all chatrooms from a user.
 router.get("/:id/chatrooms", async (req, res) => {
   const userId = parseInt(req.params.id, 10);
-
   try {
     const chatrooms = await UserChatRoom.findAll({
       where: { UserId: userId },
