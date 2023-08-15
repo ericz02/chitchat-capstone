@@ -1,6 +1,7 @@
 "use client";
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "@/app/contexts/AuthContext";
+import Link from "next/link";
 
 const Settings = () => {
   const { currentUser } = useContext(AuthContext);
@@ -11,6 +12,7 @@ const Settings = () => {
     useState(false);
   const [showAboutMeInput, setShowAboutMeInput] = useState(false);
   const [aboutMeText, setAboutMeText] = useState("");
+  const [chatrooms, setChatrooms] = useState([]);
 
   useEffect(() => {
     if (currentUser) {
@@ -24,6 +26,35 @@ const Settings = () => {
         .catch((error) => console.error("Error fetching user data:", error));
     }
   }, [currentUser]);
+
+  useEffect(()=>{
+    //get all of the chatrooms this user is a member of.
+    const getChatrooms = async ()=>{
+      try {
+        const response = await fetch(`/api/user/${currentUser.id}/chatrooms`, {
+          method: "GET",
+        });
+        const parsedChatrooms = await response.json();
+        if(response.ok){
+          const chatroomsWithData = await Promise.all(
+            parsedChatrooms.map(async (chatroom)=>{
+              const chatroomResponse = await fetch(`/api/chatrooms/${chatroom.ChatroomId}`, {method:"GET",});
+              const chatroomData = await chatroomResponse.json();
+              return {...chatroom, chatroomData:chatroomData};
+            })
+          );
+          setChatrooms(chatroomsWithData);
+        }
+      } catch (error) {
+        console.error("Error fetching membership:", error);
+      }
+    }
+    if(currentUser){
+      getChatrooms();
+    }
+  }, [currentUser]);
+
+  console.log("my chatrooms: ", chatrooms);
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -93,10 +124,10 @@ const Settings = () => {
   };
 
   return (
-    <div className=" p-4 flex justify-center min-h-screen">
-      <div className="bg-[#DDE6ED] p-8 h-[560px] rounded-md shadow-md w-2/3 my-6 cursor-pointer">
+    <div className=" p-4 flex justify-center  ">
+      <div className="bg-stone-100	p-8 rounded-md shadow-md w-2/3 my-6 h-fit">
         {userData ? (
-          <>
+          <div >
             <div className="flex flex-row items-center mb-6">
               <img
                 src={userData.profilePicture} // Replace with the actual image path
@@ -167,7 +198,7 @@ const Settings = () => {
                   </div>
                 </>
               ) : (
-                <>
+                <div className = "border-black border-2 rounded-md p-4 m-2 ">
                   <p>About me:</p>
                   <p>
                     {userData.aboutMe ? userData.aboutMe : "No content yet."}
@@ -179,10 +210,24 @@ const Settings = () => {
                   >
                     Edit About Me
                   </button>
-                </>
+                </div>
               )}
             </div>
-          </>
+
+            <div>
+              <h3 className = "text-center m-4 font-bold text-xl">My Chatrooms</h3>
+              {chatrooms.map((chatroom) =>(
+                <Link href = {`/chatroom/${chatroom.ChatroomId}`}>
+                <div className = "border-gray-400 border-2 m-4 p-2 rounded-md">
+                    <div className = "flex justify-center text-xl underline font-semibold">{chatroom.chatroomData.chatroomName}</div>
+                    <div className = "flex justify-center text-sm">role: {chatroom.role}</div>
+                    <div className = "flex justify-center text-sm">descripton: {chatroom.chatroomData.chatroomDescription}</div>
+                </div> 
+               </Link>
+              ))}
+            </div>
+
+          </div>
         ) : // If the user is not logged in, then say so.
         !currentUser ? (
           <div className = "text-xl">

@@ -8,7 +8,7 @@ export default function ProtectedRoute({ children }) {
   const router = useRouter();
   if (!currentUser) {
     router.push("/login");
-    return;
+    //return;
   }
 
   return children;

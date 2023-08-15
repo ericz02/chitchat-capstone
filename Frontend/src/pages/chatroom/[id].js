@@ -4,9 +4,11 @@ import { useRouter } from "next/router";
 import { useState, useEffect, useContext } from "react";
 import { FaUserCircle, FaCommentDots, FaThumbsUp } from "react-icons/fa";
 import Link from "next/link";
-import { AuthContext } from "@/app/contexts/AuthContext";
 import dynamic from "next/dynamic"; //solution for the hydration error.
 import LikeButton from "@/components/LikeButton";
+import CreatePost from "../CreatePost";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { AuthContext } from "@/app/contexts/AuthContext";
 
 const ViewChatRoom = () => {
   const router = useRouter();
@@ -19,8 +21,11 @@ const ViewChatRoom = () => {
   const [role, setRole] = useState(null);
   const [joining, setJoining] = useState(false); //purpose of this boolean is everythime a user leaves or joins a room they will rerender the page to show either the leave or join button
   const [warning, setWarning] = useState(false);
+  const[showForm, setShowForm] = useState(false);
+  const [postData, setPostData] = useState({postName:"", postDescription:""});
+  const [createPostWarning, setCreatePostWarning] = useState(false);
+    //this function is for when an admin tries to leave their chatroom. this will remove the user from the chatroom and also delete the chatroom.
 
-  //this function is for when an admin tries to leave their chatroom. this will remove the user from the chatroom and also delete the chatroom.
   const adminLeave = async () => {
     try {
       const leaveResponse = await fetch(`/api/chatrooms/${id}/removeUser`, {
@@ -97,6 +102,51 @@ const ViewChatRoom = () => {
     }
   };
 
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toDateString(); // Format the timestamp to display only the date
+  };
+
+  const handleCreatePost = async (e)=>{
+    e.preventDefault();
+    //reset the state to check if the user is a member or not.
+    setCreatePostWarning(false);
+    //prep the data to post
+    if(!isMember&&role===null){
+      console.log("you are either not a member or not logged in!");
+      setCreatePostWarning(true);
+      setShowForm(false);
+      return;
+    }
+    const data = {
+      title:postData.postName,
+      content:postData.postDescription,
+      chatroomId:id,
+    }
+    console.log(" send this data to the post request: ", postData);
+    try {
+      const response = await fetch("/api/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+      if (!response.ok) {
+        console.error("Failed to create post.");
+        return;
+      }
+      console.log("Post created successfully!");
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
+    setShowForm(false);
+    //clear the form data
+    setPostData({postName:"", postDescription:""});
+
+  };
+
   //check if the logged in user is a member of this chatroom
   useEffect(() => {
     const checkMembership = async () => {
@@ -109,6 +159,7 @@ const ViewChatRoom = () => {
           console.log("is there reqeuse MADEEE");
           setIsMember(true);
           setRole(data.role);
+          
         } else {
           setIsMember(false);
         }
@@ -127,7 +178,7 @@ const ViewChatRoom = () => {
   //fetch all posts from this chatroom
   useEffect(() => {
     if (id) {
-      fetch(`/api/chatrooms/${id}/posts`, { method: "GET" })
+      fetch(`/api/posts/${id}/chatroomPosts`, { method: "GET" })
         .then((response) => response.json())
         .then(async (data) => {
           setPostLength(data.length);
@@ -147,7 +198,7 @@ const ViewChatRoom = () => {
         })
         .catch((error) => console.error("Error fetching post:", error));
     }
-  }, [id]);
+  }, [id, showForm]);
 
   //fetch information about this chatroom
   useEffect(() => {
@@ -172,7 +223,7 @@ const ViewChatRoom = () => {
   return (
     <>
       <RootLayout>
-        <div className="bg-[#DDE6ED]  border-black border-2 m-10 rounded-md shadow-md w-4/5 flex-row self-center p-2">
+        <div className="bg-slate-50  border-black border-2 m-10 rounded-md shadow-md w-4/5 flex-row self-center p-2">
           <div className=" p-4 flex flex-col justify-items-center">
             {role === "admin" && isMember ? (
               <div className="flex justify-end">
@@ -189,7 +240,8 @@ const ViewChatRoom = () => {
               <></>
             )}
 
-            <h1 className="flex justify-center	text-5xl py-4"> {info.name} </h1>
+            <h1 className="flex justify-center	text-5xl py-2"> {info.name} </h1>
+            <div className = "flex justify-center text-sm py-2">Created on: {formatDate(chatroom.createdAt)}</div>
 
             {isMember ? (
               <div>
@@ -265,36 +317,104 @@ const ViewChatRoom = () => {
             </div>
           </div>
 
-          <div className=" p-4    flex-row items-center">
+          <div className="flex-col justify-items-center">
+                <div className = "flex justify-center">
+                  <button className="bg-white	text-black rounded-[10px] hover:bg-teal-200	 transition-colors 
+                    duration-300 ease-in-out p-2 mt-6 border-black border-2" onClick = {()=>{setShowForm(!showForm)}}>
+                      Create Post
+                  </button>
+                </div>
+
+                {(showForm) &&
+                  (<div className = " flex justify-center m-4 " >
+                      <div className = "border-black border-2 p-2 w-3/4 rounded-md">
+                        <form onSubmit = {handleCreatePost} method="post" className = "w-full ">
+                          <div className = "m-4">
+                            <input 
+                              className = "border-slate-400 border-2 w-full rounded-md p-2" 
+                              placeholder = "Title: "
+                              type = "text"
+                              id = "title"
+                              value = {postData.postName}
+                              onChange = {(e) => {setPostData({...postData, postName:e.target.value})}}
+                            />
+                          </div>
+                          <div className = "m-4">
+                            <textarea 
+                              className = "border-slate-400 border-2 w-full rounded-md p-2"
+                              placeholder = "Description: "
+                              id = "postDescription"
+                              rows="4"
+                              value = {postData.postDescription}
+                              onChange = {(e) => {setPostData({...postData, postDescription: e.target.value})}}
+                            />
+                          </div>
+                          <div className = "flex justify-center mb-2">
+                            <input 
+                              className="px-4 py-2 mr-2 bg-blue-500 text-white rounded-md"
+                              type = "submit"
+                            />
+                            <button
+                              className="px-4 py-2 bg-red-500 text-white rounded-md"
+                              onClick={()=>{setShowForm(false)}}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  )}
+
+                  {(createPostWarning)&&
+                  (<div className = "text-center text-red-500">
+                    <p>
+                      Create Post Failed, you are either not a member or not logged in.
+                    </p>
+                  </div>)}
+          </div>
+
+
+          <div className=" p-4  flex-row items-center">
             {postLength > 0 ? (
               posts.map((post) => (
                 <div
                   key={post.id}
-                  className=" bg-cyan-50 p-4 rounded-md shadow-md   my-6 cursor-pointer "
+                  className=" bg-zinc-100 rounded-md shadow-md   cursor-pointer border-gray-400 border-2 my-6 p-4 "
                 >
-                  <Link href={`/post/${post.id}`} key={post.id}>
-                    <div className="font-bold text-[20px]">cc/{info.name}</div>
-                    <div className="flex justify-between items-center mb-4">
-                      <h2 className="text-xl">{post.title}</h2>
-                      <p className="text-[10px]">
-                        Posted by | {post.user.userName}
-                      </p>
+                  <div className="font-bold text-[20px] ">
+                    cc/{info.name}
+                    <p className="text-[10px] font-light">Posted by | {post.user.userName}</p>
+                    <p className="text-[10px] font-light">{formatDate(post.createdAt)}</p>
+                  </div>
+                    <Link href={`/post/${post.id}`} >
+                      <div className = "	bg-cyan-50	 p-3 m-2 rounded-md">
+                        <div className="flex justify-between items-center mb-4 ">
+                            <h2 className="text-xl">{post.title}</h2>
+                        </div>
+                        <p className="text-gray-600">{post.content}</p>
+                      </div>
+                    </Link>
+
+                  <div className="top-2 right-2 flex items-center justify-end mt-4">
+                    <div>
+                      <LikeButton
+                        postId={post.id}
+                        userId={post.UserId}
+                      />
                     </div>
-                    <p className="text-gray-600">{post.content}</p>
-                  </Link>
-                  <div className="flex items-center justify-start mt-4">
-                    <div className="flex items-center mr-4">
-                      <LikeButton postId={post.id} userId={post.UserId} />
-                    </div>
-                    <div className="flex items-center">
+                   
+                    <div className="flex items-center ml-4 ">
                       <FaCommentDots className="mr-2" />
                       <p className="text-[13px]">{post.commentsCount}</p>
+                      {console.log("comment coutn: ", post.commentsCount)}
                     </div>
                   </div>
+
                 </div>
               ))
             ) : (
-              <p className="text-xlf flex justify-center	 text-red text-5xl">
+              <p className="text-xlf flex justify-center text-red text-5xl">
                 No Posts
               </p>
             )}

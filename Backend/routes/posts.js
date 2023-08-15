@@ -104,6 +104,45 @@ module.exports = (db) => {
     }
   });
 
+  //get all posts from a specific chatroom
+  router.get("/:id/chatroomPosts", async (req, res) => {
+    const chatroomId = parseInt(req.params.id, 10);
+  
+    try {
+      const chatroomPosts = await Post.findAll({
+        where: {
+          ChatroomId: chatroomId,
+        },
+        attributes: {
+          include: [
+            [
+              db.sequelize.literal(
+                '(SELECT COUNT(*) FROM "likes" WHERE "likes"."likeableId" = "Post"."id" AND "likes"."likeableType" = \'post\')'
+              ),
+              "likesCount",
+            ],
+            [
+              db.sequelize.literal(
+                '(SELECT COUNT(*) FROM "comments" WHERE "comments"."CommentableId" = "Post"."id" AND "comments"."commentableType" = \'post\')'
+              ),
+              "commentsCount",
+            ],
+          ],
+        },
+        order: [["createdAt", "DESC"]],
+      });
+  
+      if (chatroomPosts) {
+        res.status(200).json(chatroomPosts);
+      } else {
+        res.status(404).send({ message: "Chatroom not found" });
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: err.message });
+    }
+  });
+
   //get all posts with commentCount
   /*   router.get("/", async (req, res) => {
     try {
@@ -340,7 +379,7 @@ module.exports = (db) => {
     const userId = req.session.userId;
     const TITLE = req.body.title;
     const CONTENT = req.body.content;
-    const CHATROOMID = req.body.chatroomId; //try parse int
+    const CHATROOMID = req.body.chatroomId; 
     try {
       const newPost = await Post.create({
         title: TITLE,
