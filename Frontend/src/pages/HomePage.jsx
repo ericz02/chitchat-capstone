@@ -47,7 +47,7 @@ const HomePage = () => {
   };
   
   return (
-    <div className="w-full h-[2100px] flex flex-col ">
+    <div className="w-full flex flex-col ">
 
       <div className="flex flex-col justify-center mb-4 ">
         <div className="flex flex-col items-center">
@@ -77,7 +77,7 @@ const HomePage = () => {
                 <p className="text-[10px] font-light">{formatDate(post.createdAt)}</p>
               </div>
                 <Link href={`/post/${post.id}`} >
-                  <div className = "bg-cyan-50 p-3 m-2 rounded-md">
+                  <div className = "bg-cyan-50 p-3 m-2 rounded-md hover:skew-x-2 ">
                     <div className="flex justify-between items-center mb-4 ">
                         <h2 className="text-xl">{post.title}</h2>
                     </div>

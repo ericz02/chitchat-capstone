@@ -15,8 +15,8 @@ const Chatroom = () => {
 
   return (
     <div>
-      <h1 className="text-center mt-12 text-2xl font-bold">Chatrooms</h1>
-      <div className="grid grid-cols-3 gap-6 mt-12 justify-items-center ">
+      <h1 className="text-center mt-12  text-2xl font-bold">Chatrooms</h1>
+      <div className="grid grid-cols-3 gap-6 mt-12 justify-items-center mb-12">
         {chatrooms.map((chatroom) => (
           <div className="w-4/5 ">
             <div
