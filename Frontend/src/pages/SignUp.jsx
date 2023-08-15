@@ -8,14 +8,21 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "../app/contexts/AuthContext";
 
 const SignUp = () => {
-  const router = useRouter();
   //get the signup funciton, the current user and the error {if any occur during fetch}
-  const { signup, currentUser, authError } = useContext(AuthContext);
+  const authContext = useContext(AuthContext); //this is to get the current user that is creating the chatroom
+  const currentUser = authContext ? authContext.currentUser : null;
+  const signup = authContext ? authContext.signup : null;
+  const authError = authContext ? authContext.authError : null;
+  const router = useRouter();
 
-  if (currentUser) {
+  useEffect(() => {
+    if (currentUser) {
+      router.push("/login");
+    }
+  }, []);
+  /*   if (currentUser) {
     router.push("/login");
-  }
- 
+  } */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +44,7 @@ const SignUp = () => {
       </Link>
 
       <div className="bg-[#DDE6ED] mb-52 px-24 py-10 rounded-md shadow-md ">
-        <div  className="flex flex-col justify-center my-52 mx-52">
+        <div className="flex flex-col justify-center my-52 mx-52">
           <h2 className="flex text-2xl font-bold justify-center mx-52  ">
             Sign Up
           </h2>
@@ -49,8 +56,8 @@ const SignUp = () => {
                 placeholder="First Name:"
                 name="firstName"
               />
-              </div>
-              <div>
+            </div>
+            <div>
               <input
                 className="w-full h-10 border rounded bg-white mt-3 p-2"
                 type="text"
