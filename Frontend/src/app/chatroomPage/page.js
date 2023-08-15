@@ -1,9 +1,7 @@
-import Chatroom from "@/pages/Chatroom"
+import Chatroom from "@/pages/Chatroom";
 
 const page = () => {
-  return (
-    <Chatroom />
-  )
-}
+  return <Chatroom />;
+};
 
 export default page;
