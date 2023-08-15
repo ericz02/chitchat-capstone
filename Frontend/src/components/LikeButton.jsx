@@ -46,7 +46,7 @@ const LikeButton = ({ postId, userId,commentableType }) => {
   return (
     <div
     className={`flex items-center mr-4 rounded-full min-w-8 z-1 ${
-      isLiked ? "text-blue-500" : "text-gray-500"
+      isLiked ? "text-blue-800" : "text-black-500"
     }`}
       onClick={handleLike}
     >
