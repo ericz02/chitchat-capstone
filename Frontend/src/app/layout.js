@@ -47,9 +47,7 @@ export default function RootLayout({ children }) {
               <div className="flex flex-col flex-1 mt-20 overflow-y-auto pb-16">
                 {children}
               </div>
-              <div className="">
               <Footer />
-              </div>
             </div>
           </div>
         </body>
