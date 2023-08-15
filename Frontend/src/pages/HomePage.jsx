@@ -57,7 +57,7 @@ const HomePage = () => {
 
   return (
     <div className="w-full flex flex-col ">
-      <div className="flex flex-col justify-center mb-4">
+      <div className="flex flex-col justify-center mb-4 ">
         <div className="flex flex-col items-center">
           <Link href="/create">
             <button
@@ -75,7 +75,7 @@ const HomePage = () => {
           <div className=" flex justify-center my-6">
             <div
               key={post.id}
-              className="bg-zinc-100 rounded-md shadow-md cursor-pointer relative border-gray-400 border-2 w-2/3 p-4 hover:scale-105 "
+              className="bg-zinc-100 rounded-md shadow-md cursor-pointer relative border-gray-700 border-2 w-2/3 p-4 hover:scale-105 "
               // py-11 px-6 w-2/3 pr-5 my-6 ml-10
             >
               <div className="font-bold text-[20px] ">
@@ -86,11 +86,13 @@ const HomePage = () => {
                 <p className="text-[10px] font-light">
                   {formatDate(post.createdAt)}
                 </p>
-              </div>
-              <Link href={`/post/${post.id}`}>
-                <div className="bg-cyan-50 p-3 m-2 rounded-md hover:skew-x-2 ">
-                  <div className="flex justify-between items-center mb-4 ">
-                    <h2 className="text-xl">{post.title}</h2>
+              </div> 
+                <Link href={`/post/${post.id}`} >
+                  <div className = "bg-cyan-50 p-3 m-2 rounded-md border border-gray-700">
+                    <div className="flex justify-between items-center mb-4 ">
+                        <h2 className="text-xl">{post.title}</h2>
+                    </div>
+                    <p className="text-gray-600">{post.content}</p>
                   </div>
                   <p className="text-gray-600">{post.content}</p>
                 </div>
@@ -103,11 +105,12 @@ const HomePage = () => {
                     commentableType="post"
                   />
                 </div>
-
-                <div className="flex items-center ml-4">
-                  <FaCommentDots className="mr-2" />
-                  <p className="text-[13px]">{post.commentsCount}</p>
-                </div>
+                <Link href={`/post/${post.id}`}>
+                  <div className="flex items-center ml-4">
+                    <FaCommentDots className="mr-2" />
+                    <p className="text-[13px]">{post.commentsCount}</p>
+                  </div>
+                </Link>
               </div>
             </div>
           </div>
