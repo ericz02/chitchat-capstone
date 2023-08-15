@@ -34,7 +34,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                 alt="Profile"
                 width={60}
                 height={60}
-                className="rounded-full cursor-pointer ml-1"
+                className="rounded-full cursor-pointer ml-1 hover:scale-105"
               />
             </a>
           ) : (

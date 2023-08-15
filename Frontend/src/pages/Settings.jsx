@@ -145,7 +145,7 @@ const Settings = () => {
                 alt="Profile"
                 width={100}
                 height={100}
-                className="rounded-full mr-4 cursor-pointer"
+                className="rounded-full mr-4 cursor-pointer hover:scale-110"
                 onClick={handleToggleProfilePictureInput} // Show the input when clicked
               />
               <div className="text-[18px] font-semibold">
@@ -231,7 +231,7 @@ const Settings = () => {
               </h3>
               {chatrooms.map((chatroom) => (
                 <Link href={`/chatroom/${chatroom.ChatroomId}`}>
-                  <div className="border-gray-400 border-2 m-6 p-2 rounded-md shadow-lg shadow-slate-300 hover:scale-105 hover:skew-y-1 ">
+                  <div className="border-gray-400 border-2 m-6 p-2 rounded-md shadow-lg shadow-slate-300 hover:scale-105  ">
                     <div className="flex text-indigo-700 justify-center text-xl underline font-semibold">
                       {chatroom.chatroomData.chatroomName}
                     </div>

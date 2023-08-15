@@ -66,50 +66,50 @@ const CreateChatroom = () => {
     } catch (error) {
       console.error("Error adding creator as admin:", error);
     }
-    router.push("/");
+    router.push("/chatroomPage");
   };
 
   return (
     // <ProtectedRoute>
-    <div className="flex justify-center items-center h-1/2 m-11 ">
-      <form
-        onSubmit={handleSubmit}
-        method="post"
-        className="bg-[#DDE6ED] p-8 w-full md:w-1/2 lg:w-1/3 xl:w-1/4 rounded-md shadow-md my-6"
-      >
-        <h1 className="text-center text-2xl font-bold mb-4 mt-3">
-          Create Chatroom
-        </h1>
-        <div className="mb-4 ">
-          <input
-            className="w-full px-3 py-2 border rounded bg-white"
-            type="text"
-            id="chatroomName"
-            placeholder="Chatroom Name:"
-            value={roomName}
-            onChange={(e) => setChatroomName(e.target.value)}
-          />
-        </div>
-        <div className="mb-4 ">
-          <textarea
-            className="w-full px-3 py-2 border rounded bg-white"
-            id="postDescription"
-            rows="4"
-            placeholder="Description:"
-            value={roomDescription}
-            onChange={(e) => setChatroomDescription(e.target.value)}
-          />
-        </div>
-        <div className="bg-[#FFFFFF] ">
-          <button
-            className="bg-[#14AE5C] hover:bg-[#0F8B49] text-white  font-bold py-2 px-4 rounded w-full"
-            type="submit"
-          >
-            Create
-          </button>
-        </div>
-      </form>
-    </div>
+    <div className="flex justify-center items-center h-1/2 m-11">
+    <form
+      onSubmit={handleSubmit}
+      method="post"
+      className="bg-[#F2F5F7] border border-1 border-gray-700 mt-[200px] p-8 w-full md:w-[480px] lg:w-[600px] xl:w-[800px] min-w-[200px] rounded-md shadow-md my-6"
+    >
+      <h1 className="text-center text-2xl font-bold mb-4 mt-3">
+        Create Chatroom
+      </h1>
+      <div className="mb-4">
+        <input
+          className="border border-1 border-gray-700 w-full px-3 py-2 border rounded bg-white"
+          type="text"
+          id="chatroomName"
+          placeholder="Chatroom Name"
+          value={roomName}
+          onChange={(e) => setChatroomName(e.target.value)}
+        />
+      </div>
+      <div className="mb-4">
+        <textarea
+          className="border border-1 border-gray-700 w-full px-3 py-2 border rounded bg-white"
+          id="chatroomDescription"
+          rows="4"
+          placeholder="Description"
+          value={roomDescription}
+          onChange={(e) => setChatroomDescription(e.target.value)}
+        />
+      </div>
+      <div className="p-4">
+        <button
+          className="bg-[#14AE5C] hover:bg-[#0F8B49] text-white font-bold py-2 px-4 rounded w-full"
+          type="submit"
+        >
+          Create
+        </button>
+      </div>
+    </form>
+  </div>
     // </ProtectedRoute>
   );
 };

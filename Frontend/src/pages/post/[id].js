@@ -90,7 +90,7 @@ const ViewPost = () => {
         onUpdateComments={handleCreateComment}
       />
       {post.comments && post.comments.length > 0 && (
-        <div className="w-2/3 flex flex-col min-h-screen">
+        <div className="w-2/3 flex flex-col ">
           {post.comments.map((comment) => (
             <CommentSection
               key={comment.id}
