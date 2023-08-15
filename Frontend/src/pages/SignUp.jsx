@@ -3,7 +3,7 @@
 import chitchatLogo from "../public/images/chitchat.png";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "../app/contexts/AuthContext";
 
@@ -44,7 +44,7 @@ const SignUp = () => {
       </Link>
 
       <div className="bg-[#DDE6ED] rounded-md shadow-md border-gray-700 border-1 border mx-52 mb-52 px-40 pt-6 pb-5 ">
-        <div  className="flex flex-col justify-center ">
+        <div className="flex flex-col justify-center ">
           <h2 className=" text-2xl font-bold justify-center mx-40  ">
             Sign Up
           </h2>

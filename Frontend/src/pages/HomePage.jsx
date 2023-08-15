@@ -9,13 +9,8 @@ import { useRouter } from "next/navigation";
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
   const authContext = useContext(AuthContext); //this is to get the current user that is creating the chatroom
-  const currentUser = authContext ? authContext.currentUser : null;
+  //const currentUser = authContext ? authContext.currentUser : null;
   const router = useRouter();
-  useEffect(() => {
-    if (!currentUser) {
-      router.push("/login");
-    }
-  }, []);
 
   useEffect(() => {
     // Fetch posts from the server
@@ -86,13 +81,11 @@ const HomePage = () => {
                 <p className="text-[10px] font-light">
                   {formatDate(post.createdAt)}
                 </p>
-              </div> 
-                <Link href={`/post/${post.id}`} >
-                  <div className = "bg-cyan-50 p-3 m-2 rounded-md border border-gray-700">
-                    <div className="flex justify-between items-center mb-4 ">
-                        <h2 className="text-xl">{post.title}</h2>
-                    </div>
-                    <p className="text-gray-600">{post.content}</p>
+              </div>
+              <Link href={`/post/${post.id}`}>
+                <div className="bg-cyan-50 p-3 m-2 rounded-md border border-gray-700">
+                  <div className="flex justify-between items-center mb-4 ">
+                    <h2 className="text-xl">{post.title}</h2>
                   </div>
                   <p className="text-gray-600">{post.content}</p>
                 </div>
