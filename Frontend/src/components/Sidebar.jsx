@@ -11,7 +11,7 @@ const Sidebar = () => {
         <div className="mb-8">
           <Link href="/">
             <Image
-              className="m-auto"
+              className="m-auto hover:animate-spin "
               src={chitchatLogo}
               alt="Company Logo"
               height={150}

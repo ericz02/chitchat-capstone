@@ -21,10 +21,13 @@ const ViewChatRoom = () => {
   const [role, setRole] = useState(null);
   const [joining, setJoining] = useState(false); //purpose of this boolean is everythime a user leaves or joins a room they will rerender the page to show either the leave or join button
   const [warning, setWarning] = useState(false);
-  const[showForm, setShowForm] = useState(false);
-  const [postData, setPostData] = useState({postName:"", postDescription:""});
+  const [showForm, setShowForm] = useState(false);
+  const [postData, setPostData] = useState({
+    postName: "",
+    postDescription: "",
+  });
   const [createPostWarning, setCreatePostWarning] = useState(false);
-    //this function is for when an admin tries to leave their chatroom. this will remove the user from the chatroom and also delete the chatroom.
+  //this function is for when an admin tries to leave their chatroom. this will remove the user from the chatroom and also delete the chatroom.
 
   const adminLeave = async () => {
     try {
@@ -107,22 +110,22 @@ const ViewChatRoom = () => {
     return date.toDateString(); // Format the timestamp to display only the date
   };
 
-  const handleCreatePost = async (e)=>{
+  const handleCreatePost = async (e) => {
     e.preventDefault();
     //reset the state to check if the user is a member or not.
     setCreatePostWarning(false);
     //prep the data to post
-    if(!isMember&&role===null){
+    if (!isMember && role === null) {
       console.log("you are either not a member or not logged in!");
       setCreatePostWarning(true);
       setShowForm(false);
       return;
     }
     const data = {
-      title:postData.postName,
-      content:postData.postDescription,
-      chatroomId:id,
-    }
+      title: postData.postName,
+      content: postData.postDescription,
+      chatroomId: id,
+    };
     console.log(" send this data to the post request: ", postData);
     try {
       const response = await fetch("/api/posts", {
@@ -143,8 +146,7 @@ const ViewChatRoom = () => {
     }
     setShowForm(false);
     //clear the form data
-    setPostData({postName:"", postDescription:""});
-
+    setPostData({ postName: "", postDescription: "" });
   };
 
   //check if the logged in user is a member of this chatroom
@@ -159,7 +161,6 @@ const ViewChatRoom = () => {
           console.log("is there reqeuse MADEEE");
           setIsMember(true);
           setRole(data.role);
-          
         } else {
           setIsMember(false);
         }
@@ -229,8 +230,8 @@ const ViewChatRoom = () => {
               <div className="flex justify-end">
                 {/*set it to if ismember and role = admin then put this button.*/}
                 <button
-                  className="bg-red-100	text-black  rounded-[10px] hover:bg-red-500 transition-colors 
-                duration-300 ease-in-out px-4 py-2  w-1/6 text-xs "
+                  className="bg-red-100 border border-gray-900 border-2	text-black  rounded-[10px] hover:bg-red-500 transition-colors 
+                    duration-300 ease-in-out px-4 py-2  w-1/6 text-xs "
                   onClick={handleDeleteChatroom}
                 >
                   Delete Chatroom
@@ -240,15 +241,17 @@ const ViewChatRoom = () => {
               <></>
             )}
 
-            <h1 className="flex justify-center	text-5xl py-2"> {info.name} </h1>
-            <div className = "flex justify-center text-sm py-2">Created on: {formatDate(chatroom.createdAt)}</div>
+            <h1 className="flex justify-center text-5xl py-2"> {info.name} </h1>
+            <div className="flex justify-center text-sm py-2">
+              Created on: {formatDate(chatroom.createdAt)}
+            </div>
 
             {isMember ? (
               <div>
                 <div className="flex justify-center">
                   <button
-                    className="bg-red-100		 text-black px-4 py-2 mx-1 mb-4 rounded-[10px] hover:bg-red-500 transition-colors 
-                duration-300 ease-in-out border-black border-2"
+                    className="bg-red-100	text-black px-4 py-2 mx-1 mb-2 mt-1 rounded-[10px] hover:bg-red-500 transition-colors 
+                      duration-300 ease-in-out border-black border-2"
                     onClick={
                       role === "admin"
                         ? () => {
@@ -311,106 +314,128 @@ const ViewChatRoom = () => {
               <></>
             )}
             <div className="flex justify-center	">
-              <h2 className="border-black border-2 p-4 bg-cyan-50 rounded-[10px]	 w-3/4 ">
+              <h2 className="border-black border-2 p-4 bg-cyan-50 rounded-[10px] w-3/4 ">
                 {info.description}
               </h2>
             </div>
           </div>
 
           <div className="flex-col justify-items-center">
-                <div className = "flex justify-center">
-                  <button className="bg-white	text-black rounded-[10px] hover:bg-teal-200	 transition-colors 
-                    duration-300 ease-in-out p-2 mt-6 border-black border-2" onClick = {()=>{setShowForm(!showForm)}}>
-                      Create Post
-                  </button>
-                </div>
+            <div className="flex justify-center">
+              <button
+                className="bg-white	text-black rounded-[10px] hover:bg-teal-200	 transition-colors 
+                    duration-300 ease-in-out p-2 mt-6 border-black border-2"
+                onClick={() => {
+                  setShowForm(!showForm);
+                }}
+              >
+                Create Post
+              </button>
+            </div>
 
-                {(showForm) &&
-                  (<div className = " flex justify-center m-4 " >
-                      <div className = "border-black border-2 p-2 w-3/4 rounded-md">
-                        <form onSubmit = {handleCreatePost} method="post" className = "w-full ">
-                          <div className = "m-4">
-                            <input 
-                              className = "border-slate-400 border-2 w-full rounded-md p-2" 
-                              placeholder = "Title: "
-                              type = "text"
-                              id = "title"
-                              value = {postData.postName}
-                              onChange = {(e) => {setPostData({...postData, postName:e.target.value})}}
-                            />
-                          </div>
-                          <div className = "m-4">
-                            <textarea 
-                              className = "border-slate-400 border-2 w-full rounded-md p-2"
-                              placeholder = "Description: "
-                              id = "postDescription"
-                              rows="4"
-                              value = {postData.postDescription}
-                              onChange = {(e) => {setPostData({...postData, postDescription: e.target.value})}}
-                            />
-                          </div>
-                          <div className = "flex justify-center mb-2">
-                            <input 
-                              className="px-4 py-2 mr-2 bg-blue-500 text-white rounded-md"
-                              type = "submit"
-                            />
-                            <button
-                              className="px-4 py-2 bg-red-500 text-white rounded-md"
-                              onClick={()=>{setShowForm(false)}}
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        </form>
-                      </div>
+            {showForm && (
+              <div className=" flex justify-center m-4 ">
+                <div className="border-black border-2 p-2 w-3/4 rounded-md">
+                  <form
+                    onSubmit={handleCreatePost}
+                    method="post"
+                    className="w-full "
+                  >
+                    <div className="m-4">
+                      <input
+                        className="border-slate-400 border-2 w-full rounded-md p-2"
+                        placeholder="Title: "
+                        type="text"
+                        id="title"
+                        value={postData.postName}
+                        onChange={(e) => {
+                          setPostData({
+                            ...postData,
+                            postName: e.target.value,
+                          });
+                        }}
+                      />
                     </div>
-                  )}
+                    <div className="m-4">
+                      <textarea
+                        className="border-slate-400 border-2 w-full rounded-md p-2"
+                        placeholder="Description: "
+                        id="postDescription"
+                        rows="4"
+                        value={postData.postDescription}
+                        onChange={(e) => {
+                          setPostData({
+                            ...postData,
+                            postDescription: e.target.value,
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-center mb-2">
+                      <input
+                        className="px-4 py-2 mr-2 bg-blue-500 text-white rounded-md"
+                        type="submit"
+                      />
+                      <button
+                        className="px-4 py-2 bg-red-500 text-white rounded-md"
+                        onClick={() => {
+                          setShowForm(false);
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
 
-                  {(createPostWarning)&&
-                  (<div className = "text-center text-red-500">
-                    <p>
-                      Create Post Failed, you are either not a member or not logged in.
-                    </p>
-                  </div>)}
+            {createPostWarning && (
+              <div className="text-center text-red-500">
+                <p>
+                  Create Post Failed, you are either not a member or not logged
+                  in.
+                </p>
+              </div>
+            )}
           </div>
-
 
           <div className=" p-4  flex-row items-center">
             {postLength > 0 ? (
               posts.map((post) => (
                 <div
                   key={post.id}
-                  className=" bg-zinc-100 rounded-md shadow-md   cursor-pointer border-gray-400 border-2 my-6 p-4 "
+                  className=" bg-zinc-100 rounded-md shadow-md   cursor-pointer border-gray-400 border-2 my-6 p-4 hover:skew-y-1"
                 >
                   <div className="font-bold text-[20px] ">
                     cc/{info.name}
-                    <p className="text-[10px] font-light">Posted by | {post.user.userName}</p>
-                    <p className="text-[10px] font-light">{formatDate(post.createdAt)}</p>
+                    <p className="text-[10px] font-light">
+                      Posted by | {post.user.userName}
+                    </p>
+                    <p className="text-[10px] font-light">
+                      {formatDate(post.createdAt)}
+                    </p>
                   </div>
-                    <Link href={`/post/${post.id}`} >
-                      <div className = "	bg-cyan-50	 p-3 m-2 rounded-md">
-                        <div className="flex justify-between items-center mb-4 ">
-                            <h2 className="text-xl">{post.title}</h2>
-                        </div>
-                        <p className="text-gray-600">{post.content}</p>
+                  <Link href={`/post/${post.id}`}>
+                    <div className="	bg-cyan-50	 p-3 m-2 rounded-md">
+                      <div className="flex justify-between items-center mb-4 ">
+                        <h2 className="text-xl">{post.title}</h2>
                       </div>
-                    </Link>
+                      <p className="text-gray-600">{post.content}</p>
+                    </div>
+                  </Link>
 
                   <div className="top-2 right-2 flex items-center justify-end mt-4">
                     <div>
-                      <LikeButton
-                        postId={post.id}
-                        userId={post.UserId}
-                      />
+                      <LikeButton postId={post.id} userId={post.UserId} />
                     </div>
-                   
+
                     <div className="flex items-center ml-4 ">
                       <FaCommentDots className="mr-2" />
                       <p className="text-[13px]">{post.commentsCount}</p>
                       {console.log("comment coutn: ", post.commentsCount)}
                     </div>
                   </div>
-
                 </div>
               ))
             ) : (
