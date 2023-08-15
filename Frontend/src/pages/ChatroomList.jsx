@@ -19,6 +19,7 @@ const ChatroomList = () => {
           <div
             key={chatroom.id}
             className="rounded-lg bg-blue-500 hover:bg-blue-700 text-white text-center p-4 transform transition-transform hover:scale-105 cursor-pointer overflow-hidden hover:skew-y-1"
+
             title={chatroom.chatroomName} // Add the 'title' attribute
           >
             <Link href={`/chatroom/${chatroom.id}`}>
