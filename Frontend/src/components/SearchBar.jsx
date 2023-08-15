@@ -26,16 +26,18 @@ const SearchBar = () => {
 
   return (
     <div className="relative ">
-      <div className=" flex items-center  mb-2 md:mb-0 mx-auto md:mr-auto">
+      <div className="flex items-center mb-2 md:mb-0 mx-auto md:mr-auto relative">
         <BiSearch className="text-blue-500 absolute left-4" size={20} />
         <input
           type="search"
-          className="p-3 pl-10 w-full md:w-[400px]  rounded-[10px] border border-gray-300 dark:border border-l-gray-700 dark:border-gray-400 dark:placeholder-gray-100 dark:text-white outline-none"
+          className="p-3 pl-10 w-full md:w-[400px] rounded-[10px] border border-gray-300 dark:border border-l-gray-700 dark:border-gray-400 dark:placeholder-gray-400 dark:text-white bg-gray-100 dark:bg-gray-800 outline-none"
           placeholder="Search Communities, Posts, Users..."
           onChange={(e) => handleSearch(e.target.value)}
           required
+          style={{ "::placeholder": { color: "black" } }}
         />
       </div>
+
       {searchResults && (
         <div className="search-results absolute text-blue-500 w-[400px] p-2 rounded-md shadow-md bg-slate-200">
           <ul>
@@ -49,22 +51,18 @@ const SearchBar = () => {
             ))}
           </ul>
           <ul>
-          <h6 className="text-lg font-bold text-gray-400">Post:</h6>
+            <h6 className="text-lg font-bold text-gray-400">Post:</h6>
             {searchResults.posts.map((post) => (
               <li key={post.id} className=" hover:text-purple-500">
-                <Link href={`/post/${post.id}`}>
-                  {post.title}
-                </Link>
+                <Link href={`/post/${post.id}`}>{post.title}</Link>
               </li>
             ))}
           </ul>
           <ul>
-          <h6 className="text-lg font-bold text-gray-400">Users:</h6>
+            <h6 className="text-lg font-bold text-gray-400">Users:</h6>
             {searchResults.userPosts.map((post) => (
               <li key={post.id} className=" hover:text-purple-500">
-                <Link href={`/post/${post.id}`}>
-                  {post.title}
-                </Link>
+                <Link href={`/post/${post.id}`}>{post.title}</Link>
               </li>
             ))}
           </ul>
