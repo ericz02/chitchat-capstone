@@ -8,8 +8,16 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "../app/contexts/AuthContext";
 
 const Login = () => {
-  const { currentUser, login, authError } = useContext(AuthContext);
+  const authContext = useContext(AuthContext); //this is to get the current user that is creating the chatroom
+  const currentUser = authContext ? authContext.currentUser : null;
+  const login = authContext ? authContext.login : null;
+  const authError = authContext ? authContext.authError : null;
   const router = useRouter();
+  useEffect(() => {
+    if (!currentUser) {
+      router.push("/login");
+    }
+  }, []);
 
   useEffect(() => {
     if (currentUser) {

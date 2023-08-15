@@ -4,9 +4,18 @@ import { useState, useEffect, useContext } from "react";
 import { FaCommentDots, FaThumbsUp } from "react-icons/fa";
 import LikeButton from "@/components/LikeButton";
 import { AuthContext } from "@/app/contexts/AuthContext";
+import { useRouter } from "next/navigation";
+
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
-  const { currentUser } = useContext(AuthContext);
+  const authContext = useContext(AuthContext); //this is to get the current user that is creating the chatroom
+  const currentUser = authContext ? authContext.currentUser : null;
+  const router = useRouter();
+  useEffect(() => {
+    if (!currentUser) {
+      router.push("/login");
+    }
+  }, []);
 
   useEffect(() => {
     // Fetch posts from the server
@@ -45,10 +54,10 @@ const HomePage = () => {
     const date = new Date(timestamp);
     return date.toDateString(); // Format the timestamp to display only the date
   };
-  
+
   return (
     <div className="w-full flex flex-col ">
-      <div className="flex flex-col justify-center mb-4">
+      <div className="flex flex-col justify-center mb-4 ">
         <div className="flex flex-col items-center">
           <Link href="/create">
             <button
@@ -85,10 +94,11 @@ const HomePage = () => {
                     </div>
                     <p className="text-gray-600">{post.content}</p>
                   </div>
-                </Link>
+                  <p className="text-gray-600">{post.content}</p>
+                </div>
+              </Link>
               <div className="absolute top-2 right-2 flex items-center justify-end mt-4">
                 <div>
-              
                   <LikeButton
                     postId={post.id}
                     userId={post.UserId}

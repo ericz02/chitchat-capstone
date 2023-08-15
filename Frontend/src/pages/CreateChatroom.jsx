@@ -5,10 +5,17 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { useRouter } from "next/navigation";
 
 const CreateChatroom = () => {
-  const { currentUser } = useContext(AuthContext); //this is to get the current user that is creating the chatroom
+  const authContext = useContext(AuthContext); //this is to get the current user that is creating the chatroom
+  const currentUser = authContext ? authContext.currentUser : null;
   const [roomName, setChatroomName] = useState("");
   const [roomDescription, setChatroomDescription] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    if (!currentUser) {
+      router.push("/login");
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

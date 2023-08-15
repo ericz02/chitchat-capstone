@@ -2,9 +2,9 @@
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Settings = () => {
-  const { currentUser } = useContext(AuthContext);
   const [newProfilePicture, setNewProfilePicture] = useState("");
   const [userData, setUserData] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -13,6 +13,14 @@ const Settings = () => {
   const [showAboutMeInput, setShowAboutMeInput] = useState(false);
   const [aboutMeText, setAboutMeText] = useState("");
   const [chatrooms, setChatrooms] = useState([]);
+  const authContext = useContext(AuthContext); //this is to get the current user that is creating the chatroom
+  const currentUser = authContext ? authContext.currentUser : null;
+  const router = useRouter();
+  useEffect(() => {
+    if (!currentUser) {
+      router.push("/login");
+    }
+  }, []);
 
   useEffect(() => {
     if (currentUser) {
