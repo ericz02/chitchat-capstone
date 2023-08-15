@@ -334,7 +334,7 @@ const ViewChatRoom = () => {
             </div>
 
             {showForm && (
-              <div className=" flex justify-center m-4 ">
+              <div className="flex justify-center m-4 ">
                 <div className="border-black border-2 p-2 w-3/4 rounded-md">
                   <form
                     onSubmit={handleCreatePost}
