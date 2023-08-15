@@ -62,7 +62,7 @@ const Login = () => {
               <p className="text-red-500 text-sm text-center">{authError}</p>
             )}
             <Link href="/forgot" className="text-blue-600">
-              <p className="flex justify-end m-2">Forgot Password?</p>
+              <p className="flex justify-end m-2 hover:text-blue-800">Forgot Password?</p>
             </Link>
 
             <div className="flex flex-col p-4 ">
@@ -75,7 +75,7 @@ const Login = () => {
           </form>
         </div>
         <p className="flex justify-center">Don't have an account?</p>
-        <Link href="/signup" className="text-blue-600 flex justify-center">
+        <Link href="/signup" className="text-blue-600 flex justify-center hover:text-blue-800">
           Sign Up
         </Link>
       </div>
