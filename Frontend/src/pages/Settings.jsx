@@ -223,7 +223,7 @@ const Settings = () => {
               </h3>
               {chatrooms.map((chatroom) => (
                 <Link href={`/chatroom/${chatroom.ChatroomId}`}>
-                  <div className="border-gray-400 border-2 m-4 p-2 rounded-md">
+                  <div className="border-gray-400 border-2 m-6 p-2 rounded-md shadow-lg shadow-slate-300 hover:scale-105 hover:skew-y-1 ">
                     <div className="flex text-indigo-700 justify-center text-xl underline font-semibold">
                       {chatroom.chatroomData.chatroomName}
                     </div>
