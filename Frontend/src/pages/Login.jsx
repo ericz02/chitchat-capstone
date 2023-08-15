@@ -25,7 +25,7 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-[#cee2ff] p-2 flex flex-col justify-center items-center min-h-screen ">
+    <div className="bg-[#cee2ff] p-2 mt-5 flex flex-col justify-center items-center min-h-screen ">
       <Link href="/">
         <Image
           className="m-auto"
@@ -36,15 +36,15 @@ const Login = () => {
         />
       </Link>
 
-      <div className="bg-[#DDE6ED] mx-52 mb-52 px-24 py-10 rounded-md shadow-md">
-        <div className="flex flex-col justify-center my-52 mx-32 ">
+      <div className="bg-[#DDE6ED] mx-52 mb-52 pb-3 px-40 py-0 rounded-md shadow-md border border-gray-700 border-1">
+        <div className="flex flex-col justify-center my-[40px] mx-10 ">
           <h2 className="flex justify-center text-2xl font-bold mx-16">
             Login to your account
           </h2>
           <form onSubmit={handleLogin} method="post">
             <div className="flex">
               <input
-                className="w-full h-10  border rounded bg-white mt-3 p-2"
+                className="w-full h-10 border border-1 border-gray-700 rounded bg-white mt-3 p-2"
                 type="email"
                 name="email"
                 placeholder="Email: "
@@ -52,7 +52,7 @@ const Login = () => {
             </div>
             <div>
               <input
-                className="w-full h-10  border rounded bg-white mt-3 p-2"
+                className="w-full h-10  border border-1 border-gray-700  rounded bg-white mt-3 p-2"
                 type="password"
                 name="password"
                 placeholder="Password: "
