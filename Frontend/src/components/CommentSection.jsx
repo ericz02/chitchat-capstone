@@ -69,8 +69,10 @@ const CommentSection = ({
   };
 
   const toggleEditMode = () => {
-    setIsEditMode(!isEditMode);
-    setDraftContent(comment.content);
+    if (!comment.isDeleted) {
+      setIsEditMode(!isEditMode);
+      setDraftContent(comment.content);
+    }
     setShowDropdown(false); // Close the dropdown when entering edit mode
   };
 
@@ -275,7 +277,6 @@ const CommentSection = ({
       {comment.createdAt && (
         <span className="text-black text-xs">
           {formatDate(comment.createdAt)}
-         
         </span>
       )}
       {/* Show the reply input when the button is clicked */}
@@ -311,17 +312,22 @@ const CommentSection = ({
       )}
       {/* Show the button to reveal the reply input */}
       {!showReplyInput && (
-        <>        <button
-          className="px-2 py-1 mt-2 ml-2 text-[12px] bg-gray-200 hover:bg-gray-300 rounded-md"
-          onClick={handleReply}
-        >
-          Reply
-        </button>
-        <span className="flex justify-end">
-           <LikeButton postId={comment.id} userId={comment.UserId} commentableType="comment" />
-        </span>
+        <>
+          {" "}
+          <button
+            className="px-2 py-1 mt-2 ml-2 text-[12px] bg-gray-200 hover:bg-gray-300 rounded-md"
+            onClick={handleReply}
+          >
+            Reply
+          </button>
+          <span className="flex justify-end">
+            <LikeButton
+              postId={comment.id}
+              userId={comment.UserId}
+              commentableType="comment"
+            />
+          </span>
         </>
-
       )}
       {comments && comments.length > 0 && (
         <div className="mt-2">

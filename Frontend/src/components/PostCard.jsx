@@ -20,7 +20,6 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
   const dropdownRef = useRef(null);
   const router = useRouter();
 
-
   console.log("PostCard props", post, onUpdate, onUpdateComments);
 
   useEffect(() => {
@@ -56,7 +55,9 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
   };
 
   const handleEdit = () => {
-    setIsEditMode(true);
+    if (!post.isDeleted) {
+      setIsEditMode(true);
+    }
     // Close the dropdown when clicking on the edit button
     setShowDropdown(false);
   };
@@ -64,11 +65,11 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
   const handleCancel = () => {
     setIsEditMode(false);
   };
-  
+
   const handleReplyCancel = () => {
     setShowReplyTextarea(false);
-  }
-  
+  };
+
   const handleDelete = () => {
     // Fetch the backend API route to delete the post
     fetch(`/api/posts/${post.id}`, {
@@ -238,7 +239,11 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
         )}
 
         <div className="flex items-center mt-4">
-         <LikeButton postId={post.id} userId={post.UserId} commentableType="post" />
+          <LikeButton
+            postId={post.id}
+            userId={post.UserId}
+            commentableType="post"
+          />
           <span className="text-gray-500 ml-auto flex items-center">
             <FaCommentDots className="mr-2" />
             Comments: {post.commentsCount}
@@ -255,16 +260,16 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
             onChange={(e) => setNewCommentContent(e.target.value)}
           />
           <div className="flex flex-row justify-between mt-2">
-            <button 
+            <button
               className="px-4 py-2 mt-2 bg-red-500 text-white rounded-md hover:bg-red-700"
               onClick={handleReplyCancel}
-              >
+            >
               Cancel
             </button>
             <button
               className="px-4 py-2 mt-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
               onClick={handleCreateComment}
-              >
+            >
               Submit Reply
             </button>
           </div>
