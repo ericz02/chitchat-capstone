@@ -3,7 +3,7 @@ import chitchatlogo from "../public/images/chitchat.png";
 import Image from "next/image";
 export default function Loading() {
   return (
-    <div className="flex justify-center items-center h-screen bg-blue-950">
+    <div className="flex justify-center items-center min-h-screen bg-blue-950">
       <div className="text-center">
         <Image
           src={chitchatlogo}

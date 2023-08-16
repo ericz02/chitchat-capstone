@@ -240,11 +240,18 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
         )}
 
         <div className="flex items-center mt-4">
-          <LikeButton
-            postId={post.id}
-            userId={post.UserId}
-            commentableType="post"
-          />
+          {currentUser ? (
+            <LikeButton
+              postId={post.id}
+              userId={currentUser.id}
+              commentableType="post"
+            />
+          ) : (
+            <span>
+              <FaThumbsUp /> {post.likesCount}
+            </span>
+          )}
+
           <span className="text-gray-500 ml-auto flex items-center">
             <FaCommentDots className="mr-2" />
             Comments: {post.commentsCount}

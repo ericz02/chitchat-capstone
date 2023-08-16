@@ -4,7 +4,7 @@ import {
   FaUserCircle,
   FaEllipsisH,
   //FaCommentDots,
-  //FaThumbsUp,
+  FaThumbsUp,
   //FaTimes,
 } from "react-icons/fa";
 import { AuthContext } from "@/app/contexts/AuthContext";
@@ -321,11 +321,17 @@ const CommentSection = ({
             Reply
           </button>
           <span className="flex justify-end">
-            <LikeButton
-              postId={comment.id}
-              userId={comment.UserId}
-              commentableType="comment"
-            />
+            {currentUser ? (
+              <LikeButton
+                postId={comment.id}
+                userId={currentUser.id}
+                commentableType="comment"
+              />
+            ) : (
+              <span>
+                <FaThumbsUp /> {comment.likesCount}
+              </span>
+            )}
           </span>
         </>
       )}
