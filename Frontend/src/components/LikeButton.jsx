@@ -12,6 +12,7 @@ const LikeButton = ({ postId, userId, commentableType }) => {
         `/api/posts/${postId}/like?userId=${userId}&commentableType=${commentableType}`
       );
       const data = await response.json();
+      console.log(data);
       setIsLiked(data.isLiked);
       setLikesCount(data.likesCount);
     } catch (error) {
@@ -32,17 +33,12 @@ const LikeButton = ({ postId, userId, commentableType }) => {
         },
         body: JSON.stringify({ userId, commentableType }),
       });
-      // const data = await response.json();
-      // console.log(data);
-      // console.log("isLiked", data.isLiked);
-      // console.log("likesCount", data.likesCount);
-      // setIsLiked(data.isLiked);
-      // setLikesCount(data.likesCount);
       checkLikes();
     } catch (error) {
       console.error("Error liking post:", error);
     }
   };
+
   return (
     <div
       className={`flex items-center mr-4 rounded-full min-w-8 z-1 ${

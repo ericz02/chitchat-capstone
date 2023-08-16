@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
   const authContext = useContext(AuthContext); //this is to get the current user that is creating the chatroom
-  //const currentUser = authContext ? authContext.currentUser : null;
+  const currentUser = authContext ? authContext.currentUser : null;
   const router = useRouter();
 
   useEffect(() => {
@@ -92,11 +92,17 @@ const HomePage = () => {
               </Link>
               <div className="absolute top-2 right-2 flex items-center justify-end mt-4">
                 <div>
-                  <LikeButton
-                    postId={post.id}
-                    userId={post.UserId}
-                    commentableType="post"
-                  />
+                  {currentUser ? (
+                    <LikeButton
+                      postId={post.id}
+                      userId={currentUser.id}
+                      commentableType="post"
+                    />
+                  ) : (
+                    <span>
+                      <FaThumbsUp /> {post.likesCount}
+                    </span>
+                  )}
                 </div>
                 <Link href={`/post/${post.id}`}>
                   <div className="flex items-center ml-4">
