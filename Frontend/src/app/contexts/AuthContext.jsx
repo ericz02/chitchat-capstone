@@ -1,5 +1,6 @@
 "use client";
 import { useState, createContext, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export const AuthContext = createContext();
 
@@ -7,6 +8,7 @@ const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthChecked, setIsAuthChecked] = useState(false);
   const [authError, setAuthError] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -40,8 +42,8 @@ const AuthProvider = ({ children }) => {
       });
 
       if (response.ok) {
-        const { user } = await response.json();
-        setCurrentUser(user);
+        //const { user } = await response.json();
+        router.push("/login");
         setAuthError(null);
       } else if (response.status === 422) {
         const errorData = await response.json();
