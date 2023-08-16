@@ -21,13 +21,13 @@ const Chatroom = () => {
           <div className="w-4/5 ">
             <div
               key={chatroom.id}
-              className="border-black border-2 bg-white h-32 p-4 rounded-lg shadow-lg shadow-lime-100 hover:scale-105  "
+              className="border-black border-2 bg-white h-32 p-4 rounded-lg shadow-lg shadow-lime-100 hover:scale-105 hover:ease-in duration-100"
               title={chatroom.chatroomName} // Add the 'title' attribute
             >
               <div className="">
                 <Link href={`/chatroom/${chatroom.id}`}>
                   <div className="text-xl font-semibold flex justify-center underline mb-1">
-                    {chatroom.chatroomName}
+                    <div className="text-blue-700">{chatroom.chatroomName}</div>
                   </div>
                   <div className=" text-sm font-normal flex justify-center ">
                     {chatroom.chatroomDescription}

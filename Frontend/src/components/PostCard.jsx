@@ -205,6 +205,7 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
             {user ? user.userName : "Unknown User"}
             <span className="mx-2">|</span>
             {formatDate(post.createdAt)}
+            {post.updatedAt !== post.createdAt ? formatDate(post.updatedAt) : formatDate(post.createdAt)}
           </div>
         </div>
 
