@@ -37,19 +37,19 @@ const Sidebar = () => {
 
         <div className={`flex flex-col items-${isMobile ? 'center' : 'left'} justify-center space-y-4`}>
           <Link href="/">
-            <div className={`flex items-center mt-2 ml-4 text-[20px] text-white hover:text-gray-400 self-start ${isMobile && 'icon-only'}`}>
+            <div className={`flex items-center mt-2 ml-4 text-[20px] text-white hover:text-gray-400 self-start`}>
               <FaHome style={{ marginRight: "8px" }} size={24} /> {!isMobile && 'Home'}
             </div>
           </Link>
 
           <Link href="/settings">
-            <div className={`flex items-center mt-2 ml-4 text-[20px] text-white hover:text-gray-400 self-start ${isMobile && 'icon-only'}`}>
+            <div className={`flex items-center mt-2 ml-4 text-[20px] text-white hover:text-gray-400 self-start `}>
               <FaCog style={{ marginRight: "8px" }} size={24} /> {!isMobile && 'Settings'}
             </div>
           </Link>
 
           <Link href="/contact">
-            <div className={`flex items-center mt-2 ml-4 text-[20px] text-white hover:text-gray-400 self-start ${isMobile && 'icon-only'}`}>
+            <div className={`flex items-center mt-2 ml-4 text-[20px] text-white hover:text-gray-400 self-start`}>
               <FaMailBulk style={{ marginRight: "8px" }} size={24} /> {!isMobile && 'Contact Us'}
             </div>
           </Link>
@@ -61,7 +61,7 @@ const Sidebar = () => {
           </div>
         </Link>
 
-        <div className={`mt-4 ${isMobile && 'icon-only'}`}>
+        <div className={`mt-4`}>
           <Link href="/createChatroom">
             <button
               className="px-2 py-2 text-s text-white hover:text-gray-400 bg-[#526D82] rounded-[10px] hover:bg-[#43556B] 
