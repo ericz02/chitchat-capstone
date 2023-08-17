@@ -9,7 +9,7 @@ import LikeButton from "@/components/LikeButton";
 import CreatePost from "../CreatePost";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { AuthContext } from "@/app/contexts/AuthContext";
-
+import AuthProvider from "@/app/contexts/AuthContext";
 const ViewChatRoom = () => {
   const router = useRouter();
   const { id } = router.query; // This will get the chatroom ID from the URL
@@ -28,7 +28,8 @@ const ViewChatRoom = () => {
   });
   const [createPostWarning, setCreatePostWarning] = useState(false);
   //this function is for when an admin tries to leave their chatroom. this will remove the user from the chatroom and also delete the chatroom.
-
+  const authContext = useContext(AuthContext); //this is to get the current user that is creating the chatroom
+  const currentUser = authContext ? authContext.currentUser : null;
   const adminLeave = async () => {
     try {
       const leaveResponse = await fetch(`/api/chatrooms/${id}/removeUser`, {
@@ -426,8 +427,18 @@ const ViewChatRoom = () => {
                   </Link>
 
                   <div className="top-2 right-2 flex items-center justify-end mt-4">
-                    <div  >
-                      <LikeButton postId={post.id} userId={post.UserId} commentableType="post" />
+                    <div>
+                      {currentUser ? (
+                        <LikeButton
+                          postId={post.id}
+                          userId={currentUser.id}
+                          commentableType="post"
+                        />
+                      ) : (
+                        <span className="text-gray-500 flex items-center">
+                          <FaThumbsUp className="mr-2" /> {post.likesCount}
+                        </span>
+                      )}
                     </div>
 
                     <div className="flex items-center ml-4 ">
