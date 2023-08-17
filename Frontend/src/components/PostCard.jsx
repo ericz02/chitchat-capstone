@@ -246,8 +246,8 @@ const PostCard = ({ post, onUpdate, onUpdateComments }) => {
               commentableType="post"
             />
           ) : (
-            <span>
-              <FaThumbsUp /> {post.likesCount}
+            <span className="text-gray-500 flex items-center">
+              <FaThumbsUp className="mr-2" /> {post.likesCount}
             </span>
           )}
 

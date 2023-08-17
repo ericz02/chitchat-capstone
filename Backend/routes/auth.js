@@ -52,7 +52,7 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    console.log("body", req.body);
+    //console.log("body", req.body);
     const user = await User.findOne({ where: { email: req.body.email } });
 
     if (user === null) {

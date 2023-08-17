@@ -249,7 +249,7 @@ module.exports = (db) => {
   // get likes
   // Server-side route to get the likes for a post
   router.get("/:id/like", async (req, res) => {
-    console.log("get likes");
+    //console.log("get likes");
     try {
       const postId = req.params.id;
       const userId = req.query.userId;
@@ -277,10 +277,10 @@ module.exports = (db) => {
           userId: userId,
         },
       });
-      console.log(finduser);
-      console.log(likes.length);
+      //console.log(finduser);
+      //console.log(likes.length);
       if (finduser) {
-        console.log("user found");
+        //console.log("user found");
         res.status(200).json({ isLiked: true, likesCount: likes.length });
       } else {
         res.status(200).json({ isLiked: false, likesCount: likes.length });
@@ -292,7 +292,7 @@ module.exports = (db) => {
   });
   //add likes
   router.post("/:id/like", async (req, res) => {
-    console.log("add likes");
+    //console.log("add likes");
     try {
       const itemId = req.params.id;
       const userId = req.body.userId;
@@ -421,7 +421,7 @@ module.exports = (db) => {
     const postId = parseInt(req.params.id, 10);
     const content = req.body.content;
     const userId = req.session.userId;
-    console.log("Received new comment:", { postId, content, userId });
+    //console.log("Received new comment:", { postId, content, userId });
     try {
       const newComment = await Comment.create({
         content: content,
