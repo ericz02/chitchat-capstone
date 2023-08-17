@@ -35,8 +35,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: {
-            args: [8, 150],
-            msg: "The chatroom description must be between 8 and 150 characters",
+            args: [8, 500],
+            msg: "The chatroom description must be between 8 and 500 characters",
           },
         },
       },
