@@ -99,8 +99,8 @@ const HomePage = () => {
                       commentableType="post"
                     />
                   ) : (
-                    <span>
-                      <FaThumbsUp /> {post.likesCount}
+                    <span className="text-[13px] ml-auto flex items-center">
+                      <FaThumbsUp className="mr-2" /> {post.likesCount}
                     </span>
                   )}
                 </div>

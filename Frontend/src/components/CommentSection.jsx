@@ -328,8 +328,8 @@ const CommentSection = ({
                 commentableType="comment"
               />
             ) : (
-              <span>
-                <FaThumbsUp /> {comment.likesCount}
+              <span className="text-gray-500  flex items-center">
+                <FaThumbsUp className="mr-2" /> {comment.likesCount}
               </span>
             )}
           </span>
