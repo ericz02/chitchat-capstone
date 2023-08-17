@@ -10,11 +10,11 @@ const Sidebar = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Adjust the threshold as needed
+      setIsMobile(window.innerWidth <= 1100); 
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Initialize the state
+    handleResize(); 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
