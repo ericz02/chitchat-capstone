@@ -20,7 +20,7 @@ Welcome to ChitChat, your go-to forum-based social media app that lets you conne
 
 To start using ChitChat, follow these simple steps:
 
-1. **Download the App:** ChitChat is available on the web. Search for "https://www.chitchat.dev" Download and install the app on your device.
+1. **Use the App:** ChitChat is available on the web. Search for "https://www.chitchat.ninja" on any device.
 
 2. **Sign Up or Log In:** Create a new account if you're a new user or log in if you already have an existing ChitChat account.
 
