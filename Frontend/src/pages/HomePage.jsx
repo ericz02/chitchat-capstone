@@ -6,6 +6,7 @@ import LikeButton from "@/components/LikeButton";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 
+
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
   const authContext = useContext(AuthContext); //this is to get the current user that is creating the chatroom
@@ -120,4 +121,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
-//className="absolute top-2 right-2 flex items-center justify-end mt-4"
+

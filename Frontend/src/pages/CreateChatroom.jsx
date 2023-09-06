@@ -82,7 +82,7 @@ const CreateChatroom = () => {
         </h1>
         <div className="mb-4">
           <input
-            className="border border-1 border-gray-700 w-full px-3 py-2 border rounded bg-white"
+            className="border border-1 border-gray-700 w-full px-3 py-2 rounded bg-white"
             type="text"
             id="chatroomName"
             placeholder="Chatroom Name"
@@ -92,7 +92,7 @@ const CreateChatroom = () => {
         </div>
         <div className="mb-4">
           <textarea
-            className="border border-1 border-gray-700 w-full px-3 py-2 border rounded bg-white"
+            className="border border-1 border-gray-700 w-full px-3 py-2 rounded bg-white"
             id="chatroomDescription"
             rows="4"
             placeholder="Description"
